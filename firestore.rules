@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Basic rules for Society Khata. The app ships with these while you trial it —
+// the admin desk is protected by the app's PIN, not by Firebase Auth.
+//
+// For public deployment, harden it with Firebase App Check or sign the committee
+// in anonymously and tighten the admin rules — see README.md (§ Locking it down).
+// ─────────────────────────────────────────────────────────────────────────────
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Society settings + live usage counters — singleton docs in `config`.
+    match /config/{docId} {
+      allow read: if true;
+      allow write: if true; // tighten to committee devices in production
+    }
+
+    // One doc per flat: owner, monthly maintenance, running dues.
+    match /members/{memberId} {
+      allow read: if true;
+      allow write: if true; // tighten to committee devices in production
+    }
+
+    // Payment receipts. Every full-cycle document is `SK-YYYYMM-XXXX`.
+    match /payments/{paymentId} {
+      allow read: if true;
+      allow create: if request.resource.data.keys().hasAll(
+        ['id', 'memberId', 'wing', 'flat', 'ownerName', 'month', 'amount', 'status']
+      ) && request.resource.data.amount is number
+      && request.resource.data.amount > 0
+      && request.resource.data.amount <= 500000;
+      allow update: if true; // e.g. status → verified/rejected
+      allow delete: if true; // purge flow removes these after the archive
+    }
+
+    // Queue for the Firebase "Trigger Email" extension (no-reply alerts).
+    // Allow only creation from the app; nothing but the extension should edit it.
+    match /mail/{mailId} {
+      allow create: if request.resource.data.keys().hasAll(['to', 'message']);
+      allow read: if true;
+      allow update, delete: if false;
+    }
+  }
+}

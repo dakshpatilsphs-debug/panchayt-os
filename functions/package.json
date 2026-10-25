@@ -1,0 +1,14 @@
+{
+  "name": "society-khata-functions",
+  "description": "Optional server helpers: storage-limit watchdog + SMTP e-mail delivery (the payment flow itself runs fully client-side)",
+  "engines": {
+    "node": "20"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^5.1.1",
+    "nodemailer": "^6.9.15"
+  },
+  "private": true
+}

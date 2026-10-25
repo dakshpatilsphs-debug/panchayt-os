@@ -1,0 +1,35 @@
+{
+  "name": "society-khata",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Housing-society maintenance payment ledger — UPI payments, Firestore storage, Excel registers, archive-and-purge automation.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "logo": "powershell -ExecutionPolicy Bypass -File scripts/generate-logo.ps1",
+    "smoke:excel": "node scripts/run-smoke.mjs"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "firebase": "^10.14.1",
+    "qrcode": "^1.5.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "tesseract.js": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.6.3",
+    "vite": "^5.4.11"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true,
+    "protobufjs@7.6.6": true
+  }
+}
