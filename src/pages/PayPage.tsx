@@ -7,7 +7,7 @@ import { useSession } from "../lib/session";
 import { checkStorageAlert } from "../lib/email";
 import { isDemo } from "../lib/firebase";
 import { readPaymentScreenshot } from "../lib/shot";
-import { createPayment, deletePayment, findPendingDraft, listMembers, loadSettings, setSessionId, updatePayment } from "../lib/store";
+import { clearSession, createPayment, deletePayment, findPendingDraft, listMembers, loadSettings, setSessionId, updatePayment } from "../lib/store";
 import type { Member, Payment, ScreenshotMeta, SocietySettings } from "../lib/types";
 import {
   buildUpiUri,
@@ -130,8 +130,11 @@ export default function PayPage() {
   };
 
   const clearPick = () => {
+    clearSession();
     setWing("");
     setFlat("");
+    setAmount("");
+    prefilled.current = "";
   };
 
   if (!members || !settings) {
