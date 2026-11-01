@@ -127,3 +127,6 @@ export const IconBoard = (p: IconProps) => (
 export const IconPin = (p: IconProps) => (
   <S {...p}><path d="M12 3.5c-2.2 2-3.4 4.4-3.4 7.2L7 13.4l3.6.9 1 3.6 1.5-2.6c2.8.2 5.3-.7 7.3-2.5L12 3.5z" transform="rotate(90 12 12)" /></S>
 );
+export const IconEdit = (p: IconProps) => (
+  <S {...p}><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></S>
+);

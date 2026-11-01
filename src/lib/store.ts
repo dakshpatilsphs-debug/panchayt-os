@@ -19,7 +19,7 @@ import {
 } from "firebase/firestore";
 import { fdb, isDemo } from "./firebase";
 import { notifySession } from "./session";
-import { DEFAULT_SETTINGS, type Member, type Notice, type Payment, type SocietySettings, type Usage } from "./types";
+import { DEFAULT_CONTACTS, DEFAULT_SETTINGS, type Contact, type Member, type Notice, type Payment, type SocietySettings, type Usage } from "./types";
 import { byteLen, newPaymentId, memberId as mkId } from "./util";
 
 /* ────────────────────────── demo storage (localStorage) ────────────────────────── */
@@ -31,6 +31,7 @@ const K = {
   usage: "sk.usage",
   mail: "sk.sentmail",
   notices: "sk.notices",
+  contacts: "sk.contacts",
 };
 
 /** The remembered flat (memberId) — quiet browser memory, no account behind it. */
@@ -146,6 +147,9 @@ function seedDemo(): void {
     },
   ];
   wr(K.notices, notices);
+  if (!localStorage.getItem(K.contacts)) {
+    wr(K.contacts, DEFAULT_CONTACTS);
+  }
 }
 
 /** Deeply removes undefined fields from an object or array to prevent Firestore crashes. */
@@ -211,7 +215,23 @@ export async function saveMember(m: Member): Promise<void> {
     wr(K.members, arr);
     return;
   }
-  await setDoc(doc(fdb(), "members", m.id), m);
+  await setDoc(doc(fdb(), "members", m.id), stripUndefined(m));
+}
+
+export async function saveMembersBatch(members: Member[]): Promise<void> {
+  if (isDemo) {
+    const existing = rd<Member[]>(K.members, []);
+    const byId = new Map(existing.map((m) => [m.id, m]));
+    members.forEach((m) => byId.set(m.id, m));
+    wr(K.members, Array.from(byId.values()));
+    return;
+  }
+  const batch = writeBatch(fdb());
+  for (const m of members) {
+    const clean = stripUndefined(m);
+    batch.set(doc(fdb(), "members", clean.id), clean, { merge: true });
+  }
+  await batch.commit();
 }
 
 export async function deleteMember(id: string): Promise<void> {
@@ -561,4 +581,53 @@ export async function deleteNotice(id: string): Promise<void> {
 
 export function newNoticeId(): string {
   return `NT-${Date.now().toString(36).toUpperCase().slice(-6)}`;
+}
+
+/* ────────────────────────── important contacts ────────────────────────── */
+
+export async function listContacts(): Promise<Contact[]> {
+  if (isDemo) {
+    seedDemo();
+    return rd<Contact[]>(K.contacts, DEFAULT_CONTACTS);
+  }
+  try {
+    const snap = await getDocs(collection(fdb(), "contacts"));
+    if (snap.empty) {
+      // seed defaults into Firestore on first read
+      const batch = writeBatch(fdb());
+      for (const c of DEFAULT_CONTACTS) {
+        batch.set(doc(fdb(), "contacts", c.id), c);
+      }
+      await batch.commit();
+      return DEFAULT_CONTACTS;
+    }
+    return snap.docs.map((d) => d.data() as Contact);
+  } catch {
+    return DEFAULT_CONTACTS;
+  }
+}
+
+export async function saveContact(c: Contact): Promise<void> {
+  const clean = stripUndefined(c);
+  if (isDemo) {
+    const arr = rd<Contact[]>(K.contacts, DEFAULT_CONTACTS);
+    const i = arr.findIndex((x) => x.id === c.id);
+    if (i >= 0) arr[i] = clean;
+    else arr.push(clean);
+    wr(K.contacts, arr);
+    return;
+  }
+  await setDoc(doc(fdb(), "contacts", c.id), clean, { merge: true });
+}
+
+export async function deleteContact(id: string): Promise<void> {
+  if (isDemo) {
+    wr(K.contacts, rd<Contact[]>(K.contacts, DEFAULT_CONTACTS).filter((c) => c.id !== id));
+    return;
+  }
+  await deleteDoc(doc(fdb(), "contacts", id));
+}
+
+export function newContactId(): string {
+  return `C-${Date.now().toString(36).toUpperCase().slice(-5)}`;
 }

@@ -91,3 +91,58 @@ export function downloadBlob(blob: Blob, filename: string): void {
 export function slug(s: string): string {
   return s.replace(/[^a-zA-Z0-9]+/g, "").slice(0, 28) || "society";
 }
+
+/** Derive floor number from flat string or floor property (e.g. 101 -> 1, 204 -> 2, 1002 -> 10). */
+export function getFlatFloor(flat: string, explicitFloor?: number): number {
+  if (explicitFloor != null && !Number.isNaN(explicitFloor)) {
+    return explicitFloor;
+  }
+  const clean = flat.replace(/\D/g, "");
+  if (!clean) return 1;
+  const num = parseInt(clean, 10);
+  if (num >= 100) {
+    return Math.floor(num / 100);
+  }
+  if (num >= 10 && clean.length === 2) {
+    return Math.floor(num / 10);
+  }
+  return num > 0 ? num : 0;
+}
+
+/** Human-readable floor label (e.g. 0 -> "Ground Floor", 1 -> "1st Floor", 2 -> "2nd Floor"). */
+export function floorLabel(floor: number): string {
+  if (floor === 0) return "Ground Floor";
+  const j = floor % 10;
+  const k = floor % 100;
+  if (j === 1 && k !== 11) return `${floor}st Floor`;
+  if (j === 2 && k !== 12) return `${floor}nd Floor`;
+  if (j === 3 && k !== 13) return `${floor}rd Floor`;
+  return `${floor}th Floor`;
+}
+
+/** Generate a list of flats for a given wing, number of floors, and flats per floor. */
+export function generateFlatsList(opts: {
+  wing: string;
+  totalFloors: number;
+  flatsPerFloor: number;
+  startFloor?: number;
+  defaultMaintenance?: number;
+}): Array<{ wing: string; flat: string; floor: number; id: string; monthlyMaintenance: number }> {
+  const { wing, totalFloors, flatsPerFloor, startFloor = 1, defaultMaintenance = 0 } = opts;
+  const flats: Array<{ wing: string; flat: string; floor: number; id: string; monthlyMaintenance: number }> = [];
+  const cleanWing = wing.trim().toUpperCase() || "A";
+
+  for (let f = startFloor; f < startFloor + totalFloors; f++) {
+    for (let i = 1; i <= flatsPerFloor; i++) {
+      const flatNumStr = f === 0 ? `G${i}` : `${f * 100 + i}`;
+      flats.push({
+        wing: cleanWing,
+        flat: flatNumStr,
+        floor: f,
+        id: memberId(cleanWing, flatNumStr),
+        monthlyMaintenance: defaultMaintenance,
+      });
+    }
+  }
+  return flats;
+}

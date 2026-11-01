@@ -7,11 +7,13 @@ import { useSession } from "../lib/session";
 import { checkStorageAlert } from "../lib/email";
 import { isDemo } from "../lib/firebase";
 import { readPaymentScreenshot } from "../lib/shot";
-import { clearSession, createPayment, deletePayment, findPendingDraft, listMembers, loadSettings, setSessionId, updatePayment } from "../lib/store";
-import type { Member, Payment, ScreenshotMeta, SocietySettings } from "../lib/types";
+import { clearSession, createPayment, deletePayment, findPendingDraft, listContacts, listMembers, listNotices, loadSettings, setSessionId, updatePayment } from "../lib/store";
+import type { Contact, Member, Notice, Payment, ScreenshotMeta, SocietySettings } from "../lib/types";
 import {
   buildUpiUri,
   currentMonth,
+  floorLabel,
+  getFlatFloor,
   inr,
   monthLabel,
   newPaymentId,
@@ -34,6 +36,9 @@ export default function PayPage() {
   // ── state (everything lives above the early return — Rules of Hooks) ──
   const [settings, setSettings] = useState<SocietySettings | null>(null);
   const [members, setMembers] = useState<Member[] | null>(null);
+  const [notices, setNotices] = useState<Notice[] | null>(null);
+  const [contacts, setContacts] = useState<Contact[] | null>(null);
+  const [sideTab, setSideTab] = useState<"notices" | "directory" | "contacts">("notices");
   const [wing, setWing] = useState("");
   const [flat, setFlat] = useState("");
   const [amount, setAmount] = useState("");
@@ -76,11 +81,13 @@ export default function PayPage() {
 
   useEffect(() => {
     let alive = true;
-    Promise.all([listMembers(), loadSettings()])
-      .then(([ms, s]) => {
+    Promise.all([listMembers(), loadSettings(), listNotices(), listContacts()])
+      .then(([ms, s, ns, cs]) => {
         if (!alive) return;
         setMembers(ms);
         setSettings(s);
+        setNotices(ns);
+        setContacts(cs);
       })
       .catch((e) => toast(e.message, "err"));
     return () => {
@@ -103,6 +110,15 @@ export default function PayPage() {
     () => (members ?? []).filter((m) => m.wing === wing && m.active).sort((a, b) => a.flat.localeCompare(b.flat, "en", { numeric: true })),
     [members, wing]
   );
+  const floorFlats = useMemo(() => {
+    const groups = new Map<number, Member[]>();
+    for (const m of flats) {
+      const f = getFlatFloor(m.flat, m.floor);
+      if (!groups.has(f)) groups.set(f, []);
+      groups.get(f)!.push(m);
+    }
+    return Array.from(groups.entries()).sort(([a], [b]) => a - b);
+  }, [flats]);
 
   // a remembered flat fills the chips on first paint
   useEffect(() => {
@@ -115,11 +131,10 @@ export default function PayPage() {
   const amountValid = Number.isFinite(amountN) && amountN > 0 && amountN <= 500000;
   const monthValid = month <= currentMonth();
 
-  // (re)fill the amount whenever a different flat is picked
+  // Pick remembers identity without forcing a definite payment amount
   useEffect(() => {
     if (!me || prefilled.current === me.id) return;
     prefilled.current = me.id;
-    setAmount(String(Math.max(me.dueBalance > 0 ? me.dueBalance : me.monthlyMaintenance, 0)));
   }, [me]);
 
   /** Chip pick — sets identity AND quietly remembers it for this browser. */
@@ -155,18 +170,15 @@ export default function PayPage() {
     setOcrBusy(false);
     setOcrPct(0);
     setOcrHint("");
-    if (me) {
-      setAmount(String(Math.max(me.dueBalance > 0 ? me.dueBalance : me.monthlyMaintenance, 0)));
-    }
+    setAmount("");
   };
 
   /* ── draft creation: double-click + duplicate guarded ── */
 
   const buildDraft = async (): Promise<Payment> => {
     if (!me) throw new Error("Pick your flat first");
-    const due = Math.max(0, me.dueBalance || 0);
-    const maintenancePart = Math.min(amountN, due);
-    const donationPart = Math.max(0, Math.round((amountN - maintenancePart) * 100) / 100);
+    const maintenancePart = amountN;
+    const donationPart = 0;
     const p: Payment = {
       id: newPaymentId(),
       memberId: me.id,
@@ -375,38 +387,50 @@ export default function PayPage() {
                   </div>
                 </div>
                 {wing && (
-                  <div className="selrow">
-                    <span className="eyebrow">Flat number</span>
-                    <div className="chipsrow">
-                      {flats.map((m) => (
-                        <button key={m.id} className={`chip ${flat === m.flat ? "chip-on" : ""}`} onClick={() => pickFlat(m)}>
-                          {m.flat}
-                          {m.dueBalance > 0 && <em className="taken-dot" title={`Dues ${inr(m.dueBalance)}`} />}
-                        </button>
-                      ))}
-                    </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "12px" }}>
+                    <span className="eyebrow">Select flat (floor-wise)</span>
+                    {floorFlats.map(([fNum, fList]) => (
+                      <div key={fNum} style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                        <span className="muted" style={{ fontSize: "12px", minWidth: "90px", fontWeight: 600 }}>
+                          {floorLabel(fNum)}:
+                        </span>
+                        <div className="chipsrow" style={{ margin: 0 }}>
+                          {fList.map((m) => (
+                            <button
+                              key={m.id}
+                              className={`chip ${flat === m.flat ? "chip-on" : ""}`}
+                              onClick={() => pickFlat(m)}
+                              title={m.ownerName ? `Owner: ${m.ownerName}` : undefined}
+                            >
+                              {m.flat} {m.ownerName ? `(${m.ownerName.split(" ")[0]})` : ""}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
                 <p className="hint">
-                  Choose your wing, then the flat number — no sign-in, no PIN. The dot marks flats with
-                  outstanding dues; the amount fills itself once you pick.
+                  Choose your wing, then your flat. Owner name from society directory is verified upon selection.
                 </p>
               </div>
             ) : (
               <>
             <div className="ownerstrip">
-               <div>
+              <div>
                 <span className="eyebrow">Flat</span>
                 <b>{me.wing}-{me.flat}</b>
               </div>
               <div>
-                <span className="eyebrow">Monthly maintenance</span>
-                <b>{inr(me.monthlyMaintenance)}</b>
+                <span className="eyebrow">Flat Owner</span>
+                <b>{me.ownerName || "— Not specified in directory"}</b>
               </div>
-              <div>
-                <span className="eyebrow">Dues outstanding</span>
-                <b className={me.dueBalance > 0 ? "dues-hot" : ""}>{inr(Math.max(0, me.dueBalance))}</b>
-              </div>
+              {me.phone && (
+                <div>
+                  <span className="eyebrow">Contact</span>
+                  <b>{me.phone}</b>
+                </div>
+              )}
             </div>
 
             <form
@@ -423,22 +447,17 @@ export default function PayPage() {
                   type="number"
                   min="1"
                   max="500000"
-                  step="0.01"
+                  step="any"
                   inputMode="decimal"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder="e.g. 2800"
+                  placeholder="Enter amount to pay (₹)"
                   required
                 />
+                <span className="muted" style={{ fontSize: "12px", marginTop: "4px", display: "block" }}>
+                  No definite amount required — enter any maintenance, advance, or custom amount you wish to pay.
+                </span>
               </label>
-              <div className="chipsrow">
-                <button type="button" className="chip" onClick={() => setAmount(String(Math.max(0, me.dueBalance)))}>
-                  Clear dues ({inr(Math.max(0, me.dueBalance))})
-                </button>
-                <button type="button" className="chip" onClick={() => setAmount(String(me.monthlyMaintenance))}>
-                  Just this month ({inr(me.monthlyMaintenance)})
-                </button>
-              </div>
               <label>
                 <span className="eyebrow">For which month?</span>
                 <input
@@ -451,8 +470,7 @@ export default function PayPage() {
                 />
               </label>
               <p className="hint">
-                Anything beyond the outstanding dues is recorded as a voluntary contribution and appears
-                separately on the register. Amount settles toward dues first.
+                Scan the society UPI QR code on the next step with any UPI app (GPay, PhonePe, Paytm, BHIM) and confirm.
               </p>
               {!monthValid && (
                 <p className="warnline">
@@ -470,27 +488,205 @@ export default function PayPage() {
             )}
           </div>
 
-          <aside className="sidecard">
-            <div className="miniorn" />
-            <h3>How your money is matched</h3>
-            <ol className="stepslist">
-              <li>
-                <b>Dues first.</b> The committee sets a monthly maintenance amount for each flat. Whatever is unpaid
-                shows as "dues".
-              </li>
-              <li>
-                <b>Extra is contribution.</b> Donate above your dues — it's recorded as a separate line on the Excel
-                register.
-              </li>
-              <li>
-                <b>Verification.</b> After you pay, the treasurer verifies the UPI reference — or reads it straight
-                off your screenshot; your dues reduce the moment it's confirmed.
-              </li>
-            </ol>
-            <div className="sidequote">
-              <p>"Not everything nice is proper. Banking-grade simplicity is."</p>
-              <span>— Maintenance handbook, page&nbsp;1</span>
+          <aside className="sidecard" style={{ padding: "18px 20px" }}>
+            {/* Quick switcher to load society pages right here */}
+            <div className="chipsrow" style={{ borderBottom: "1px solid var(--line)", paddingBottom: "10px", marginBottom: "14px" }}>
+              <button
+                type="button"
+                className={`chip ${sideTab === "notices" ? "chip-on" : ""}`}
+                onClick={() => setSideTab("notices")}
+                style={{ fontSize: "12px", padding: "4px 9px", fontWeight: 600 }}
+              >
+                📢 Notices
+              </button>
+              <button
+                type="button"
+                className={`chip ${sideTab === "directory" ? "chip-on" : ""}`}
+                onClick={() => setSideTab("directory")}
+                style={{ fontSize: "12px", padding: "4px 9px", fontWeight: 600 }}
+              >
+                🏛️ Management
+              </button>
+              <button
+                type="button"
+                className={`chip ${sideTab === "contacts" ? "chip-on" : ""}`}
+                onClick={() => setSideTab("contacts")}
+                style={{ fontSize: "12px", padding: "4px 9px", fontWeight: 600 }}
+              >
+                🚨 Helplines
+              </button>
             </div>
+
+            {/* Page Tab 1: Notice Board */}
+            {sideTab === "notices" && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                  <h4 style={{ margin: 0, fontSize: "14.5px", color: "var(--brand-deep)" }}>
+                    Notice Board
+                  </h4>
+                  <Link to="/notices" style={{ fontSize: "12px", color: "var(--brand)", textDecoration: "none", fontWeight: 600 }}>
+                    Full Board →
+                  </Link>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {(notices ?? []).slice(0, 3).map((n) => (
+                    <div
+                      key={n.id}
+                      style={{
+                        background: "#fff",
+                        border: "1px solid var(--line)",
+                        borderRadius: "8px",
+                        padding: "10px 12px",
+                        borderLeft: n.tone === "warn" ? "3px solid var(--amber)" : n.tone === "event" ? "3px solid var(--brass)" : "3px solid var(--brand)",
+                      }}
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "6px" }}>
+                        <span style={{ fontSize: "13px", fontWeight: 700, color: "var(--fg)" }}>
+                          {n.title}
+                        </span>
+                        {n.pinned && (
+                          <span className="badge" style={{ fontSize: "10px", padding: "1px 5px", background: "#fef3c7", color: "#92400e" }}>
+                            Pinned
+                          </span>
+                        )}
+                      </div>
+                      <p style={{ margin: "4px 0 0", fontSize: "12px", color: "var(--ink-soft)", lineHeight: 1.4, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                        {n.body}
+                      </p>
+                    </div>
+                  ))}
+
+                  {(!notices || notices.length === 0) && (
+                    <p className="muted" style={{ fontSize: "12.5px" }}>No notices posted on the board yet.</p>
+                  )}
+                </div>
+
+                <Link
+                  to="/notices"
+                  className="btn btn-outline btn-sm"
+                  style={{ width: "100%", justifyContent: "center", marginTop: "14px", fontSize: "12.5px" }}
+                >
+                  View All Bulletins →
+                </Link>
+              </div>
+            )}
+
+            {/* Page Tab 2: Society Management & Committee */}
+            {sideTab === "directory" && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                  <h4 style={{ margin: 0, fontSize: "14.5px", color: "var(--brand-deep)" }}>
+                    Committee Members
+                  </h4>
+                  <Link to="/directory" style={{ fontSize: "12px", color: "var(--brand)", textDecoration: "none", fontWeight: 600 }}>
+                    Directory →
+                  </Link>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  {(contacts ?? [])
+                    .filter((c) => c.category === "committee")
+                    .slice(0, 3)
+                    .map((c) => (
+                      <div
+                        key={c.id}
+                        style={{
+                          background: "#fff",
+                          border: "1px solid var(--line)",
+                          borderRadius: "8px",
+                          padding: "10px 12px",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div>
+                          <span style={{ fontSize: "13px", fontWeight: 700, display: "block" }}>{c.name}</span>
+                          <span className="muted" style={{ fontSize: "11.5px" }}>{c.role}</span>
+                        </div>
+                        <a
+                          href={`tel:${c.phone}`}
+                          className="btn btn-ghost btn-xs"
+                          style={{ fontSize: "11.5px", color: "var(--brand)", fontWeight: 600 }}
+                        >
+                          📞 Call
+                        </a>
+                      </div>
+                    ))}
+
+                  {(contacts ?? []).filter((c) => c.category === "committee").length === 0 && (
+                    <p className="muted" style={{ fontSize: "12.5px" }}>No committee members listed yet.</p>
+                  )}
+                </div>
+
+                <Link
+                  to="/directory"
+                  className="btn btn-outline btn-sm"
+                  style={{ width: "100%", justifyContent: "center", marginTop: "14px", fontSize: "12.5px" }}
+                >
+                  Open Floor-wise Directory →
+                </Link>
+              </div>
+            )}
+
+            {/* Page Tab 3: Emergency & Utility Helplines */}
+            {sideTab === "contacts" && (
+              <div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+                  <h4 style={{ margin: 0, fontSize: "14.5px", color: "#dc2626" }}>
+                    Emergency Contacts
+                  </h4>
+                  <Link to="/directory" style={{ fontSize: "12px", color: "var(--brand)", textDecoration: "none", fontWeight: 600 }}>
+                    All Helplines →
+                  </Link>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                  {(contacts ?? [])
+                    .filter((c) => c.category !== "committee")
+                    .slice(0, 4)
+                    .map((c) => (
+                      <div
+                        key={c.id}
+                        style={{
+                          background: "#fff",
+                          border: "1px solid var(--line)",
+                          borderRadius: "8px",
+                          padding: "9px 12px",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <div>
+                          <span style={{ fontSize: "12.5px", fontWeight: 700, display: "block" }}>{c.name}</span>
+                          <span className="muted" style={{ fontSize: "11px" }}>{c.role}</span>
+                        </div>
+                        <a
+                          href={`tel:${c.phone}`}
+                          className="btn btn-primary btn-xs"
+                          style={{
+                            fontSize: "11px",
+                            padding: "3px 8px",
+                            backgroundColor: c.category === "emergency" ? "#dc2626" : undefined,
+                          }}
+                        >
+                          📞 Call
+                        </a>
+                      </div>
+                    ))}
+                </div>
+
+                <Link
+                  to="/directory"
+                  className="btn btn-outline btn-sm"
+                  style={{ width: "100%", justifyContent: "center", marginTop: "14px", fontSize: "12.5px" }}
+                >
+                  View All Society Helplines →
+                </Link>
+              </div>
+            )}
           </aside>
         </div>
       )}

@@ -56,8 +56,8 @@ export default function Shell({ children }: { children: ReactNode }) {
             <NavLink to="/" end className={({ isActive }) => (isActive ? "on" : "")}>
               Pay
             </NavLink>
-            <NavLink to="/history" className={({ isActive }) => (isActive ? "on" : "")}>
-              My payments
+            <NavLink to="/directory" className={({ isActive }) => (isActive ? "on" : "")}>
+              Directory
             </NavLink>
             <NavLink to="/notices" className={({ isActive }) => (isActive ? "on" : "")}>
               Notices

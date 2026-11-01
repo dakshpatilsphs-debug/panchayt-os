@@ -21,12 +21,33 @@ export interface Member {
   id: string; // "A-102"
   wing: string;
   flat: string;
+  floor?: number;
   ownerName: string;
   phone: string;
   monthlyMaintenance: number;
   dueBalance: number;
   active: boolean;
 }
+
+export interface Contact {
+  id: string;
+  name: string;
+  role: string;
+  phone: string;
+  category: "committee" | "staff" | "emergency" | "services";
+  notes?: string;
+}
+
+export const DEFAULT_CONTACTS: Contact[] = [
+  { id: "c-1", name: "Sunita Iyer", role: "Society Chairman (Flat B-601)", phone: "9820022334", category: "committee", notes: "General inquiries & approvals" },
+  { id: "c-2", name: "Rohan Deshpande", role: "Secretary (Flat A-402)", phone: "9820011223", category: "committee", notes: "Meetings & society correspondence" },
+  { id: "c-3", name: "Vikram Khan", role: "Treasurer (Flat C-303)", phone: "9820033445", category: "committee", notes: "Maintenance accounts & receipts" },
+  { id: "c-4", name: "Security Gate #1", role: "Main Gate Security", phone: "9820044556", category: "staff", notes: "24/7 Main Entrance Security" },
+  { id: "c-5", name: "Ramesh Electrician", role: "Society Electrician", phone: "9820055667", category: "services", notes: "On-call 8 AM - 8 PM" },
+  { id: "c-6", name: "Sunil Plumber", role: "Society Plumber", phone: "9820077889", category: "services", notes: "On-call for leakages & pumps" },
+  { id: "c-7", name: "Schindler / OTIS Lift Helpline", role: "Lift Breakdown & Entrapment", phone: "18002008888", category: "emergency", notes: "24/7 Toll-free Emergency" },
+  { id: "c-8", name: "Local Police Station", role: "Police Control Room", phone: "112", category: "emergency", notes: "National Emergency Helpline" },
+];
 
 export interface ScreenshotMeta {
   /** When the resident attached the screenshot (ISO). */
@@ -85,6 +106,11 @@ export interface Notice {
   updatedAt?: string;
   /** Surfaced at the top of the board and on the sign-in page. */
   pinned?: boolean;
+  /** Target scope: all floors, specific wing, specific floor, or specific flat */
+  targetType?: "all" | "wing" | "floor" | "flat";
+  targetWing?: string;
+  targetFloor?: number;
+  targetFlat?: string;
 }
 
 export const DEFAULT_SETTINGS: SocietySettings = {
