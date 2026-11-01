@@ -15,10 +15,17 @@
     },
     "python": {
       "root": "python",
-      "runtime": "python"
+      "framework": "fastapi",
+      "entrypoint": "main:app"
     }
   },
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "python"
+      }
+    },
     {
       "source": "/(.*)",
       "destination": {
@@ -27,4 +34,3 @@
     }
   ]
 }
-

@@ -2,6 +2,9 @@
 #   pip install -r python/requirements.txt
 pdfplumber>=0.11
 openpyxl>=3.1
+fastapi>=0.100.0
+python-multipart>=0.0.9
+uvicorn>=0.22.0
 
 # ── Bank slip OCR (resident screenshots in Mode B) — install ONE engine ──
 # The matcher auto-picks whichever is installed: PaddleOCR first, then Tesseract.

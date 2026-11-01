@@ -354,6 +354,54 @@ export default function PaymentsTab() {
     }
   };
 
+  /** Sends the statement directly to the Python FastAPI microservice (/api/match) */
+  const matchStatementWithPythonApi = async (file: File | undefined) => {
+    if (!file || !rows) return;
+    setMatching(true);
+    setMatchingMsg("Python API processing…");
+    try {
+      const formData = new FormData();
+      formData.append("statement", file);
+      const lean = rows.map((r) => {
+        const { screenshot: _shot, screenshotMeta: _meta, ...rest } = r.p;
+        return rest;
+      });
+      formData.append("payments_json", JSON.stringify(lean));
+
+      const res = await fetch("/api/match", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        let errDetail = "Python matcher service returned an error";
+        try {
+          const errJson = await res.json();
+          if (errJson.detail) errDetail = errJson.detail;
+        } catch {
+          errDetail = `${res.status} ${res.statusText}`;
+        }
+        throw new Error(errDetail);
+      }
+
+      const data = await res.json();
+      if (data.format !== "society-khata/bank-verify" || !Array.isArray(data.verified)) {
+        throw new Error("Invalid response format from Python matcher service.");
+      }
+
+      const { applied, skipped } = await applyVerdicts(data.verified, "Python matcher API");
+      toast(
+        `Python Matcher: ${applied} receipt${applied === 1 ? "" : "s"} verified${skipped ? `, ${skipped} skipped (already settled or amount off)` : ""}.`,
+        applied ? "ok" : "info"
+      );
+    } catch (e) {
+      toast(`Python Matcher: ${(e as Error).message}`, "err");
+    } finally {
+      setMatching(false);
+      setMatchingMsg("");
+    }
+  };
+
   return (
     <div>
       <div className="filterbar card pad">
@@ -387,6 +435,9 @@ export default function PaymentsTab() {
           <button className="btn btn-outline self-end" onClick={() => document.getElementById("statement-input")?.click()} disabled={matching || !rows}>
             <IconLedger size={15} /> {matching ? matchingMsg || "Reading…" : "Match statement"}
           </button>
+          <button className="btn btn-outline self-end" onClick={() => document.getElementById("python-match-input")?.click()} disabled={matching || !rows || rows.length === 0} title="Match statement directly via the Python microservice">
+            <IconCheck size={15} /> {matching ? matchingMsg || "Matching…" : "Python Match"}
+          </button>
           <button className="btn btn-outline self-end" onClick={downloadMatcherJson} disabled={!rows || rows.length === 0}>
             <IconDownload size={15} /> Matcher JSON
           </button>
@@ -405,6 +456,17 @@ export default function PaymentsTab() {
               const f = e.target.files?.[0];
               e.target.value = "";
               void matchStatementFile(f);
+            }}
+          />
+          <input
+            id="python-match-input"
+            type="file"
+            accept=".pdf,.csv,.xlsx,.xlsm"
+            style={{ display: "none" }}
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              e.target.value = "";
+              void matchStatementWithPythonApi(f);
             }}
           />
           <input
