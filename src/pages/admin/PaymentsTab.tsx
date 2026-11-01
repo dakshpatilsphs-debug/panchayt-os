@@ -714,7 +714,7 @@ export default function PaymentsTab() {
                     <td>
                       {p.wing}-{p.flat}
                     </td>
-                    <td>{p.ownerName}</td>
+                    <td>{p.ownerName || "—"}</td>
                     <td>
                       {monthLabel(p.month)}
                       {p.donationPart > 0 && <small className="muted block">incl. {inr(p.donationPart)} contribution</small>}

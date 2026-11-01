@@ -154,7 +154,7 @@ export default function DashboardTab() {
                   <tr key={p.id}>
                     <td><b>{p.id}</b></td>
                     <td>
-                      {p.ownerName}
+                      {p.ownerName || `Flat ${p.wing}-${p.flat}`}
                       <small className="muted block">
                         {p.wing}-{p.flat}
                       </small>

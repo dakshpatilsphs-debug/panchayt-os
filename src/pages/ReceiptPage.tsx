@@ -91,7 +91,7 @@ export default function ReceiptPage() {
         <section className="r-parties">
           <div>
             <span className="eyebrow">Received from</span>
-            <b>{payment.ownerName}</b>
+            <b>{payment.ownerName || `Flat ${payment.wing}-${payment.flat}`}</b>
             <span className="muted">Flat {payment.wing}-{payment.flat}</span>
           </div>
           <div className="r-dates">

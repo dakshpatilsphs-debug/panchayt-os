@@ -25,7 +25,7 @@ export default function MembersTab() {
   const { toast } = useToast();
   const [members, setMembers] = useState<Member[] | null>(null);
   const [wing, setWing] = useState("");
-  const [newMember, setNewMember] = useState({ flat: "", ownerName: "", phone: "", monthlyMaintenance: "", dueBalance: "0" });
+  const [newMember, setNewMember] = useState({ flat: "", phone: "", monthlyMaintenance: "", dueBalance: "0" });
   const [adding, setAdding] = useState(false);
 
   useEffect(() => {
@@ -70,9 +70,8 @@ export default function MembersTab() {
   const addMember = async (e: React.FormEvent) => {
     e.preventDefault();
     const flatTrim = newMember.flat.trim();
-    const nameTrim = newMember.ownerName.trim();
-    if (!flatTrim || !nameTrim) {
-      toast("Flat number and owner name are required.", "err");
+    if (!flatTrim) {
+      toast("Flat number is required.", "err");
       return;
     }
     const id = memberId(activeWing, flatTrim);
@@ -86,7 +85,7 @@ export default function MembersTab() {
         id,
         wing: activeWing,
         flat: flatTrim,
-        ownerName: nameTrim,
+        ownerName: "",
         phone: newMember.phone.trim(),
         monthlyMaintenance: Math.max(0, Number(newMember.monthlyMaintenance) || 0),
         dueBalance: Math.max(0, Number(newMember.dueBalance) || 0),
@@ -94,7 +93,7 @@ export default function MembersTab() {
       };
       await saveMember(m);
       upsertLocal(m);
-      setNewMember({ flat: "", ownerName: "", phone: "", monthlyMaintenance: "", dueBalance: "0" });
+      setNewMember({ flat: "", phone: "", monthlyMaintenance: "", dueBalance: "0" });
       toast(id + " added to Wing " + activeWing + ".", "ok");
     } catch (err) {
       toast((err as Error).message, "err");
@@ -176,16 +175,6 @@ export default function MembersTab() {
           />
         </label>
         <label>
-          <span className="eyebrow">Owner's name</span>
-          <input
-            className="input"
-            placeholder="e.g. Sanjay Marathe"
-            value={newMember.ownerName}
-            onChange={(e) => setNewMember({ ...newMember, ownerName: e.target.value })}
-            required
-          />
-        </label>
-        <label>
           <span className="eyebrow">Phone (optional)</span>
           <input
             className="input"
@@ -260,7 +249,7 @@ function MemberRow({
     try {
       const cleaned: Member = {
         ...member,
-        ownerName: draft.ownerName.trim() || member.ownerName,
+        ownerName: draft.ownerName.trim(),
         phone: draft.phone.trim(),
         monthlyMaintenance: Math.max(0, Number(draft.monthlyMaintenance) || 0),
         dueBalance: Math.max(0, Number(draft.dueBalance) || 0),
@@ -277,7 +266,8 @@ function MemberRow({
   };
 
   const remove = async () => {
-    if (!window.confirm(`Remove flat ${member.id} (${member.ownerName}) from the register? Payment receipts live in the payments collection, not here.`)) return;
+    const nameStr = member.ownerName ? ` (${member.ownerName})` : "";
+    if (!window.confirm(`Remove flat ${member.id}${nameStr} from the register? Payment receipts live in the payments collection, not here.`)) return;
     setBusy(true);
     try {
       await deleteMember(member.id);
@@ -298,6 +288,7 @@ function MemberRow({
       <td>
         <input
           className="input inline"
+          placeholder="—"
           value={draft.ownerName}
           onChange={(e) => set({ ownerName: e.target.value })}
           aria-label="Owner name"
