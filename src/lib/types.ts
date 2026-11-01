@@ -96,6 +96,6 @@ export const DEFAULT_SETTINGS: SocietySettings = {
   payeeName: "Shanti Villa CHS",
   wings: ["A", "B", "C"],
   adminPin: "2408",
-  adminEmail: (import.meta.env.VITE_ADMIN_EMAIL as string | undefined) ?? "",
+  adminEmail: (import.meta.env.VITE_ADMIN_EMAIL as string | undefined) || "dakshpatil.sphs@gmail.com",
   usageLimitMB: 512,
 };
