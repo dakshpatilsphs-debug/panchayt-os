@@ -120,3 +120,10 @@ export const IconCamera = (p: IconProps) => (
 export const IconImage = (p: IconProps) => (
   <S {...p}><rect x="3.5" y="4.5" width="17" height="15" rx="1.6" /><circle cx="9" cy="10" r="1.8" /><path d="M3.5 16.5 9 11l3.5 3.5L16 11l4.5 5" /></S>
 );
+/** Notice board — pinned bulletins. */
+export const IconBoard = (p: IconProps) => (
+  <S {...p}><rect x="3.5" y="4" width="17" height="16" rx="1.8" /><path d="M12 1.5v2.5" /><path d="M7 9h7" /><path d="M7 12.5h10" /><path d="M7 16h5.5" /></S>
+);
+export const IconPin = (p: IconProps) => (
+  <S {...p}><path d="M12 3.5c-2.2 2-3.4 4.4-3.4 7.2L7 13.4l3.6.9 1 3.6 1.5-2.6c2.8.2 5.3-.7 7.3-2.5L12 3.5z" transform="rotate(90 12 12)" /></S>
+);

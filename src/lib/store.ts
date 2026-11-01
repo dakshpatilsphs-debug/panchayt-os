@@ -17,7 +17,8 @@ import {
   type UpdateData,
 } from "firebase/firestore";
 import { fdb, isDemo } from "./firebase";
-import { DEFAULT_SETTINGS, type Member, type Payment, type SocietySettings, type Usage } from "./types";
+import { notifySession } from "./session";
+import { DEFAULT_SETTINGS, type Member, type Notice, type Payment, type SocietySettings, type Usage } from "./types";
 import { byteLen, newPaymentId, memberId as mkId } from "./util";
 
 /* ────────────────────────── demo storage (localStorage) ────────────────────────── */
@@ -28,7 +29,11 @@ const K = {
   payments: "sk.payments",
   usage: "sk.usage",
   mail: "sk.sentmail",
+  notices: "sk.notices",
 };
+
+/** The remembered flat (memberId) — quiet browser memory, no account behind it. */
+const SESSION_KEY = "sk.session";
 
 function rd<T>(key: string, fb: T): T {
   try {
@@ -107,12 +112,39 @@ function seedDemo(): void {
     });
   }
   wr(K.payments, payments);
-  wr(K.usage, {
+    wr(K.usage, {
     paymentsCount: payments.length,
     estBytes: payments.reduce((a, p) => a + byteLen(p), 0),
     limitAlertSent: false,
     lastChecked: new Date().toISOString(),
   });
+
+  // A starter notice board so the login screen has something to show
+  const notices: Notice[] = [
+    {
+      id: "NT-01",
+      title: "Diwali deep-cleaning of the premises",
+      body: "Wing-wise schedule is up on the physical board. Please move vehicles between 6–9 a.m. on your cleaning day. Sweeper fund: ₹150 per flat, collected at the gate on the 2nd November.",
+      tone: "event",
+      createdAt: new Date(Date.now() - 2 * 864e5).toISOString(),
+      pinned: true,
+    },
+    {
+      id: "NT-02",
+      title: "Maintenance for October–November",
+      body: "Kindly pay before the 10th. Receipts marked pending are verified by the treasurer within a day; attaching your UPI screenshot makes it faster. Interest on arrears resumes after the grace period.",
+      tone: "info",
+      createdAt: new Date(Date.now() - 5 * 864e5).toISOString(),
+    },
+    {
+      id: "NT-03",
+      title: "Water tank cleaning — Sunday 7 a.m.",
+      body: "Supply will stay off for two hours while the overhead tanks are scrubbed and flushed. Store a bucket or two beforehand.",
+      tone: "warn",
+      createdAt: new Date(Date.now() - 8 * 864e5).toISOString(),
+    },
+  ];
+  wr(K.notices, notices);
 }
 
 function stripUndefined(o: Record<string, unknown>): Record<string, unknown> {
@@ -434,4 +466,67 @@ export async function lastMails(): Promise<{ to: string; subject: string; at: st
   } catch {
     return [];
   }
+}
+
+/* ────────────────────────── quiet flat memory ────────────────────────── */
+
+/**
+ * NO resident accounts and NO PINs — paying is open: pick your wing + flat and
+ * go. The picked flat id is remembered in this browser purely so "My payments"
+ * opens on it next time. Option-clear it any time.
+ */
+export function setSessionId(id: string): void {
+  try {
+    localStorage.setItem(SESSION_KEY, id);
+  } catch {
+    /* private mode: memory simply won't survive a reload */
+  }
+  notifySession();
+}
+
+export function clearSession(): void {
+  try {
+    localStorage.removeItem(SESSION_KEY);
+  } catch {
+    /* ignore */
+  }
+  notifySession();
+}
+
+/* ────────────────────────── notice board ────────────────────────── */
+
+export async function listNotices(): Promise<Notice[]> {
+  if (isDemo) {
+    seedDemo();
+    return rd<Notice[]>(K.notices, []).sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt));
+  }
+  const snap = await getDocs(collection(fdb(), "notices"));
+  return snap.docs
+    .map((d) => d.data() as Notice)
+    .sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt));
+}
+
+export async function saveNotice(n: Notice): Promise<void> {
+  const withStamp = { ...n, updatedAt: new Date().toISOString() };
+  if (isDemo) {
+    const arr = rd<Notice[]>(K.notices, []);
+    const i = arr.findIndex((x) => x.id === n.id);
+    if (i >= 0) arr[i] = withStamp;
+    else arr.unshift(withStamp);
+    wr(K.notices, arr);
+    return;
+  }
+  await setDoc(doc(fdb(), "notices", n.id), withStamp, { merge: true });
+}
+
+export async function deleteNotice(id: string): Promise<void> {
+  if (isDemo) {
+    wr(K.notices, rd<Notice[]>(K.notices, []).filter((n) => n.id !== id));
+    return;
+  }
+  await deleteDoc(doc(fdb(), "notices", id));
+}
+
+export function newNoticeId(): string {
+  return `NT-${Date.now().toString(36).toUpperCase().slice(-6)}`;
 }

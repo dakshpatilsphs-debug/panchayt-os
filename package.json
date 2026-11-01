@@ -9,11 +9,13 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "logo": "powershell -ExecutionPolicy Bypass -File scripts/generate-logo.ps1",
-    "smoke:excel": "node scripts/run-smoke.mjs"
+    "smoke:excel": "node scripts/run-smoke.mjs",
+    "smoke:statement": "esbuild src/lib/statement.ts --bundle --format=esm --platform=neutral --external:pdfjs-dist --external:exceljs --external:pdfjs-dist/build/pdf.worker.min.mjs?url --external:tesseract.js --outfile=node_modules/.tmp/statement-test.mjs --log-level=error && node scripts/statement-smoke.mjs"
   },
   "dependencies": {
     "exceljs": "^4.4.0",
     "firebase": "^10.14.1",
+    "pdfjs-dist": "^4.10.38",
     "qrcode": "^1.5.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

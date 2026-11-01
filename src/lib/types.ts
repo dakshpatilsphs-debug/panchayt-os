@@ -73,6 +73,20 @@ export interface Usage {
   lastChecked: string;
 }
 
+export type NoticeTone = "info" | "warn" | "event";
+
+/** A committee-posted bulletin on the society's notice board. */
+export interface Notice {
+  id: string;
+  title: string;
+  body: string;
+  tone: NoticeTone;
+  createdAt: string; // ISO
+  updatedAt?: string;
+  /** Surfaced at the top of the board and on the sign-in page. */
+  pinned?: boolean;
+}
+
 export const DEFAULT_SETTINGS: SocietySettings = {
   societyName: "Shanti Villa CHS Ltd.",
   address1: "Plot 14, Saraswati Lane, Karve Nagar",

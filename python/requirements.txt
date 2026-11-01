@@ -1,0 +1,12 @@
+# Society Khata bank-statement matcher
+#   pip install -r python/requirements.txt
+pdfplumber>=0.11
+openpyxl>=3.1
+
+# ── Bank slip OCR (resident screenshots in Mode B) — install ONE engine ──
+# The matcher auto-picks whichever is installed: PaddleOCR first, then Tesseract.
+# PaddleOCR (heavier models, best accuracy):
+#   pip install paddleocr
+# pytesseract (light; requires the Tesseract engine installed on the OS):
+#   pip install pytesseract pillow
+# Slip PDFs with a text layer need neither — pdfplumber reads them directly.

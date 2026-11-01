@@ -38,7 +38,7 @@ export default function Shell({ children }: { children: ReactNode }) {
           <IconAlert size={15} />
           <span>
             Firestore storage is at <b>{Math.round(pct)}%</b> of the configured soft limit.{" "}
-            <NavLink to="/admin">Admin → Archive</NavLink> to download the register &amp; purge old records.
+            <NavLink to="/admin">Committee → Archive</NavLink>
           </span>
         </div>
       )}
@@ -59,8 +59,8 @@ export default function Shell({ children }: { children: ReactNode }) {
             <NavLink to="/history" className={({ isActive }) => (isActive ? "on" : "")}>
               My payments
             </NavLink>
-            <NavLink to="/admin" className={({ isActive }) => (isActive ? "on" : "")}>
-              Admin
+            <NavLink to="/notices" className={({ isActive }) => (isActive ? "on" : "")}>
+              Notices
             </NavLink>
           </nav>
         </div>
@@ -82,6 +82,10 @@ export default function Shell({ children }: { children: ReactNode }) {
         <span>
           © {new Date().getFullYear()} {settings?.societyName ?? "Society Khata"} · built on UPI + Firestore · archives saved to your own machine
         </span>
+        {/* The committee desk lives one discreet link away — the page itself is PIN-gated. */}
+        <NavLink to="/admin" className="admin-door" title="Committee desk (PIN-protected)">
+          Committee · admin
+        </NavLink>
       </footer>
     </div>
   );

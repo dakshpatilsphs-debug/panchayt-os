@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { IconAlert, IconArchive, IconCog, IconDashboard, IconLock, IconShield, IconUsers } from "../components/Icons";
+import { IconAlert, IconArchive, IconBoard, IconCog, IconDashboard, IconLock, IconShield, IconUsers } from "../components/Icons";
 import { useToast } from "../components/Toast";
 import { isDemo } from "../lib/firebase";
 import { loadSettings, saveSettings } from "../lib/store";
@@ -7,16 +7,18 @@ import type { SocietySettings } from "../lib/types";
 import ArchiveTab from "./admin/ArchiveTab";
 import DashboardTab from "./admin/DashboardTab";
 import MembersTab from "./admin/MembersTab";
+import NoticesTab from "./admin/NoticesTab";
 import PaymentsTab from "./admin/PaymentsTab";
 import SettingsTab from "./admin/SettingsTab";
 import { AdminProvider } from "./admin/AdminCtx";
 
-type TabKey = "dashboard" | "payments" | "members" | "archive" | "settings";
+type TabKey = "dashboard" | "payments" | "members" | "notices" | "archive" | "settings";
 
 const TABS: Array<{ key: TabKey; label: string; icon: (p: { size?: number }) => JSX.Element }> = [
   { key: "dashboard", label: "Dashboard", icon: IconDashboard },
   { key: "payments", label: "Payments", icon: IconShield },
   { key: "members", label: "Flats & members", icon: IconUsers },
+  { key: "notices", label: "Notice board", icon: IconBoard },
   { key: "archive", label: "Archive & purge", icon: IconArchive },
   { key: "settings", label: "Settings", icon: IconCog },
 ];
@@ -74,6 +76,7 @@ export default function AdminPage() {
       {tab === "dashboard" && <DashboardTab />}
       {tab === "payments" && <PaymentsTab />}
       {tab === "members" && <MembersTab />}
+      {tab === "notices" && <NoticesTab />}
       {tab === "archive" && <ArchiveTab />}
       {tab === "settings" && <SettingsTab />}
     </AdminProvider>

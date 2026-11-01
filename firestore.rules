@@ -35,6 +35,12 @@ service cloud.firestore {
       allow delete: if true; // purge flow removes these after the archive
     }
 
+    // Society notice board — residents read; committee posts via the app's PIN.
+    match /notices/{noticeId} {
+      allow read: if true;
+      allow write: if true; // tighten to committee devices in production
+    }
+
     // Queue for the Firebase "Trigger Email" extension (no-reply alerts).
     // Allow only creation from the app; nothing but the extension should edit it.
     match /mail/{mailId} {

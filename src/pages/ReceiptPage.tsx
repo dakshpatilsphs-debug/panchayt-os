@@ -162,6 +162,18 @@ export default function ReceiptPage() {
           </section>
         )}
 
+        {!payment.screenshot && payment.screenshotMeta && (
+          <section className="r-shot">
+            <div className="r-shot-head">
+              <b>Payment screenshot reference</b>
+              <span className={`r-shotchip ${payment.screenshotMeta.verdict === "matched" ? "ok" : payment.screenshotMeta.verdict === "partial" ? "warn" : "meh"}`}>
+                screenshot reader: {payment.screenshotMeta.verdict}{payment.screenshotMeta.ocrUtr ? ` · UTR ${payment.screenshotMeta.ocrUtr}` : ""}{payment.screenshotMeta.ocrAmount != null ? ` · ${inr(payment.screenshotMeta.ocrAmount)}` : ""}
+              </span>
+            </div>
+            <p className="muted small">The screenshot was read in your browser and its <b>UTR / transaction id saved as text</b> — the image itself is not stored.</p>
+          </section>
+        )}
+
         <footer className="r-foot">
           <div>
             <p>

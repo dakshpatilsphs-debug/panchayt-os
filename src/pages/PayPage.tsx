@@ -1,35 +1,41 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import UpiQr from "../components/UpiQr";
-import { IconAlert, IconArrow, IconCamera, IconCheck, IconClose, IconImage, IconQr, IconSend } from "../components/Icons";
+import { IconAlert, IconCamera, IconCheck, IconClose, IconImage, IconQr, IconSend } from "../components/Icons";
 import { useToast } from "../components/Toast";
+import { useSession } from "../lib/session";
 import { checkStorageAlert } from "../lib/email";
 import { isDemo } from "../lib/firebase";
 import { readPaymentScreenshot } from "../lib/shot";
-import { createPayment, deletePayment, findPendingDraft, listMembers, loadSettings, updatePayment } from "../lib/store";
+import { createPayment, deletePayment, findPendingDraft, listMembers, loadSettings, setSessionId, updatePayment } from "../lib/store";
 import type { Member, Payment, ScreenshotMeta, SocietySettings } from "../lib/types";
 import {
   buildUpiUri,
   currentMonth,
   inr,
-  memberId,
   monthLabel,
   newPaymentId,
   utrLooksValid,
-  wingsInSettingsAndData,
 } from "../lib/util";
 
 type Stage = "form" | "modal" | "done";
 
+/**
+ * The payment flow — open, with no accounts and no PINs. The resident picks
+ * the wing + flat chips; the pick is remembered quietly for "My payments",
+ * and owner names are never displayed here (records still store them for the
+ * treasurer's register).
+ */
 export default function PayPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const sessionId = useSession();
 
   // ── state (everything lives above the early return — Rules of Hooks) ──
   const [settings, setSettings] = useState<SocietySettings | null>(null);
   const [members, setMembers] = useState<Member[] | null>(null);
-  const [wing, setWing] = useState<string | null>(null);
-  const [flat, setFlat] = useState<string | null>(null);
+  const [wing, setWing] = useState("");
+  const [flat, setFlat] = useState("");
   const [amount, setAmount] = useState("");
   const [month, setMonth] = useState(currentMonth());
   const [stage, setStage] = useState<Stage>("form");
@@ -54,6 +60,8 @@ export default function PayPage() {
    * React, which is exactly what a double-click needs.
    */
   const startLock = useRef(false);
+  /** Flat the amount was last pre-filled from — refill on every fresh pick. */
+  const prefilled = useRef("");
 
   useEffect(() => {
     paymentRef.current = payment;
@@ -81,15 +89,50 @@ export default function PayPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const wings = useMemo(() => (members ? wingsInSettingsAndData(settings?.wings ?? [], members) : []), [members, settings]);
-  const inWing = useMemo(
-    () => (members ?? []).filter((m) => m.active && m.wing === wing).sort((a, b) => a.flat.localeCompare(b.flat, "en", { numeric: true })),
+  // identity: a remembered flat first, then whatever the chips pick
+  const me = useMemo(() => {
+    const ms = members ?? [];
+    if (wing) return ms.find((m) => m.wing === wing && m.flat === flat) ?? null;
+    return ms.find((m) => m.id === sessionId) ?? null;
+  }, [members, wing, flat, sessionId]);
+  const wings = useMemo(
+    () => Array.from(new Set((members ?? []).filter((m) => m.active).map((m) => m.wing))).sort(),
+    [members]
+  );
+  const flats = useMemo(
+    () => (members ?? []).filter((m) => m.wing === wing && m.active).sort((a, b) => a.flat.localeCompare(b.flat, "en", { numeric: true })),
     [members, wing]
   );
-  const member = useMemo(() => inWing.find((m) => m.id === flat) ?? null, [inWing, flat]);
+
+  // a remembered flat fills the chips on first paint
+  useEffect(() => {
+    if (wing || !me) return;
+    setWing(me.wing);
+    setFlat(me.flat);
+  }, [me, wing]);
+
   const amountN = Math.round(Number(amount) * 100) / 100;
   const amountValid = Number.isFinite(amountN) && amountN > 0 && amountN <= 500000;
   const monthValid = month <= currentMonth();
+
+  // (re)fill the amount whenever a different flat is picked
+  useEffect(() => {
+    if (!me || prefilled.current === me.id) return;
+    prefilled.current = me.id;
+    setAmount(String(Math.max(me.dueBalance > 0 ? me.dueBalance : me.monthlyMaintenance, 0)));
+  }, [me]);
+
+  /** Chip pick — sets identity AND quietly remembers it for this browser. */
+  const pickFlat = (m: Member) => {
+    setWing(m.wing);
+    setFlat(m.flat);
+    setSessionId(m.id);
+  };
+
+  const clearPick = () => {
+    setWing("");
+    setFlat("");
+  };
 
   if (!members || !settings) {
     return (
@@ -102,8 +145,6 @@ export default function PayPage() {
   const reset = () => {
     setStage("form");
     setPayment(null);
-    setFlat(null);
-    setAmount("");
     setUtr("");
     setPayNote("");
     setShotUrl("");
@@ -111,21 +152,24 @@ export default function PayPage() {
     setOcrBusy(false);
     setOcrPct(0);
     setOcrHint("");
+    if (me) {
+      setAmount(String(Math.max(me.dueBalance > 0 ? me.dueBalance : me.monthlyMaintenance, 0)));
+    }
   };
 
   /* ── draft creation: double-click + duplicate guarded ── */
 
   const buildDraft = async (): Promise<Payment> => {
-    if (!member || !settings) throw new Error("Member context missing");
-    const due = Math.max(0, member.dueBalance || 0);
+    if (!me) throw new Error("Pick your flat first");
+    const due = Math.max(0, me.dueBalance || 0);
     const maintenancePart = Math.min(amountN, due);
     const donationPart = Math.max(0, Math.round((amountN - maintenancePart) * 100) / 100);
     const p: Payment = {
       id: newPaymentId(),
-      memberId: memberId(member.wing, member.flat),
-      wing: member.wing,
-      flat: member.flat,
-      ownerName: member.ownerName,
+      memberId: me.id,
+      wing: me.wing,
+      flat: me.flat,
+      ownerName: me.ownerName,
       month,
       amount: amountN,
       maintenancePart,
@@ -147,14 +191,14 @@ export default function PayPage() {
   };
 
   const startPayment = async () => {
-    if (!member || !amountValid || !monthValid) return;
+    if (!me || !amountValid || !monthValid) return;
     // Second tap on a slow network: hard-stop before any network call.
     if (startLock.current || busy) return;
     startLock.current = true;
     try {
       // One pending draft per flat per month — a double click, a refresh or a
       // second device all resume the SAME receipt instead of minting another.
-      const existing = await findPendingDraft(memberId(member.wing, member.flat), month);
+      const existing = await findPendingDraft(me.id, month);
       if (existing) {
         setPayment(existing);
         setStage("modal");
@@ -197,20 +241,26 @@ export default function PayPage() {
       // the resident may have cancelled the draft while OCR was running —
       // never resurrect a discarded receipt
       if (paymentRef.current?.id !== draft.id) return;
-      // evidence is attached to the receipt immediately — it survives even a
-      // flaky connection the moment this write lands
-      await updatePayment(draft.id, { screenshot: read.dataUrl, screenshotMeta: meta });
+      // save what the network read — UTR + details — NOT the photo itself.
+      // The evidence on the receipt is the extracted text, which is lighter
+      // (no ~600 KB base64 blob in Firestore) and feeds the bank-statement
+      // cross-check directly (a matching UTR is the decisive signal).
+      const patch: { screenshotMeta: ScreenshotMeta; utr?: string } = { screenshotMeta: meta };
+      if (read.utr && utrLooksValid(read.utr) && !draft.utr) patch.utr = read.utr;
+      await updatePayment(draft.id, patch);
       setShotUrl(read.dataUrl);
       setShotMeta(meta);
+      if (!read.utr) {
+        setOcrHint(read.verdict === "matched" ? "" : "No 12-digit UTR visible on this screenshot — enter it by hand below.");
+      }
       if (read.verdict === "matched") {
         if (!utr) setUtr(read.utr);
-        setOcrImg("");
-        toast("Screenshot matched — the UTR was filled in for you.", "ok");
-      } else if (read.verdict === "partial") {
+        toast("Screenshot read — the UTR and transaction id were saved on the receipt (image not stored).", "ok");
+      } else if (read.verdict === "partial" || read.utr) {
         if (read.utr && !utr) setUtr(read.utr);
-        setOcrImg("warn");
+        toast("Screenshot read — UTR saved as text instead of the photo; the treasurer will cross-check it against the bank statement.", "info");
       } else {
-        setOcrImg("meh");
+        toast("Screenshot read, but no UTR could be detected — enter the UTR by hand (the image itself is not stored).", "info");
       }
     } catch (e) {
       setOcrHint((e as Error).message || "Couldn't read the screenshot — you can still enter the UTR by hand.");
@@ -218,12 +268,6 @@ export default function PayPage() {
       setOcrBusy(false);
       setOcrPct(0);
     }
-  };
-
-  /** Small helper to keep the verdict-chip markup honest about the current draft. */
-  const setOcrImg = (tone: "warn" | "meh" | "") => {
-    if (tone === "warn") toast("Screenshot attached — but a few details didn't match the receipt, so the treasurer will check it.", "info");
-    if (tone === "meh") toast("Screenshot attached — couldn't read it automatically, enter the UTR by hand.", "info");
   };
 
   const removeShot = async () => {
@@ -251,8 +295,8 @@ export default function PayPage() {
       await updatePayment(payment.id, { utr: utr.trim(), note: payNote.trim() });
       setPayment({ ...payment, utr: utr.trim() });
       setStage("done");
-      toast(payment.screenshot ? "Submitted with your screenshot attached — the committee verifies within a day." : "Payment submitted — the committee verifies within a day.", "ok");
-    } catch (e) {
+      toast(payment.screenshotMeta ? "Submitted with your screenshot reference saved — the committee verifies within a day." : "Payment submitted — the committee verifies within a day.", "ok");
+    } catch {
       // Network broke mid-save: the reference stays in the box — press again.
       toast("Couldn't reach the server — your reference is kept, try once more.", "err");
     } finally {
@@ -272,12 +316,12 @@ export default function PayPage() {
     reset();
   };
 
-  const upiNote = `${settings.societyName} maintenance ${member ? member.flat : ""} ${month}`;
+  const upiNote = `${
+    settings.societyName
+  } maintenance ${payment?.wing ?? ""}-${payment?.flat ?? ""} ${month}`;
   const uri = payment
     ? buildUpiUri({ vpa: settings.upiId, payee: settings.payeeName || settings.societyName, amount: payment.amount, note: upiNote })
     : "";
-
-  const step = !wing ? 1 : !flat ? 2 : 3;
 
   return (
     <div>
@@ -285,20 +329,20 @@ export default function PayPage() {
         <p className="eyebrow">{settings.societyName} · Reg. {settings.regNo}</p>
         <h1>Pay your maintenance, in two quiet minutes.</h1>
         <p className="lede">
-          Pick your wing and flat, confirm the amount, and settle it straight from any UPI app.
+          Confirm the amount, scan the QR with any UPI app, and attach your payment screenshot.
           The society ledger and your receipt update together.
         </p>
       </section>
 
       <ol className="steps" aria-label="Steps">
         {[
-          ["Wing", 1],
-          ["Flat", 2],
+          [me ? `Flat ${me.wing}-${me.flat}` : "Your flat", 1],
+          ["Confirm", 2],
           ["Pay", 3],
         ].map(([label, n]) => (
-          <li key={label as string} className={step >= (n as number) ? "done" : ""}>
+          <li key={label as string} className={stepGate(n as number) ? "done" : ""}>
             <i>{n as number}</i>
-            {label}
+            {label as string}
           </li>
         ))}
       </ol>
@@ -306,147 +350,119 @@ export default function PayPage() {
       {stage === "form" && (
         <div className="paygrid">
           <div className="card pad">
-            {!wing && (
-              <>
-                <h2 className="card-title">Choose your wing</h2>
-                <div className="winglist">
-                  {wings.length === 0 && <p className="muted">The committee hasn't added flats yet (Admin → Members).</p>}
-                  {wings.map((w) => {
-                    const list = members.filter((m) => m.active && m.wing === w);
-                    const dues = list.filter((m) => m.dueBalance > 0).length;
-                    return (
-                      <button key={w} className="wingbtn" onClick={() => { setWing(w); setFlat(null); }}>
-                        <span className="wing-letter">{w}</span>
-                        <span className="wing-meta">
-                          <b>Wing {w}</b>
-                          <em>{list.length} flats</em>
-                        </span>
-                        {dues > 0 && <span className="wing-flag">{dues} with dues</span>}
-                        <IconArrow className="wing-go" size={16} />
-                      </button>
-                    );
-                  })}
-                </div>
-              </>
-            )}
+            <div className="card-head-line">
+              <h2 className="card-title">{me ? `Flat ${me.wing}-${me.flat}` : "Pick your flat"}</h2>
+              {me && (
+                <button className="btn btn-ghost btn-sm" onClick={clearPick}>
+                  Not yours? Change
+                </button>
+              )}
+            </div>
 
-            {wing && !flat && (
-              <>
-                <div className="card-head-line">
-                  <h2 className="card-title">Wing {wing} — which flat is yours?</h2>
-                  <button className="btn btn-ghost btn-sm" onClick={() => { setWing(null); setFlat(null); }}>
-                    Change wing
-                  </button>
-                </div>
-                <div className="flatgrid">
-                  {inWing.map((m) => (
-                    <button
-                      key={m.id}
-                      className={`flatcard ${m.dueBalance > 0 ? "hasdue" : ""}`}
-                      onClick={() => {
-                        setFlat(m.id);
-                        setAmount(String(Math.max(m.dueBalance > 0 ? m.dueBalance : m.monthlyMaintenance, 0)));
-                      }}
-                    >
-                      <span className="flat-no">{m.flat}</span>
-                      <span className="flat-owner">{m.ownerName}</span>
-                      <span className={`flat-due ${m.dueBalance > 0 ? "due" : "clear"}`}>
-                        {m.dueBalance > 0 ? `${inr(m.dueBalance)} due` : "dues clear"}
-                      </span>
-                    </button>
-                  ))}
-                  {inWing.length === 0 && <p className="muted">No flats registered in this wing yet.</p>}
-                </div>
-              </>
-            )}
-
-            {wing && flat && member && (
-              <>
-                <div className="card-head-line">
-                  <h2 className="card-title">
-                    Flat {member.wing}-{member.flat}
-                  </h2>
-                  <button className="btn btn-ghost btn-sm" onClick={() => setFlat(null)}>
-                    Change flat
-                  </button>
-                </div>
-                <div className="ownerstrip">
-                  <div>
-                    <span className="eyebrow">Member</span>
-                    <b>{member.ownerName}</b>
-                  </div>
-                  <div>
-                    <span className="eyebrow">Monthly maintenance</span>
-                    <b>{inr(member.monthlyMaintenance)}</b>
-                  </div>
-                  <div>
-                    <span className="eyebrow">Dues outstanding</span>
-                    <b className={member.dueBalance > 0 ? "dues-hot" : ""}>{inr(Math.max(0, member.dueBalance))}</b>
-                  </div>
-                </div>
-
-                <form
-                  className="payform"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    startPayment();
-                  }}
-                >
-                  <label>
-                    <span className="eyebrow">Amount to pay (₹)</span>
-                    <input
-                      className="input big"
-                      type="number"
-                      min="1"
-                      max="500000"
-                      step="0.01"
-                      inputMode="decimal"
-                      autoFocus
-                      value={amount}
-                      onChange={(e) => setAmount(e.target.value)}
-                      placeholder="e.g. 2800"
-                      required
-                    />
-                  </label>
+            {!me ? (
+              <div className="flatpick">
+                <div className="selrow">
+                  <span className="eyebrow">Wing</span>
                   <div className="chipsrow">
-                    <button
-                      type="button"
-                      className="chip"
-                      onClick={() => setAmount(String(Math.max(0, member.dueBalance)))}
-                    >
-                      Clear dues ({inr(Math.max(0, member.dueBalance))})
-                    </button>
-                    <button type="button" className="chip" onClick={() => setAmount(String(member.monthlyMaintenance))}>
-                      Just this month ({inr(member.monthlyMaintenance)})
-                    </button>
+                    {wings.map((w) => (
+                      <button key={w} className={`chip ${wing === w ? "chip-on" : ""}`} onClick={() => { setWing(w); setFlat(""); }}>
+                        Wing {w}
+                      </button>
+                    ))}
                   </div>
-                  <label>
-                    <span className="eyebrow">For which month?</span>
-                    <input
-                      className="input"
-                      type="month"
-                      value={month}
-                      max={currentMonth()}
-                      onChange={(e) => setMonth(e.target.value)}
-                      required
-                    />
-                  </label>
-                  <p className="hint">
-                    Anything you pay beyond the outstanding dues is recorded as a voluntary contribution and appears
-                    separately on the register. Amount settles toward dues first.
-                  </p>
-                  {!monthValid && (
-                    <p className="warnline">
-                      <IconAlert size={14} /> Payments can only be recorded up to the current month.
-                    </p>
-                  )}
-                  <button className="btn btn-primary btn-block" disabled={!amountValid || !monthValid || busy}>
-                    {busy ? "Opening…" : (<><IconQr size={17} /> Continue to UPI payment</>)}
-                  </button>
-                  <p className="fineprint">
-                    No gateway, no commission — payments go direct to the society's UPI ID, <b>{settings.upiId}</b>.
-                  </p>
-                </form>
+                </div>
+                {wing && (
+                  <div className="selrow">
+                    <span className="eyebrow">Flat number</span>
+                    <div className="chipsrow">
+                      {flats.map((m) => (
+                        <button key={m.id} className={`chip ${flat === m.flat ? "chip-on" : ""}`} onClick={() => pickFlat(m)}>
+                          {m.flat}
+                          {m.dueBalance > 0 && <em className="taken-dot" title={`Dues ${inr(m.dueBalance)}`} />}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <p className="hint">
+                  Choose your wing, then the flat number — no sign-in, no PIN. The dot marks flats with
+                  outstanding dues; the amount fills itself once you pick.
+                </p>
+              </div>
+            ) : (
+              <>
+            <div className="ownerstrip">
+               <div>
+                <span className="eyebrow">Flat</span>
+                <b>{me.wing}-{me.flat}</b>
+              </div>
+              <div>
+                <span className="eyebrow">Monthly maintenance</span>
+                <b>{inr(me.monthlyMaintenance)}</b>
+              </div>
+              <div>
+                <span className="eyebrow">Dues outstanding</span>
+                <b className={me.dueBalance > 0 ? "dues-hot" : ""}>{inr(Math.max(0, me.dueBalance))}</b>
+              </div>
+            </div>
+
+            <form
+              className="payform"
+              onSubmit={(e) => {
+                e.preventDefault();
+                startPayment();
+              }}
+            >
+              <label>
+                <span className="eyebrow">Amount to pay (₹)</span>
+                <input
+                  className="input big"
+                  type="number"
+                  min="1"
+                  max="500000"
+                  step="0.01"
+                  inputMode="decimal"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="e.g. 2800"
+                  required
+                />
+              </label>
+              <div className="chipsrow">
+                <button type="button" className="chip" onClick={() => setAmount(String(Math.max(0, me.dueBalance)))}>
+                  Clear dues ({inr(Math.max(0, me.dueBalance))})
+                </button>
+                <button type="button" className="chip" onClick={() => setAmount(String(me.monthlyMaintenance))}>
+                  Just this month ({inr(me.monthlyMaintenance)})
+                </button>
+              </div>
+              <label>
+                <span className="eyebrow">For which month?</span>
+                <input
+                  className="input"
+                  type="month"
+                  value={month}
+                  max={currentMonth()}
+                  onChange={(e) => setMonth(e.target.value)}
+                  required
+                />
+              </label>
+              <p className="hint">
+                Anything beyond the outstanding dues is recorded as a voluntary contribution and appears
+                separately on the register. Amount settles toward dues first.
+              </p>
+              {!monthValid && (
+                <p className="warnline">
+                  <IconAlert size={14} /> Payments can only be recorded up to the current month.
+                </p>
+              )}
+              <button className="btn btn-primary btn-block" disabled={!amountValid || !monthValid || busy}>
+                {busy ? "Opening…" : (<><IconQr size={17} /> Continue to UPI payment</>)}
+              </button>
+              <p className="fineprint">
+                No gateway, no commission — payments go direct to the society's UPI ID, <b>{settings.upiId}</b>.
+              </p>
+            </form>
               </>
             )}
           </div>
@@ -484,7 +500,7 @@ export default function PayPage() {
                 <p className="eyebrow">Scan &amp; pay</p>
                 <h3>{inr(payment.amount)}</h3>
                 <p className="muted small">
-                  {payment.wing}-{payment.flat} · {monthLabel(payment.month)}
+                  Flat {payment.wing}-{payment.flat} · {monthLabel(payment.month)}
                 </p>
               </div>
               <button className="iconbtn" onClick={cancelPayment} aria-label="Cancel payment">
@@ -608,7 +624,7 @@ export default function PayPage() {
       {stage === "done" && payment && (
         <div className="donecard card pad">
           <span className="donering"><IconCheck size={26} /></span>
-          <h2>Thank you, {payment.ownerName.split(" ")[0]}.</h2>
+          <h2>Thank you.</h2>
           <p className="lede">
             {payment.status === "verified" ? (
               <>
@@ -617,9 +633,9 @@ export default function PayPage() {
               </>
             ) : (
               <>
-                <b>{inr(payment.amount)}</b> recorded for {monthLabel(payment.month)} as receipt{" "}
-                <b>{payment.id}</b>. {payment.utr && <>Reference <b>{payment.utr}</b> · </>}status: awaiting
-                committee verification.{payment.screenshot && <> Your screenshot proof is attached.</>}
+                <b>{inr(payment.amount)}</b> recorded for flat {payment.wing}-{payment.flat} for {monthLabel(payment.month)}{" "}
+                as receipt <b>{payment.id}</b>. {payment.utr && <>Reference <b>{payment.utr}</b> · </>}status: awaiting
+                committee verification.{(payment.screenshot || payment.screenshotMeta) && <> Your screenshot's UTR and transaction id are saved as text proof.</>}
               </>
             )}
           </p>
@@ -630,13 +646,15 @@ export default function PayPage() {
             <Link className="btn btn-outline" to="/history">
               My payment history
             </Link>
-            <button className="btn btn-ghost" onClick={reset}>
-              Pay for another flat
-            </button>
           </div>
           <span className="done-ruling" />
         </div>
       )}
     </div>
   );
+
+  /** Steps strip is decorative: the flat is known as soon as chips pick it. */
+  function stepGate(n: number): boolean {
+    return n <= 2;
+  }
 }
