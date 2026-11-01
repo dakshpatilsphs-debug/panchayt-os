@@ -237,9 +237,9 @@ export default function PayPage() {
       const read = await readPaymentScreenshot(file, draft.amount, (pct) => setOcrPct(pct));
       const meta: ScreenshotMeta = {
         attachedAt: new Date().toISOString(),
-        ocrUtr: read.utr || undefined,
-        ocrAmount: read.amount ?? undefined,
         verdict: read.verdict,
+        ...(read.utr ? { ocrUtr: read.utr } : {}),
+        ...(read.amount != null && !Number.isNaN(read.amount) ? { ocrAmount: read.amount } : {}),
       };
       // the resident may have cancelled the draft while OCR was running —
       // never resurrect a discarded receipt

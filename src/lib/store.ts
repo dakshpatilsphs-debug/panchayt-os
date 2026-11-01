@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   deleteDoc,
+  deleteField,
   doc,
   getDoc,
   getDocs,
@@ -147,10 +148,22 @@ function seedDemo(): void {
   wr(K.notices, notices);
 }
 
-function stripUndefined(o: Record<string, unknown>): Record<string, unknown> {
-  const r = { ...o };
-  Object.keys(r).forEach((k) => r[k] === undefined && delete r[k]);
-  return r;
+/** Deeply removes undefined fields from an object or array to prevent Firestore crashes. */
+function stripUndefined<T>(val: T): T {
+  if (val === null || val === undefined) return val;
+  if (Array.isArray(val)) {
+    return val.map((x) => stripUndefined(x)) as unknown as T;
+  }
+  if (typeof val === "object" && (val as object).constructor === Object) {
+    const r: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(val as Record<string, unknown>)) {
+      if (v !== undefined) {
+        r[k] = stripUndefined(v);
+      }
+    }
+    return r as T;
+  }
+  return val;
 }
 
 /* ────────────────────────── settings ────────────────────────── */
@@ -274,10 +287,11 @@ export async function findPendingDraft(memberId: string, month: string): Promise
 }
 
 export async function createPayment(p: Payment): Promise<Payment> {
-  const bytes = byteLen(p);
+  const clean = stripUndefined(p);
+  const bytes = byteLen(clean);
   if (isDemo) {
     const arr = rd<Payment[]>(K.payments, []);
-    arr.unshift(p);
+    arr.unshift(clean);
     wr(K.payments, arr);
     wr(K.usage, {
       paymentsCount: arr.length,
@@ -285,15 +299,15 @@ export async function createPayment(p: Payment): Promise<Payment> {
       limitAlertSent: rd<Usage>(K.usage, { limitAlertSent: false } as Usage).limitAlertSent,
       lastChecked: new Date().toISOString(),
     });
-    return p;
+    return clean;
   }
-  await setDoc(doc(fdb(), "payments", p.id), p);
+  await setDoc(doc(fdb(), "payments", clean.id), clean);
   await setDoc(
     doc(fdb(), "config", "usage"),
     { paymentsCount: increment(1), estBytes: increment(bytes), lastChecked: new Date().toISOString() },
     { merge: true }
   );
-  return p;
+  return clean;
 }
 
 export async function updatePayment(id: string, patch: Partial<Payment>): Promise<void> {
@@ -301,10 +315,20 @@ export async function updatePayment(id: string, patch: Partial<Payment>): Promis
   if (isDemo) {
     const arr = rd<Payment[]>(K.payments, []);
     const i = arr.findIndex((p) => p.id === id);
-    if (i >= 0) arr[i] = { ...arr[i], ...clean, ...(clean.id ? { id } : {}) };
+    if (i >= 0) {
+      const updated = { ...arr[i] };
+      for (const [k, v] of Object.entries(patch)) {
+        if (v === undefined) {
+          delete (updated as Record<string, unknown>)[k];
+        } else {
+          (updated as Record<string, unknown>)[k] = stripUndefined(v);
+        }
+      }
+      arr[i] = updated as Payment;
+    }
     wr(K.payments, arr);
     // screenshots dance the byte tally — keep the estimate honest
-    if ("screenshot" in clean) {
+    if ("screenshot" in patch) {
       wr(K.usage, {
         paymentsCount: arr.length,
         estBytes: arr.reduce((a, x) => a + byteLen(x), 0),
@@ -315,12 +339,20 @@ export async function updatePayment(id: string, patch: Partial<Payment>): Promis
     return;
   }
   const ref = doc(fdb(), "payments", id);
-  try {
-    await updateDoc(ref, clean as UpdateData<DocumentData>);
-  } catch {
-    await setDoc(ref, clean, { merge: true });
+  const fsUpdate: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(patch)) {
+    if (v === undefined) {
+      fsUpdate[k] = deleteField();
+    } else {
+      fsUpdate[k] = stripUndefined(v);
+    }
   }
-  if ("screenshot" in clean) {
+  try {
+    await updateDoc(ref, fsUpdate as UpdateData<DocumentData>);
+  } catch {
+    await setDoc(ref, fsUpdate, { merge: true });
+  }
+  if ("screenshot" in patch) {
     const delta = (typeof clean.screenshot === "string" ? clean.screenshot.length : 0) - (await oldScreenshotLen(id));
     if (delta !== 0) {
       await setDoc(
