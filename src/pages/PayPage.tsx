@@ -1,48 +1,58 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import UpiQr from "../components/UpiQr";
 import { IconAlert, IconCamera, IconCheck, IconClose, IconImage, IconQr, IconSend } from "../components/Icons";
 import { useToast } from "../components/Toast";
-import { useSession } from "../lib/session";
 import { checkStorageAlert } from "../lib/email";
 import { isDemo } from "../lib/firebase";
 import { readPaymentScreenshot } from "../lib/shot";
-import { clearSession, createPayment, deletePayment, findPendingDraft, listContacts, listMembers, listNotices, loadSettings, setSessionId, updatePayment } from "../lib/store";
+import { createPayment, deletePayment, listContacts, listMembers, listNotices, loadSettings, updatePayment } from "../lib/store";
 import type { Contact, Member, Notice, Payment, ScreenshotMeta, SocietySettings } from "../lib/types";
 import {
   buildUpiUri,
-  currentMonth,
   floorLabel,
+  fmtDate,
   getFlatFloor,
   inr,
-  monthLabel,
   newPaymentId,
   utrLooksValid,
 } from "../lib/util";
 
 type Stage = "form" | "modal" | "done";
 
+const getTodayDateStr = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
+
 /**
- * The payment flow — open, with no accounts and no PINs. The resident picks
- * the wing + flat chips; the pick is remembered quietly for "My payments",
- * and owner names are never displayed here (records still store them for the
- * treasurer's register).
+ * Maintenance payment flow — open, direct selection of flat number,
+ * with default today's date and custom payment amount.
  */
 export default function PayPage() {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const sessionId = useSession();
+  const [searchParams] = useSearchParams();
 
-  // ── state (everything lives above the early return — Rules of Hooks) ──
+  // Clear any legacy session memory so users always pick their flat
+  useEffect(() => {
+    try {
+      localStorage.removeItem("sk.session");
+    } catch {}
+  }, []);
+
+  // ── state ──
   const [settings, setSettings] = useState<SocietySettings | null>(null);
   const [members, setMembers] = useState<Member[] | null>(null);
   const [notices, setNotices] = useState<Notice[] | null>(null);
   const [contacts, setContacts] = useState<Contact[] | null>(null);
   const [sideTab, setSideTab] = useState<"notices" | "directory" | "contacts">("notices");
-  const [wing, setWing] = useState("");
-  const [flat, setFlat] = useState("");
+
+  // Selection state — initialized from query params if clicked from Directory, else blank for user selection
+  const [wing, setWing] = useState(() => searchParams.get("wing") || "");
+  const [flat, setFlat] = useState(() => searchParams.get("flat") || "");
   const [amount, setAmount] = useState("");
-  const [month, setMonth] = useState(currentMonth());
+  const [paymentDate, setPaymentDate] = useState(getTodayDateStr);
   const [stage, setStage] = useState<Stage>("form");
   const [payment, setPayment] = useState<Payment | null>(null);
   const [utr, setUtr] = useState("");
@@ -59,14 +69,7 @@ export default function PayPage() {
 
   /** Latest payment snapshot for closures. */
   const paymentRef = useRef<Payment | null>(null);
-  /**
-   * Synchronous in-flight lock. React state (busy) updates on the *next*
-   * render, so two quick taps both slip past it — a ref doesn't wait for
-   * React, which is exactly what a double-click needs.
-   */
   const startLock = useRef(false);
-  /** Flat the amount was last pre-filled from — refill on every fresh pick. */
-  const prefilled = useRef("");
 
   useEffect(() => {
     paymentRef.current = payment;
@@ -96,20 +99,30 @@ export default function PayPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // identity: a remembered flat first, then whatever the chips pick
-  const me = useMemo(() => {
-    const ms = members ?? [];
-    if (wing) return ms.find((m) => m.wing === wing && m.flat === flat) ?? null;
-    return ms.find((m) => m.id === sessionId) ?? null;
-  }, [members, wing, flat, sessionId]);
   const wings = useMemo(
     () => Array.from(new Set((members ?? []).filter((m) => m.active).map((m) => m.wing))).sort(),
     [members]
   );
+
+  // Default to first wing when wings load if user hasn't selected a wing yet
+  useEffect(() => {
+    if (!wing && wings.length > 0) {
+      setWing(wings[0]);
+    }
+  }, [wings, wing]);
+
+  // Selected member identity — strictly from chosen wing and flat (no localStorage)
+  const me = useMemo(() => {
+    const ms = members ?? [];
+    if (wing && flat) return ms.find((m) => m.wing === wing && m.flat === flat) ?? null;
+    return null;
+  }, [members, wing, flat]);
+
   const flats = useMemo(
     () => (members ?? []).filter((m) => m.wing === wing && m.active).sort((a, b) => a.flat.localeCompare(b.flat, "en", { numeric: true })),
     [members, wing]
   );
+
   const floorFlats = useMemo(() => {
     const groups = new Map<number, Member[]>();
     for (const m of flats) {
@@ -120,36 +133,19 @@ export default function PayPage() {
     return Array.from(groups.entries()).sort(([a], [b]) => a - b);
   }, [flats]);
 
-  // a remembered flat fills the chips on first paint
-  useEffect(() => {
-    if (wing || !me) return;
-    setWing(me.wing);
-    setFlat(me.flat);
-  }, [me, wing]);
-
   const amountN = Math.round(Number(amount) * 100) / 100;
   const amountValid = Number.isFinite(amountN) && amountN > 0 && amountN <= 500000;
-  const monthValid = month <= currentMonth();
+  const dateValid = Boolean(paymentDate) && paymentDate <= getTodayDateStr();
 
-  // Pick remembers identity without forcing a definite payment amount
-  useEffect(() => {
-    if (!me || prefilled.current === me.id) return;
-    prefilled.current = me.id;
-  }, [me]);
-
-  /** Chip pick — sets identity AND quietly remembers it for this browser. */
+  /** Direct chip pick — sets flat without saving to localStorage. */
   const pickFlat = (m: Member) => {
     setWing(m.wing);
     setFlat(m.flat);
-    setSessionId(m.id);
   };
 
   const clearPick = () => {
-    clearSession();
-    setWing("");
     setFlat("");
     setAmount("");
-    prefilled.current = "";
   };
 
   if (!members || !settings) {
@@ -173,7 +169,7 @@ export default function PayPage() {
     setAmount("");
   };
 
-  /* ── draft creation: double-click + duplicate guarded ── */
+  /* ── draft creation: open custom amount and default date ── */
 
   const buildDraft = async (): Promise<Payment> => {
     if (!me) throw new Error("Pick your flat first");
@@ -185,48 +181,32 @@ export default function PayPage() {
       wing: me.wing,
       flat: me.flat,
       ownerName: me.ownerName,
-      month,
+      month: paymentDate.slice(0, 7),
       amount: amountN,
       maintenancePart,
       donationPart,
       method: "upi",
       utr: "",
       status: "pending",
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(`${paymentDate}T${new Date().toTimeString().slice(0, 8)}`).toISOString(),
       note: "",
     };
     const saved = await createPayment(p);
-    // storage watchdog — only acts when the 90% soft limit has been crossed
-    checkStorageAlert()
-      .then((r) => {
-        if (r.fired && r.mailto && isDemo) toast("Storage alert generated (demo mode) — see Admin → Archive.", "info");
-      })
-      .catch(() => undefined);
+    checkStorageAlert().catch(() => undefined);
     return saved as Payment;
   };
 
   const startPayment = async () => {
-    if (!me || !amountValid || !monthValid) return;
-    // Second tap on a slow network: hard-stop before any network call.
+    if (!me || !amountValid || !dateValid) return;
     if (startLock.current || busy) return;
     startLock.current = true;
     try {
-      // One pending draft per flat per month — a double click, a refresh or a
-      // second device all resume the SAME receipt instead of minting another.
-      const existing = await findPendingDraft(me.id, month);
-      if (existing) {
-        setPayment(existing);
-        setStage("modal");
-        toastOnce("resumed-" + existing.id, `Continuing your recent pending receipt ${existing.id} for ${monthLabel(existing.month)} — cancel it first if the amount changed.`, "info");
-        return;
-      }
       const saved = await buildDraft();
       setPayment(saved);
       setStage("modal");
     } catch (e) {
       setPayment(null);
       setStage("form");
-      // Slow network / Firestore hiccup — nothing was charged either way.
       toast((e as Error).message.includes("permission") ? (e as Error).message : "Network hiccup while opening the payment — try again, you cannot be double-charged.", "err");
     } finally {
       startLock.current = false;
@@ -331,9 +311,7 @@ export default function PayPage() {
     reset();
   };
 
-  const upiNote = `${
-    settings.societyName
-  } maintenance ${payment?.wing ?? ""}-${payment?.flat ?? ""} ${month}`;
+  const upiNote = `${settings.societyName} maint ${payment?.wing ?? ""}-${payment?.flat ?? ""} ${paymentDate}`;
   const uri = payment
     ? buildUpiUri({ vpa: settings.upiId, payee: settings.payeeName || settings.societyName, amount: payment.amount, note: upiNote })
     : "";
@@ -342,11 +320,7 @@ export default function PayPage() {
     <div>
       <section className="hero">
         <p className="eyebrow">{settings.societyName} · Reg. {settings.regNo}</p>
-        <h1>Pay your maintenance, in two quiet minutes.</h1>
-        <p className="lede">
-          Confirm the amount, scan the QR with any UPI app, and attach your payment screenshot.
-          The society ledger and your receipt update together.
-        </p>
+        <h1>Maintenance Payment</h1>
       </section>
 
       <ol className="steps" aria-label="Steps">
@@ -459,25 +433,25 @@ export default function PayPage() {
                 </span>
               </label>
               <label>
-                <span className="eyebrow">For which month?</span>
+                <span className="eyebrow">Payment Date</span>
                 <input
                   className="input"
-                  type="month"
-                  value={month}
-                  max={currentMonth()}
-                  onChange={(e) => setMonth(e.target.value)}
+                  type="date"
+                  value={paymentDate}
+                  max={getTodayDateStr()}
+                  onChange={(e) => setPaymentDate(e.target.value)}
                   required
                 />
               </label>
               <p className="hint">
                 Scan the society UPI QR code on the next step with any UPI app (GPay, PhonePe, Paytm, BHIM) and confirm.
               </p>
-              {!monthValid && (
+              {!dateValid && (
                 <p className="warnline">
-                  <IconAlert size={14} /> Payments can only be recorded up to the current month.
+                  <IconAlert size={14} /> Payments can only be recorded up to today's date.
                 </p>
               )}
-              <button className="btn btn-primary btn-block" disabled={!amountValid || !monthValid || busy}>
+              <button className="btn btn-primary btn-block" disabled={!amountValid || !dateValid || busy}>
                 {busy ? "Opening…" : (<><IconQr size={17} /> Continue to UPI payment</>)}
               </button>
               <p className="fineprint">
@@ -699,7 +673,7 @@ export default function PayPage() {
                 <p className="eyebrow">Scan &amp; pay</p>
                 <h3>{inr(payment.amount)}</h3>
                 <p className="muted small">
-                  Flat {payment.wing}-{payment.flat} · {monthLabel(payment.month)}
+                  Flat {payment.wing}-{payment.flat} · {fmtDate(payment.createdAt)}
                 </p>
               </div>
               <button className="iconbtn" onClick={cancelPayment} aria-label="Cancel payment">
@@ -827,12 +801,12 @@ export default function PayPage() {
           <p className="lede">
             {payment.status === "verified" ? (
               <>
-                <b>{inr(payment.amount)}</b> confirmed for {monthLabel(payment.month)} as receipt <b>{payment.id}</b> —
-                your dues have been reduced and the receipt is ready.
+                <b>{inr(payment.amount)}</b> confirmed on {fmtDate(payment.createdAt)} as receipt <b>{payment.id}</b> —
+                your maintenance payment has been verified and the receipt is ready.
               </>
             ) : (
               <>
-                <b>{inr(payment.amount)}</b> recorded for flat {payment.wing}-{payment.flat} for {monthLabel(payment.month)}{" "}
+                <b>{inr(payment.amount)}</b> recorded for flat {payment.wing}-{payment.flat} on {fmtDate(payment.createdAt)}{" "}
                 as receipt <b>{payment.id}</b>. {payment.utr && <>Reference <b>{payment.utr}</b> · </>}status: awaiting
                 committee verification.{(payment.screenshot || payment.screenshotMeta) && <> Your screenshot's UTR and transaction id are saved as text proof.</>}
               </>
@@ -842,8 +816,8 @@ export default function PayPage() {
             <button className="btn btn-primary" onClick={() => navigate(`/receipt/${payment.id}`)}>
               View receipt
             </button>
-            <Link className="btn btn-outline" to="/history">
-              My payment history
+            <Link className="btn btn-outline" to="/directory">
+              Society Directory
             </Link>
           </div>
           <span className="done-ruling" />

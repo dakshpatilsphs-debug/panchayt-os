@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { IconBuilding, IconLedger, IconPhone } from "../components/Icons";
 import { useToast } from "../components/Toast";
-import { listContacts, listMembers, loadSettings, setSessionId } from "../lib/store";
+import { listContacts, listMembers, loadSettings } from "../lib/store";
 import type { Contact, Member, SocietySettings } from "../lib/types";
 import { floorLabel, getFlatFloor } from "../lib/util";
 
@@ -85,10 +85,6 @@ export default function DirectoryPage() {
     () => (contacts ?? []).filter((c) => c.category !== "committee"),
     [contacts]
   );
-
-  const selectFlatForPayment = (m: Member) => {
-    setSessionId(m.id);
-  };
 
   if (!members || !settings || !contacts) {
     return (
@@ -220,8 +216,7 @@ export default function DirectoryPage() {
                           </div>
 
                           <Link
-                            to="/"
-                            onClick={() => selectFlatForPayment(m)}
+                            to={`/?wing=${encodeURIComponent(m.wing)}&flat=${encodeURIComponent(m.flat)}`}
                             className="btn btn-outline btn-sm"
                             style={{ width: "100%", justifyContent: "center", marginTop: "4px" }}
                           >
