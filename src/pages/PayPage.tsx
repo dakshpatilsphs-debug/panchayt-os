@@ -697,13 +697,59 @@ export default function PayPage() {
                 Copy
               </button>
             </div>
-            <a
-              className="btn btn-outline btn-block"
-              href={uri}
-              onClick={() => toast("Opening your UPI app…", "info")}
-            >
-              <IconSend size={16} /> Open UPI app instead
-            </a>
+
+            {/* UPI app launcher buttons — GPay, PhonePe, Any UPI */}
+            <p className="eyebrow" style={{ marginTop: "6px", fontSize: "11px", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--muted)" }}>
+              Open with your UPI app
+            </p>
+            <div className="upi-apps">
+              <a
+                className="upi-app-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const link = document.createElement("a");
+                  link.href = `upi://pay?${new URLSearchParams({ pa: settings.upiId, pn: settings.payeeName || settings.societyName, am: String(payment.amount), cu: "INR", tn: upiNote }).toString()}`;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  toast("Opening GPay…", "info");
+                }}
+              >
+                <div className="upi-app-icon">💳</div>
+                <span>GPay</span>
+              </a>
+              <a
+                className="upi-app-btn"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const link = document.createElement("a");
+                  link.href = `upi://pay?${new URLSearchParams({ pa: settings.upiId, pn: settings.payeeName || settings.societyName, am: String(payment.amount), cu: "INR", tn: upiNote }).toString()}`;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  toast("Opening PhonePe…", "info");
+                }}
+              >
+                <div className="upi-app-icon">📱</div>
+                <span>PhonePe</span>
+              </a>
+              <a
+                className="upi-app-btn"
+                href={uri}
+                onClick={(e) => {
+                  e.preventDefault();
+                  const link = document.createElement("a");
+                  link.href = uri;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                  toast("Opening your UPI app…", "info");
+                }}
+              >
+                <div className="upi-app-icon">🏧</div>
+                <span>Any UPI</span>
+              </a>
+            </div>
             <div className="modal-divider">after paying</div>
 
             {/* proof of a really-done payment — read right here in the browser */}

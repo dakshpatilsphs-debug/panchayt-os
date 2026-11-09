@@ -1,51 +1,66 @@
 rules_version = '2';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Basic rules for Society Khata. The app ships with these while you trial it —
-// the admin desk is protected by the app's PIN, not by Firebase Auth.
-//
-// For public deployment, harden it with Firebase App Check or sign the committee
-// in anonymously and tighten the admin rules — see README.md (§ Locking it down).
-// ─────────────────────────────────────────────────────────────────────────────
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Society settings + live usage counters — singleton docs in `config`.
+    // RisePay — Firestore security rules
+    // Collections: config, members, payments, notices, mail
+    // Residents (no auth): read members/payments/notices, create own payment drafts
+    // Committee (auth + admin token): full write access
+
+    // Helper: authenticated committee member
+    function isCommittee() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    // config — society settings + usage counters (singleton docs)
     match /config/{docId} {
       allow read: if true;
-      allow write: if true; // tighten to committee devices in production
+      allow write: if isCommittee();
     }
 
-    // One doc per flat: owner, monthly maintenance, running dues.
+    // members — one doc per flat (owner, monthly maintenance, running dues)
     match /members/{memberId} {
       allow read: if true;
-      allow write: if true; // tighten to committee devices in production
+      allow create: if isCommittee();
+      allow update: if isCommittee();
+      allow delete: if isCommittee();
     }
 
-    // Payment receipts. Every full-cycle document is `SK-YYYYMM-XXXX`.
+    // payments — receipts. ID: SK-YYYYMM-XXXX
+    // Residents create their own drafts; committee updates status.
     match /payments/{paymentId} {
       allow read: if true;
-      allow create: if request.resource.data.keys().hasAll(
-        ['id', 'memberId', 'wing', 'flat', 'ownerName', 'month', 'amount', 'status']
-      ) && request.resource.data.amount is number
-      && request.resource.data.amount > 0
-      && request.resource.data.amount <= 500000;
-      allow update: if true; // e.g. status → verified/rejected
-      allow delete: if true; // purge flow removes these after the archive
+
+      allow create: if request.auth == null
+        && request.resource.data.keys().hasAll(
+          ['id', 'memberId', 'wing', 'flat', 'ownerName', 'month', 'amount', 'status', 'method']
+        )
+        && request.resource.data.amount is number
+        && request.resource.data.amount > 0
+        && request.resource.data.amount <= 500000
+        && request.resource.data.status == 'pending'
+        && request.resource.data.method == 'upi'
+        && request.resource.data.memberId != null
+        && request.resource.data.wing != null
+        && request.resource.data.flat != null;
+
+      allow update: if isCommittee();
+      allow delete: if isCommittee();
     }
 
-    // Society notice board — residents read; committee posts via the app's PIN.
+    // notices — society notice board
     match /notices/{noticeId} {
       allow read: if true;
-      allow write: if true; // tighten to committee devices in production
+      allow create: if isCommittee();
+      allow update: if isCommittee();
+      allow delete: if isCommittee();
     }
 
-    // Queue for the Firebase "Trigger Email" extension (no-reply alerts).
-    // Allow only creation from the app; nothing but the extension should edit it.
+    // mail — Firebase "Trigger Email" extension queue
     match /mail/{mailId} {
       allow create: if request.resource.data.keys().hasAll(['to', 'message']);
-      allow read: if true;
+      allow read: if isCommittee();
       allow update, delete: if false;
     }
   }

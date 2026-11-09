@@ -48,7 +48,7 @@ export default function Shell({ children }: { children: ReactNode }) {
           <NavLink to="/" className="brand">
             <Logo size={40} />
             <span className="brand-text">
-              <strong>{settings?.societyName ?? "Society Khata"}</strong>
+              <strong>{settings?.societyName ?? "RisePay"}</strong>
               <em>Maintenance payment ledger</em>
             </span>
           </NavLink>
@@ -80,7 +80,7 @@ export default function Shell({ children }: { children: ReactNode }) {
       <footer className="footer shell">
         <Logo size={22} />
         <span>
-          © {new Date().getFullYear()} {settings?.societyName ?? "Society Khata"} · built on UPI + Firestore · archives saved to your own machine
+          © {new Date().getFullYear()} {settings?.societyName ?? "RisePay"} · built on UPI + Firestore · archives saved to your own machine
         </span>
         {/* The committee desk lives one discreet link away — the page itself is PIN-gated. */}
         <NavLink to="/admin" className="admin-door" title="Committee desk (PIN-protected)">
