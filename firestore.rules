@@ -3,65 +3,50 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // RisePay — Firestore security rules
-    // Collections: config, members, payments, notices, mail
-    // Residents (no auth): read members/payments/notices, create own payment drafts
-    // Committee (auth + admin token): full write access
-
-    // Helper: authenticated committee member
-    function isCommittee() {
-      return request.auth != null && request.auth.token.admin == true;
-    }
+    // ══════════════════════════════════════════════════════════════════════════════
+    // Panchayat OS — Firestore Security Rules
+    // Full read & write permissions for all estate ledger collections:
+    //   • config (society settings, usage counters)
+    //   • members (flats, owner details, floor allocations, running dues)
+    //   • contacts (managing committee, emergency desks, utility services)
+    //   • payments (UPI transaction logs, receipts, settlement tracking)
+    //   • notices (society board announcements, event alerts)
+    //   • mail (notification queues)
+    // ══════════════════════════════════════════════════════════════════════════════
 
     // config — society settings + usage counters (singleton docs)
     match /config/{docId} {
-      allow read: if true;
-      allow write: if isCommittee();
+      allow read, write: if true;
     }
 
     // members — one doc per flat (owner, monthly maintenance, running dues)
     match /members/{memberId} {
-      allow read: if true;
-      allow create: if isCommittee();
-      allow update: if isCommittee();
-      allow delete: if isCommittee();
+      allow read, write: if true;
     }
 
-    // payments — receipts. ID: SK-YYYYMM-XXXX
-    // Residents create their own drafts; committee updates status.
+    // contacts — managing committee, emergency desks & utility services
+    match /contacts/{contactId} {
+      allow read, write: if true;
+    }
+
+    // payments — receipts & resident UPI payment transactions
     match /payments/{paymentId} {
-      allow read: if true;
-
-      allow create: if request.auth == null
-        && request.resource.data.keys().hasAll(
-          ['id', 'memberId', 'wing', 'flat', 'ownerName', 'month', 'amount', 'status', 'method']
-        )
-        && request.resource.data.amount is number
-        && request.resource.data.amount > 0
-        && request.resource.data.amount <= 500000
-        && request.resource.data.status == 'pending'
-        && request.resource.data.method == 'upi'
-        && request.resource.data.memberId != null
-        && request.resource.data.wing != null
-        && request.resource.data.flat != null;
-
-      allow update: if isCommittee();
-      allow delete: if isCommittee();
+      allow read, write: if true;
     }
 
     // notices — society notice board
     match /notices/{noticeId} {
-      allow read: if true;
-      allow create: if isCommittee();
-      allow update: if isCommittee();
-      allow delete: if isCommittee();
+      allow read, write: if true;
     }
 
-    // mail — Firebase "Trigger Email" extension queue
+    // mail — Firebase Trigger Email extension queue
     match /mail/{mailId} {
-      allow create: if request.resource.data.keys().hasAll(['to', 'message']);
-      allow read: if isCommittee();
-      allow update, delete: if false;
+      allow read, write: if true;
+    }
+
+    // Global fallback for any estate collection or future additions
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }

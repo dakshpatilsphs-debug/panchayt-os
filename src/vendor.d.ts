@@ -2,3 +2,6 @@
 declare module "exceljs/dist/exceljs.min.js" {
   export * from "exceljs";
 }
+
+// Global Three.js from CDN script
+declare const THREE: any;

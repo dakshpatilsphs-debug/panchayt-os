@@ -64,7 +64,7 @@ exports.usageWatch = functions.pubsub
 exports.onMailCreate = functions.firestore
   .document("mail/{id}")
   .onCreate(async (snap) => {
-    const appName = process.env.MAIL_FROM_NAME || "Society Khata";
+    const appName = process.env.MAIL_FROM_NAME || "Panchayat OS";
     const fromEmail = process.env.MAIL_FROM || process.env.SMTP_USER;
     if (!fromEmail || !process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.warn("SMTP not configured — mail doc left in queue: ", snap.id);
@@ -80,7 +80,7 @@ exports.onMailCreate = functions.firestore
     await transporter.sendMail({
       from: `${appName} (no-reply) <${fromEmail}>`,
       to: data.to,
-      subject: (data.message && data.message.subject) || "Society Khata",
+      subject: (data.message && data.message.subject) || "Panchayat OS",
       text: data.message && data.message.text,
       html: data.message && data.message.html,
     });

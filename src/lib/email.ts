@@ -34,7 +34,7 @@ export async function dispatchLimitEmail(
     `Estimated collection size : ${bytesHuman(usage.estBytes)} of ${settings.usageLimitMB} MB`,
     "",
     "What to do now:",
-    "1. Open the Society Khata app → Admin → Archive.",
+    `1. Open the ${settings.societyName} app → Admin → Archive.`,
     "2. Download the Excel register and the JSON backup (they save to this computer).",
     "3. Confirm the archive, then run 'Purge Firestore' — old payment records are removed and "
     + " Firestore keeps working on the free tier.",
@@ -59,7 +59,7 @@ export async function dispatchLimitEmail(
     "<li>Download the <b>Excel register</b> and the <b>JSON backup</b> to this computer.</li>",
     "<li>Confirm the archive, then run <b>Purge Firestore</b>.</li>",
     "</ol>",
-    '<p style="color:#71806F;font-size:12px">Society Khata · automated no-reply alert</p>',
+    `<p style="color:#71806F;font-size:12px">${settings.societyName} · automated no-reply alert</p>`,
     "</div>",
   ].join("\n");
 

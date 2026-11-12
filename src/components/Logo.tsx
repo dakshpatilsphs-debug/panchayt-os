@@ -1,59 +1,330 @@
 import type { CSSProperties } from "react";
 
-export default function Logo({ size = 44, style }: { size?: number; style?: CSSProperties }) {
-  const s = size / 44;
+export default function Logo({ size = 40, style }: { size?: number; style?: CSSProperties }) {
   return (
     <svg
+      xmlns="http://www.w3.org/2000/svg"
+      xmlnsXlink="http://www.w3.org/1999/xlink"
       width={size}
       height={size}
-      viewBox="0 0 44 44"
-      role="img"
-      aria-label="RisePay"
-      style={{ ...style }}
+      viewBox="0 0 512 512"
+      className="shrink-0 block select-none"
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        minWidth: `${size}px`,
+        minHeight: `${size}px`,
+        maxWidth: `${size}px`,
+        maxHeight: `${size}px`,
+        aspectRatio: "1/1",
+        display: "block",
+        ...style,
+      }}
     >
       <defs>
-        <linearGradient id="rpGold" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f6e05e" />
-          <stop offset="50%" stopColor="#d4a017" />
-          <stop offset="100%" stopColor="#8a5a00" />
-        </linearGradient>
-        <linearGradient id="rpDark" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#121212" />
-          <stop offset="100%" stopColor="#050505" />
-        </linearGradient>
-        <filter id="rpGlow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000" flood-opacity="0.45" />
-        </filter>
-        <filter id="rpInnerGlow" x="-10%" y="-10%" width="120%" height="120%">
-          <feMorphology operator="dilate" radius="1" in="SourceAlpha" result="spread" />
-          <feGaussianBlur stdDeviation="1.5" result="blur" />
-          <feFlood flood-color="#f6e05e" flood-opacity="0.35" result="color" />
-          <feComposite in="color" in2="blur" operator="in" result="coloredBlur" />
-          <feMerge>
-            <feMergeNode in="coloredBlur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
+        <clipPath id="canvas-clip">
+          <rect width="512" height="512" rx="112" ry="112" />
+        </clipPath>
       </defs>
-
-      {/* Dark rounded-square app icon background */}
-      <rect x="1" y="1" width="42" height="42" rx="13" fill="url(#rpDark)" filter="url(#rpGlow)" />
-      <rect x="1.5" y="1.5" width="41" height="41" rx="12.5" fill="none" stroke="url(#rpGold)" strokeWidth="1.4" opacity="0.95" />
-
-      {/* Bold gold "R" mark — modern app icon */}
-      <path
-        d="M13.5 11h6.2c2.4 0 4.2 1.9 4.2 4.2v10.2c0 2.3-1.8 4.2-4.2 4.2h-4v10h-2.4V20.4h4c-2.4 0-4.2-1.9-4.2-4.2v-4.2c0-2.3 1.8-4.2 4.2-4.2"
-        fill="none"
-        stroke="url(#rpGold)"
-        strokeWidth="2.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        filter="url(#rpInnerGlow)"
-      />
-      <path d="M23.9 19.2v10" fill="none" stroke="url(#rpGold)" strokeWidth="2.8" strokeLinecap="round" />
-
-      {/* Gold accent dot */}
-      <circle cx="30.5" cy="11.5" r="2.4" fill="url(#rpGold)" />
+      <rect width="512" height="512" rx="112" ry="112" fill="#000000" clipPath="url(#canvas-clip)" />
+      <g clipPath="url(#canvas-clip)">
+        <g transform="rotate(0, 256, 256)">
+          <g transform="translate(111 103) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(110 106) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(109 108) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(107 110) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(104 111) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(101 111) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(98 109) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(96 107) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(95 104) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(95 102) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(96 99) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(98 97) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(101 95) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(104 95) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(107 96) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(109 98) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(110 100) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(108 103) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(107 105) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(106 107) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(103 108) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(101 107) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(99 105) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(98 103) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(99 100) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(100 99) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(103 98) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(106 99) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(107 100) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(106 103) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(106 104) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(105 106) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(103 106) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(102 106) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(100 104) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(100 103) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(100 101) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(101 100) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(103 100) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(105 100) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(106 101) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#111111" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+          <g transform="translate(103 103) scale(12.791666666666666 12.791666666666666) translate(0 0)">
+            <g fill="none" stroke="#EAB308" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
+              <path d="M10 12h4m-4-4h4m0 13v-3a2 2 0 0 0-4 0v3" />
+              <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" />
+              <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" />
+            </g>
+          </g>
+        </g>
+      </g>
     </svg>
   );
 }

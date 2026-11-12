@@ -365,7 +365,7 @@ export function backupJson(
   usage: Usage | null
 ): void {
   const payload = {
-    format: "society-khata/full-backup",
+    format: "panchayat-os/full-backup",
     version: 1 as const,
     exportedAt: new Date().toISOString(),
     society: settings,

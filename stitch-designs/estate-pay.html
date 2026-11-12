@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "background": "#f9f9f8", "surface-container-lowest": "#ffffff", "warning": "#c0392b", "surface": "#ffffff", "on-tertiary-fixed": "#261900", "secondary-fixed": "#e5e2e1", "surface-container-highest": "#e2e2e2", "tertiary-fixed-dim": "#f6be47", "on-secondary-container": "#636262", "primary": "#7a5500", "on-surface-variant": "#4f4536", "line-strong": "#d6d3cb", "gold-deep": "#8a5f0f", "on-error-container": "#93000a", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#474746", "inverse-surface": "#2f3130", "on-tertiary": "#ffffff", "surface-container-high": "#e8e8e7", "secondary-container": "#e2dfde", "on-primary-container": "#fffbff", "secondary": "#5f5e5e", "tertiary-container": "#976d00", "on-secondary-fixed": "#1c1b1b", "tertiary": "#785600", "line": "#e7e5e0", "on-tertiary-fixed-variant": "#5d4200", "bg-soft": "#f4f4f2", "surface-dim": "#dadad9", "surface-container": "#eeeeed", "surface-bright": "#f9f9f8", "on-error": "#ffffff", "on-background": "#1a1c1c", "outline": "#817564", "error-container": "#ffdad6", "primary-container": "#996c00", "surface-tint": "#7d5800", "muted": "#86827d", "outline-variant": "#d3c4b0", "on-primary-fixed-variant": "#5f4100", "inverse-primary": "#f6bd54", "gold-soft": "#fbf3dc", "gold-soft-deep": "#f2e6b8", "primary-fixed-dim": "#f6bd54", "primary-fixed": "#ffdea9", "on-primary": "#ffffff", "surface-container-low": "#f3f4f3", "tertiary-fixed": "#ffdea4", "on-tertiary-container": "#fffbff", "secondary-fixed-dim": "#c8c6c5", "surface-soft": "#faf9f7", "inverse-on-surface": "#f1f1f0", "on-primary-fixed": "#271900", "on-surface": "#1a1c1c", "error": "#ba1a1a", "ink-soft": "#57534e", "surface-variant": "#e2e2e2", "success": "#1d7a3d" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-mobile": "1rem", "margin-mobile": "1rem", "space-md": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "gutter": "1.5rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "margin": "2.5rem" }, "fontFamily": { "title-lg": [ "Inter" ], "body-sm": [ "Inter" ], "headline-lg-mobile": [ "Playfair Display" ], "body-md": [ "Inter" ], "body-lg": [ "Inter" ], "label-sm": [ "Inter" ], "code-md": [ "JetBrains Mono" ], "headline-lg": [ "Playfair Display" ], "display": [ "Playfair Display" ], "title-md": [ "Inter" ], "headline-md": [ "Playfair Display" ], "label-md": [ "Inter" ], "display-mobile": [ "Playfair Display" ], "headline-sm": [ "Playfair Display" ] }, "fontSize": { "title-lg": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-lg-mobile": [ "26px", { "lineHeight": "34px", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "label-sm": [ "11px", { "lineHeight": "16px", "letterSpacing": "0.14em", "fontWeight": "600" } ], "code-md": [ "13px", { "lineHeight": "20px", "fontWeight": "400" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "fontWeight": "600" } ], "display": [ "48px", { "lineHeight": "56px", "fontWeight": "600" } ], "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "fontWeight": "600" } ], "label-md": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.04em", "fontWeight": "500" } ], "display-mobile": [ "34px", { "lineHeight": "42px", "fontWeight": "600" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ] } } } };</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[1280px] mx-auto px-gutter flex items-center justify-between gap-gutter"><div class="flex items-center gap-gutter"><div class="flex items-center gap-space-sm"><img alt="Panchayat OS Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/ALJJyrCnbqPvIEq-vPdL0kHOD4ZBVbADnMboLEtATHJ5DtTbNwezaufOx8-tXexzDIMb-HCSstoiGtTTXZKk9EVzd1xFvd1R1bobEYkp2VgBj0M10MP-K6Gk7JhMxE_ZUrByQrbgaGReui24qRL8hpXO--Z6oael1J-LdRM9-v2Vo4gOjeFqq9H5fI_qKQSeWJ-jJOfmqKP1by8Ia-8OdTdFRKf3ZPqPViZMJFghJWpCDQ0E"/><div class="flex flex-col"><span class="font-title-md text-title-md text-on-surface tracking-tight leading-none">Panchayat OS</span><span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold mt-1">Estate Ledger</span></div></div><div class="hidden xl:flex flex-col justify-center px-space-md py-1 bg-gold-soft rounded-lg"><span class="font-title-md text-[13px] leading-tight font-semibold text-primary">Royal Palms Co-Operative Housing Society</span><span class="font-code-md text-[11px] leading-tight text-ink-soft">Reg. MH/MUM/2019/847</span></div></div><nav class="hidden lg:flex items-center gap-1" data-active-classes="bg-gold-soft text-primary font-semibold rounded-lg"><a aria-current="page" class="px-space-md py-2 transition-all bg-gold-soft text-primary font-semibold rounded-lg" data-path="estate-pay" href="#">3D Estate &amp; Pay</a><a class="px-space-md py-2 font-label-md text-label-md text-on-surface-variant hover:bg-gold-soft hover:text-primary transition-all rounded-lg" data-path="notices" href="#">Notices</a><a class="px-space-md py-2 font-label-md text-label-md text-on-surface-variant hover:bg-gold-soft hover:text-primary transition-all rounded-lg" data-path="directory" href="#">Directory</a><a class="px-space-md py-2 font-label-md text-label-md text-on-surface-variant hover:bg-gold-soft hover:text-primary transition-all rounded-lg" data-path="receipt" href="#">Receipt</a><a class="px-space-md py-2 font-label-md text-label-md text-on-surface-variant hover:bg-gold-soft hover:text-primary transition-all rounded-lg" data-path="admin-desk" href="#">Admin Desk</a></nav><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-error-container text-on-error-container"><span class="material-symbols-outlined text-[16px] text-error">emergency</span><span class="font-label-sm text-label-sm text-error">LIFT SOS: 1800-425-001</span></div><div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low"><span class="h-2 w-2 rounded-full bg-success animate-pulse"></span><span class="font-label-sm text-label-sm text-ink-soft">Sec Desk: Active</span></div><div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-soft hover:bg-gold-soft transition-colors cursor-pointer"><span class="font-label-md text-label-md font-semibold text-on-surface">Flat 1402-B</span><span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-background"><div class="flex flex-col w-full">
+<!-- Top Section: Society Ledger Header & Steps Indicator -->
+<section class="w-full max-w-[1280px] mx-auto px-gutter py-space-md sm:py-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-md pb-space-md">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full bg-gold-soft text-primary font-label-sm text-label-sm uppercase tracking-wider">Estate Ledger • Live Fiscal Cycle</span>
+<span class="font-code-md text-ink-soft text-body-sm">Reg. MH/MUM/2019/847</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight mt-1">Estate Maintenance &amp; Interactive Society Model</h1>
+<p class="font-body-md text-body-md text-ink-soft">Real-time occupancy synchronization, architectural spatial view, and zero-fee UPI treasury clearance.</p>
+</div>
+<!-- 3-Step Flow Pipeline -->
+<div class="flex items-center gap-2 sm:gap-3 bg-surface p-2 sm:p-2.5 rounded-xl shadow-sm">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gold-soft text-primary">
+<span class="w-5 h-5 rounded-full bg-primary text-on-primary font-code-md text-[11px] flex items-center justify-center font-bold">1</span>
+<span class="font-label-md text-label-md font-semibold whitespace-nowrap">Select Flat</span>
+</div>
+<span class="material-symbols-outlined text-outline text-[16px]">chevron_right</span>
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low text-ink-soft">
+<span class="w-5 h-5 rounded-full bg-surface-variant text-ink-soft font-code-md text-[11px] flex items-center justify-center font-bold">2</span>
+<span class="font-label-md text-label-md font-medium whitespace-nowrap hidden sm:inline">Review Dues</span>
+</div>
+<span class="material-symbols-outlined text-outline text-[16px]">chevron_right</span>
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low text-ink-soft">
+<span class="w-5 h-5 rounded-full bg-surface-variant text-ink-soft font-code-md text-[11px] flex items-center justify-center font-bold">3</span>
+<span class="font-label-md text-label-md font-medium whitespace-nowrap hidden sm:inline">Instant UPI</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive 3D Society Model Section -->
+<section class="w-full max-w-[1280px] mx-auto px-gutter mb-space-lg">
+<div class="relative w-full rounded-2xl overflow-hidden bg-inverse-surface shadow-xl text-surface transition-all">
+<!-- Top HUD Toolbar (pointer-events-none container with pointer-events-auto buttons to allow 3D canvas interaction) -->
+<div class="absolute top-0 left-0 w-full z-20 px-4 py-3 sm:px-6 sm:py-4 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-b from-inverse-surface/90 via-inverse-surface/60 to-transparent backdrop-blur-md pointer-events-none">
+<div class="flex items-center gap-3 pointer-events-auto">
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></div>
+<div>
+<span class="font-headline-sm text-headline-sm text-surface tracking-wide uppercase font-semibold">Royal Palms Enclave</span>
+<span class="font-code-md text-[11px] text-primary-fixed-dim block sm:inline sm:ml-2">Live Architectural Twin • 3 Towers Active</span>
+</div>
+</div>
+<!-- 3D Controls -->
+<div class="flex items-center gap-2 pointer-events-auto">
+<!-- Lighting Mode Toggle -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface/10 hover:bg-surface/20 text-surface text-label-md font-label-md transition-all pointer-events-auto" id="btn-lighting-toggle" type="button">
+<span class="material-symbols-outlined text-[18px]" id="light-icon">bedtime</span>
+<span class="hidden sm:inline" id="light-text">Dusk Mode</span>
+</button>
+<!-- Heatmap Filter Toggle -->
+<div class="hidden md:flex items-center bg-surface/10 rounded-lg p-1 text-label-sm font-label-sm pointer-events-auto">
+<button class="px-2.5 py-1 rounded bg-primary text-on-primary" id="filter-all" type="button">All Units</button>
+<button class="px-2.5 py-1 text-surface hover:text-primary-fixed-dim" id="filter-dues" type="button">Dues Heatmap</button>
+</div>
+<!-- Reset Camera View -->
+<button class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-label-md font-label-md transition-all shadow-sm pointer-events-auto" id="btn-reset-cam" type="button">
+<span class="material-symbols-outlined text-[16px]">view_in_ar</span>
+<span class="hidden sm:inline">Reset Orbit</span>
+</button>
+</div>
+</div>
+<!-- Three.js Architectural Twin Scene Container -->
+<div class="relative w-full h-[520px]">
+<!-- STITCH_THREEJS_START:ANIMATION_13 class="w-full h-[520px] rounded-2xl block relative z-0" -->
+<div class="w-full h-[520px] rounded-2xl block relative z-0" style="display:block;">
+<script src="https://ajax.googleapis.com/ajax/libs/threejs/r125/three.min.js"></script>
+<div id="threejs-container-ANIMATION_13" style="width:100%;height:100%"></div>
+<script>
+(function() {
+  const container = document.getElementById('threejs-container-ANIMATION_13');
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  // Three.js Interactive Architectural 3D Society Simulation for Royal Palms Enclave
+// Supports responsive viewport, raycasting, interactive flat selection, and perimeter car animation
+
+const width = container.clientWidth || window.innerWidth;
+const height = container.clientHeight || 550;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0e1318);
+scene.fog = new THREE.FogExp2(0x0e1318, 0.012);
+
+const camera = new THREE.PerspectiveCamera(45, width / height, 0.5, 1000);
+camera.position.set(48, 38, 54);
+camera.lookAt(0, 10, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
+renderer.setSize(width, height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.25;
+
+container.style.position = 'relative';
+container.appendChild(renderer.domElement);
+
+// Lighting Setup: Evening golden-hour & architectural accents
+const ambientLight = new THREE.AmbientLight(0xd9e4f0, 0.85);
+scene.add(ambientLight);
+
+const sunLight = new THREE.DirectionalLight(0xffecd2, 1.8);
+sunLight.position.set(60, 90, 40);
+sunLight.castShadow = true;
+sunLight.shadow.mapSize.width = 2048;
+sunLight.shadow.mapSize.height = 2048;
+sunLight.shadow.camera.near = 10;
+sunLight.shadow.camera.far = 220;
+sunLight.shadow.camera.left = -50;
+sunLight.shadow.camera.right = 50;
+sunLight.shadow.camera.top = 50;
+sunLight.shadow.camera.bottom = -50;
+sunLight.shadow.bias = -0.0005;
+scene.add(sunLight);
+
+const goldFill = new THREE.DirectionalLight(0xb4831d, 0.6);
+goldFill.position.set(-40, 25, -30);
+scene.add(goldFill);
+
+// Ground & Society Landscape
+const groundGeo = new THREE.PlaneGeometry(160, 160);
+const groundMat = new THREE.MeshStandardMaterial({
+  color: 0x161c22,
+  roughness: 0.9,
+  metalness: 0.1
+});
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Central Courtyard / Podium Greenery
+const lawnGeo = new THREE.BoxGeometry(46, 0.6, 38);
+const lawnMat = new THREE.MeshStandardMaterial({ color: 0x1d3324, roughness: 0.8 });
+const lawn = new THREE.Mesh(lawnGeo, lawnMat);
+lawn.position.set(0, 0.3, 0);
+lawn.receiveShadow = true;
+scene.add(lawn);
+
+// Swimming Pool
+const poolGeo = new THREE.BoxGeometry(16, 0.3, 8);
+const poolMat = new THREE.MeshStandardMaterial({
+  color: 0x0ea5e9,
+  roughness: 0.15,
+  metalness: 0.4
+});
+const pool = new THREE.Mesh(poolGeo, poolMat);
+pool.position.set(0, 0.65, 8);
+scene.add(pool);
+
+// Clubhouse Pavilion
+const clubGeo = new THREE.BoxGeometry(18, 4, 12);
+const clubMat = new THREE.MeshStandardMaterial({ color: 0xf4f1ea, roughness: 0.3 });
+const club = new THREE.Mesh(clubGeo, clubMat);
+club.position.set(0, 2, -6);
+club.castShadow = true;
+club.receiveShadow = true;
+scene.add(club);
+
+// Society Entrance Gate & Sign
+const gateArchGeo = new THREE.BoxGeometry(22, 5.5, 2.5);
+const gateArchMat = new THREE.MeshStandardMaterial({ color: 0x22262a, roughness: 0.4 });
+const gateArch = new THREE.Mesh(gateArchGeo, gateArchMat);
+gateArch.position.set(0, 2.75, 42);
+gateArch.castShadow = true;
+scene.add(gateArch);
+
+// Trees in Courtyard & Boundaries
+const treeTrunkGeo = new THREE.CylinderGeometry(0.3, 0.4, 2, 8);
+const treeTrunkMat = new THREE.MeshStandardMaterial({ color: 0x4a3525 });
+const treeLeavesGeo = new THREE.SphereGeometry(1.6, 8, 8);
+const treeLeavesMat = new THREE.MeshStandardMaterial({ color: 0x22543d, roughness: 0.7 });
+
+const treeCoords = [
+  [-16, 6], [-16, 14], [-12, 16], [16, 6], [16, 14], [12, 16],
+  [-22, 28], [22, 28], [-22, 38], [22, 38], [-35, 0], [35, 0],
+  [-35, -20], [35, -20], [0, -22]
+];
+treeCoords.forEach(([tx, tz]) => {
+  const trunk = new THREE.Mesh(treeTrunkGeo, treeTrunkMat);
+  trunk.position.set(tx, 1, tz);
+  trunk.castShadow = true;
+  const foliage = new THREE.Mesh(treeLeavesGeo, treeLeavesMat);
+  foliage.position.set(tx, 2.8, tz);
+  foliage.castShadow = true;
+  scene.add(trunk);
+  scene.add(foliage);
+});
+
+// Tower Configuration (Wings A, B, C)
+const towers = [
+  { name: 'Wing A', x: -20, z: -8, floors: 10, color: 0xf9f9f8, roofColor: 0xb4831d },
+  { name: 'Wing B', x: 20, z: -8, floors: 12, color: 0xf7f5f0, roofColor: 0x926715 },
+  { name: 'Wing C', x: 0, z: -26, floors: 14, color: 0xfbfbfb, roofColor: 0xb4831d }
+];
+
+const interactiveWindows = [];
+const windowMatClear = new THREE.MeshStandardMaterial({
+  color: 0x10b981,
+  emissive: 0x059669,
+  emissiveIntensity: 0.65,
+  roughness: 0.2
+});
+const windowMatDue = new THREE.MeshStandardMaterial({
+  color: 0xf43f5e,
+  emissive: 0xe11d48,
+  emissiveIntensity: 0.85,
+  roughness: 0.2
+});
+const windowMatSelected = new THREE.MeshStandardMaterial({
+  color: 0xfbbf24,
+  emissive: 0xd97706,
+  emissiveIntensity: 1.2,
+  roughness: 0.1
+});
+const windowMatLit = new THREE.MeshStandardMaterial({
+  color: 0xffedd5,
+  emissive: 0xfbbf24,
+  emissiveIntensity: 0.45,
+  roughness: 0.3
+});
+
+towers.forEach((tw) => {
+  const towerHeight = tw.floors * 3.4;
+  const towerBodyGeo = new THREE.BoxGeometry(14, towerHeight, 14);
+  const towerMat = new THREE.MeshStandardMaterial({
+    color: tw.color,
+    roughness: 0.4,
+    metalness: 0.05
+  });
+  const towerMesh = new THREE.Mesh(towerBodyGeo, towerMat);
+  towerMesh.position.set(tw.x, towerHeight / 2, tw.z);
+  towerMesh.castShadow = true;
+  towerMesh.receiveShadow = true;
+  scene.add(towerMesh);
+
+  // Decorative Penthouse / Water Tank Roof
+  const roofGeo = new THREE.BoxGeometry(10, 3, 10);
+  const roofMat = new THREE.MeshStandardMaterial({ color: tw.roofColor, roughness: 0.3, metalness: 0.2 });
+  const roofMesh = new THREE.Mesh(roofGeo, roofMat);
+  roofMesh.position.set(tw.x, towerHeight + 1.5, tw.z);
+  roofMesh.castShadow = true;
+  scene.add(roofMesh);
+
+  // Architectural vertical gold fins
+  const finGeo = new THREE.BoxGeometry(0.3, towerHeight, 1.2);
+  const finMat = new THREE.MeshStandardMaterial({ color: 0xb4831d, metalness: 0.5, roughness: 0.2 });
+  [-6.8, 6.8].forEach(fx => {
+    const fin = new THREE.Mesh(finGeo, finMat);
+    fin.position.set(tw.x + fx, towerHeight / 2, tw.z);
+    scene.add(fin);
+  });
+
+  // Windows per floor with interactive raycastable meshes
+  for (let f = 1; f <= tw.floors; f++) {
+    const yPos = (f * 3.4) - 1.2;
+    const isDue = (tw.name === 'Wing A' && (f === 1 || f === 4 || f === 6)) ||
+                  (tw.name === 'Wing B' && (f === 2 || f === 5)) ||
+                  (tw.name === 'Wing C' && f === 3);
+    const isSelected = (tw.name === 'Wing A' && f === 4);
+
+    // Front facing balconies and windows
+    const winGeo = new THREE.BoxGeometry(2.4, 1.8, 0.4);
+    [-4, 4].forEach((wx, idx) => {
+      let activeMat = isSelected ? windowMatSelected : (isDue ? windowMatDue : (Math.random() > 0.3 ? windowMatLit : windowMatClear));
+      const winMesh = new THREE.Mesh(winGeo, activeMat);
+      winMesh.position.set(tw.x + wx, yPos, tw.z + 7.1);
+      winMesh.castShadow = false;
+
+      // Meta for flat identification
+      const flatNum = `${tw.name[5]}-${f}0${idx + 1}`;
+      winMesh.userData = {
+        flat: flatNum,
+        wing: tw.name,
+        floor: f,
+        isDue: isDue,
+        isSelected: isSelected
+      };
+      interactiveWindows.push(winMesh);
+      scene.add(winMesh);
+
+      // Balcony Railing
+      const balcGeo = new THREE.BoxGeometry(3.2, 0.8, 1.0);
+      const balcMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4 });
+      const balc = new THREE.Mesh(balcGeo, balcMat);
+      balc.position.set(tw.x + wx, yPos - 0.7, tw.z + 7.6);
+      balc.castShadow = true;
+      scene.add(balc);
+    });
+  }
+});
+
+// Realistic Perimeter Roads & Moving Vehicles
+const roadMat = new THREE.MeshStandardMaterial({ color: 0x181c20, roughness: 0.7 });
+
+// Outer Loop Roadways
+const roadGeoNS = new THREE.BoxGeometry(7, 0.08, 96);
+const roadWest = new THREE.Mesh(roadGeoNS, roadMat);
+roadWest.position.set(-36, 0.04, 8);
+scene.add(roadWest);
+
+const roadEast = new THREE.Mesh(roadGeoNS, roadMat);
+roadEast.position.set(36, 0.04, 8);
+scene.add(roadEast);
+
+const roadGeoEW = new THREE.BoxGeometry(79, 0.08, 7);
+const roadSouth = new THREE.Mesh(roadGeoEW, roadMat);
+roadSouth.position.set(0, 0.04, 46);
+scene.add(roadSouth);
+
+const roadNorth = new THREE.Mesh(roadGeoEW, roadMat);
+roadNorth.position.set(0, 0.04, -38);
+scene.add(roadNorth);
+
+// Animated Vehicle Fleet
+const vehicleColors = [0xef4444, 0x3b82f6, 0xffffff, 0xb4831d, 0x10b981];
+const vehicles = [];
+
+function createCar(colorHex) {
+  const carGroup = new THREE.Group();
+  // Chassis
+  const bodyGeo = new THREE.BoxGeometry(2.4, 0.9, 1.3);
+  const bodyMat = new THREE.MeshStandardMaterial({ color: colorHex, metalness: 0.4, roughness: 0.2 });
+  const body = new THREE.Mesh(bodyGeo, bodyMat);
+  body.position.y = 0.6;
+  body.castShadow = true;
+  carGroup.add(body);
+
+  // Cabin
+  const cabinGeo = new THREE.BoxGeometry(1.4, 0.65, 1.15);
+  const cabinMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.1 });
+  const cabin = new THREE.Mesh(cabinGeo, cabinMat);
+  cabin.position.set(-0.2, 1.2, 0);
+  carGroup.add(cabin);
+
+  // Headlights
+  const lightGeo = new THREE.BoxGeometry(0.1, 0.2, 0.3);
+  const headMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const headL = new THREE.Mesh(lightGeo, headMat);
+  headL.position.set(1.22, 0.6, 0.35);
+  const headR = new THREE.Mesh(lightGeo, headMat);
+  headR.position.set(1.22, 0.6, -0.35);
+  carGroup.add(headL);
+  carGroup.add(headR);
+
+  // Tail lights
+  const tailMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+  const tailL = new THREE.Mesh(lightGeo, tailMat);
+  tailL.position.set(-1.22, 0.6, 0.35);
+  const tailR = new THREE.Mesh(lightGeo, tailMat);
+  tailR.position.set(-1.22, 0.6, -0.35);
+  carGroup.add(tailL);
+  carGroup.add(tailR);
+
+  return carGroup;
+}
+
+// Perimeter Waypoints for Car Circulation
+const carLoopWaypoints = [
+  { x: -36, z: 46 },
+  { x: 36, z: 46 },
+  { x: 36, z: -38 },
+  { x: -36, z: -38 }
+];
+
+// Initialize 5 distinct circulating cars
+for (let i = 0; i < 5; i++) {
+  const car = createCar(vehicleColors[i % vehicleColors.length]);
+  scene.add(car);
+  vehicles.push({
+    mesh: car,
+    progress: (i / 5),
+    speed: 0.00075 + (i * 0.00015)
+  });
+}
+
+function updateVehicles() {
+  const totalLength = 72 + 84 + 72 + 84; // Perimeter loop length
+  vehicles.forEach(v => {
+    v.progress = (v.progress + v.speed) % 1.0;
+    const currentDist = v.progress * totalLength;
+
+    if (currentDist < 72) {
+      // Moving South: -36 to +36 along z=46
+      const t = currentDist / 72;
+      v.mesh.position.set(-36 + (72 * t), 0, 46);
+      v.mesh.rotation.y = 0;
+    } else if (currentDist < 156) {
+      // Moving North along East road: z=46 to z=-38
+      const t = (currentDist - 72) / 84;
+      v.mesh.position.set(36, 0, 46 - (84 * t));
+      v.mesh.rotation.y = Math.PI / 2;
+    } else if (currentDist < 228) {
+      // Moving West along North road: x=36 to x=-36 at z=-38
+      const t = (currentDist - 156) / 72;
+      v.mesh.position.set(36 - (72 * t), 0, -38);
+      v.mesh.rotation.y = Math.PI;
+    } else {
+      // Moving South along West road: z=-38 to z=46
+      const t = (currentDist - 228) / 84;
+      v.mesh.position.set(-36, 0, -38 + (84 * t));
+      v.mesh.rotation.y = -Math.PI / 2;
+    }
+  });
+}
+
+// Raycasting for Flat Selection
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+container.addEventListener('click', (event) => {
+  const rect = renderer.domElement.getBoundingClientRect();
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(interactiveWindows);
+
+  if (intersects.length > 0) {
+    const target = intersects[0].object;
+    if (target.userData && target.userData.flat) {
+      // Reset all windows
+      interactiveWindows.forEach(w => {
+        w.material = w.userData.isDue ? windowMatDue : windowMatClear;
+      });
+      // Highlight clicked
+      target.material = windowMatSelected;
+
+      // Dispatch custom window event to sync with UI
+      const selectEvent = new CustomEvent('flat-3d-selected', {
+        detail: {
+          flat: target.userData.flat,
+          wing: target.userData.wing,
+          floor: target.userData.floor
+        }
+      });
+      window.dispatchEvent(selectEvent);
+    }
+  }
+});
+
+// Interactive Orbit / Drag rotation
+let isDragging = false;
+let previousMousePosition = { x: 0, y: 0 };
+let targetRotationY = 0;
+let currentRotationY = 0;
+
+container.addEventListener('mousedown', (e) => {
+  isDragging = true;
+  previousMousePosition = { x: e.clientX, y: e.clientY };
+});
+
+window.addEventListener('mouseup', () => {
+  isDragging = false;
+});
+
+window.addEventListener('mousemove', (e) => {
+  if (isDragging) {
+    const deltaX = e.clientX - previousMousePosition.x;
+    targetRotationY += deltaX * 0.006;
+    previousMousePosition = { x: e.clientX, y: e.clientY };
+  }
+});
+
+// Window Resize Handling
+window.addEventListener('resize', () => {
+  const w = container.clientWidth || window.innerWidth;
+  const h = container.clientHeight || 550;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+});
+
+// Main Animation Loop
+function animate() {
+  requestAnimationFrame(animate);
+
+  // Smooth rotation dampening
+  currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+  scene.rotation.y = currentRotationY;
+
+  // Orbit camera slight gentle sway when idle
+  if (!isDragging) {
+    targetRotationY += 0.0006;
+  }
+
+  updateVehicles();
+  renderer.render(scene, camera);
+}
+
+animate();
+
+})();
+</script>
+</div>
+<!-- STITCH_THREEJS_END:ANIMATION_13 -->
+<!-- Floating Architectural Hover/Target Card -->
+<div class="absolute pointer-events-none hidden z-30 transform -translate-x-1/2 -translate-y-full mb-3 px-3 py-2 rounded-xl bg-surface/95 text-on-surface shadow-2xl backdrop-blur-md transition-all" id="canvas-unit-tooltip">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-warning" id="tooltip-status-dot"></span>
+<span class="font-title-md text-title-md font-semibold text-primary" id="tooltip-unit">A-402</span>
+<span class="font-code-md text-body-sm font-bold text-warning tabular-nums" id="tooltip-due">₹6,200 Pending</span>
+</div>
+<p class="font-body-sm text-ink-soft text-[11px] mt-0.5" id="tooltip-owner">Priya Deshmukh • 1,420 sq.ft</p>
+</div>
+<!-- 3D Legend & Mini Floor Slider -->
+<div class="absolute bottom-4 left-4 right-4 z-20 flex flex-col sm:flex-row items-center justify-between gap-3 bg-inverse-surface/80 backdrop-blur-md p-3 rounded-xl pointer-events-none">
+<div class="flex flex-wrap items-center gap-3 text-label-sm font-label-sm text-surface pointer-events-auto">
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-success"></span>
+<span>Account Clear (184)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-warning"></span>
+<span>Maintenance Due (28)</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary-fixed-dim ring-2 ring-primary"></span>
+<span>Selected Unit</span>
+</div>
+<div class="hidden lg:flex items-center gap-1.5 text-primary-fixed-dim ml-2 font-code-md text-[11px]">
+<span class="material-symbols-outlined text-[14px]">directions_car</span>
+<span>Live Perimeter Traffic • 3 Access Gates</span>
+</div>
+</div>
+<!-- Floor Level Slider (Interactive 3D camera height) -->
+<div class="flex items-center gap-2 w-full sm:w-auto justify-end pointer-events-auto">
+<span class="font-label-sm text-label-sm text-surface/80 whitespace-nowrap">Elevation:</span>
+<input class="w-28 accent-primary h-1.5 rounded-lg bg-surface/20 cursor-pointer" id="floor-slider" max="15" min="1" type="range" value="4"/>
+<span class="font-code-md text-[12px] text-tertiary-fixed font-bold min-w-[50px] text-right" id="floor-indicator">Fl. 4</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Asymmetric Workspace (8:4 Desktop Ratio) -->
+<section class="w-full max-w-[1280px] mx-auto px-gutter pb-space-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Primary Operational Pane: 8 Columns -->
+<div class="lg:col-span-8 flex flex-col gap-space-md">
+<!-- Unit Selection Matrix & Wing Tabs -->
+<div class="bg-surface rounded-2xl p-space-md sm:p-space-lg shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">Step 1 of 3</span>
+<h2 class="font-title-lg text-title-lg text-on-surface">Select Residential Unit</h2>
+</div>
+<!-- Wing Selection Pills -->
+<div class="flex items-center gap-1.5 p-1 bg-surface-container-low rounded-full">
+<button class="wing-tab-btn active px-4 py-1.5 rounded-full font-label-md text-label-md transition-all bg-primary text-on-primary font-semibold shadow-sm" data-wing="A" type="button">Wing A (Gulmohar)</button>
+<button class="wing-tab-btn px-4 py-1.5 rounded-full font-label-md text-label-md transition-all text-on-surface-variant hover:text-on-surface" data-wing="B" type="button">Wing B (Amaltas)</button>
+<button class="wing-tab-btn px-4 py-1.5 rounded-full font-label-md text-label-md transition-all text-on-surface-variant hover:text-on-surface" data-wing="C" type="button">Wing C (Jacaranda)</button>
+</div>
+</div>
+<!-- Unit Cards Grid for Floor Selection -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 pt-2" id="units-grid">
+<!-- Dynamically populated or statically curated units for Wing A -->
+<button class="unit-card text-left p-3 rounded-xl bg-surface-container-low hover:bg-gold-soft/50 transition-all flex flex-col justify-between h-24" data-area="1280" data-arrears="0" data-due="4500" data-maint="3200" data-owner="Arvind Sharma" data-sink="800" data-unit="A-101" data-water="500" data-wing="Wing A" type="button">
+<div class="flex items-center justify-between">
+<span class="font-code-md text-title-md font-bold text-on-surface">A-101</span>
+<span class="w-2.5 h-2.5 rounded-full bg-warning"></span>
+</div>
+<div>
+<span class="font-body-sm text-[12px] text-ink-soft block truncate">Arvind Sharma</span>
+<span class="font-code-md text-[13px] text-warning font-semibold">₹4,500 due</span>
+</div>
+</button>
+<button class="unit-card text-left p-3 rounded-xl bg-surface-container-low hover:bg-gold-soft/50 transition-all flex flex-col justify-between h-24" data-area="1150" data-arrears="0" data-due="0" data-maint="2875" data-owner="Rajesh Nair" data-sink="700" data-unit="A-102" data-water="500" data-wing="Wing A" type="button">
+<div class="flex items-center justify-between">
+<span class="font-code-md text-title-md font-bold text-on-surface">A-102</span>
+<span class="w-2.5 h-2.5 rounded-full bg-success"></span>
+</div>
+<div>
+<span class="font-body-sm text-[12px] text-ink-soft block truncate">Rajesh Nair</span>
+<span class="font-code-md text-[12px] text-success font-medium">Settled (₹0)</span>
+</div>
+</button>
+<button class="unit-card text-left p-3 rounded-xl bg-surface-container-low hover:bg-gold-soft/50 transition-all flex flex-col justify-between h-24" data-area="1420" data-arrears="0" data-due="0" data-maint="3550" data-owner="Vikram Mehta" data-sink="900" data-unit="A-201" data-water="500" data-wing="Wing A" type="button">
+<div class="flex items-center justify-between">
+<span class="font-code-md text-title-md font-bold text-on-surface">A-201</span>
+<span class="w-2.5 h-2.5 rounded-full bg-success"></span>
+</div>
+<div>
+<span class="font-body-sm text-[12px] text-ink-soft block truncate">Vikram Mehta</span>
+<span class="font-code-md text-[12px] text-success font-medium">Settled (₹0)</span>
+</div>
+</button>
+<button class="unit-card text-left p-3 rounded-xl bg-surface-container-low hover:bg-gold-soft/50 transition-all flex flex-col justify-between h-24" data-area="1420" data-arrears="0" data-due="3550" data-maint="3550" data-owner="Sunita Kulkarni" data-sink="900" data-unit="A-301" data-water="500" data-wing="Wing A" type="button">
+<div class="flex items-center justify-between">
+<span class="font-code-md text-title-md font-bold text-on-surface">A-301</span>
+<span class="w-2.5 h-2.5 rounded-full bg-warning"></span>
+</div>
+<div>
+<span class="font-body-sm text-[12px] text-ink-soft block truncate">Sunita Kulkarni</span>
+<span class="font-code-md text-[13px] text-warning font-semibold">₹3,550 due</span>
+</div>
+</button>
+<button class="unit-card active text-left p-3 rounded-xl bg-gold-soft transition-all flex flex-col justify-between h-24 ring-2 ring-primary" data-area="1420" data-arrears="1250" data-due="6200" data-maint="3550" data-owner="Priya Deshmukh" data-sink="900" data-unit="A-402" data-water="500" data-wing="Wing A" type="button">
+<div class="flex items-center justify-between">
+<span class="font-code-md text-title-md font-bold text-primary">A-402</span>
+<span class="w-2.5 h-2.5 rounded-full bg-warning"></span>
+</div>
+<div>
+<span class="font-body-sm text-[12px] text-primary font-semibold block truncate">Priya Deshmukh</span>
+<span class="font-code-md text-[13px] text-warning font-bold">₹6,200 due</span>
+</div>
+</button>
+<button class="unit-card text-left p-3 rounded-xl bg-surface-container-low hover:bg-gold-soft/50 transition-all flex flex-col justify-between h-24" data-area="1280" data-arrears="0" data-due="0" data-maint="3200" data-owner="Ananya Roy" data-sink="800" data-unit="A-501" data-water="500" data-wing="Wing A" type="button">
+<div class="flex items-center justify-between">
+<span class="font-code-md text-title-md font-bold text-on-surface">A-501</span>
+<span class="w-2.5 h-2.5 rounded-full bg-success"></span>
+</div>
+<div>
+<span class="font-body-sm text-[12px] text-ink-soft block truncate">Ananya Roy</span>
+<span class="font-code-md text-[12px] text-success font-medium">Settled (₹0)</span>
+</div>
+</button>
+<button class="unit-card text-left p-3 rounded-xl bg-surface-container-low hover:bg-gold-soft/50 transition-all flex flex-col justify-between h-24" data-area="1350" data-arrears="0" data-due="4800" data-maint="3375" data-owner="Deepak Chopra" data-sink="925" data-unit="A-602" data-water="500" data-wing="Wing A" type="button">
+<div class="flex items-center justify-between">
+<span class="font-code-md text-title-md font-bold text-on-surface">A-602</span>
+<span class="w-2.5 h-2.5 rounded-full bg-warning"></span>
+</div>
+<div>
+<span class="font-body-sm text-[12px] text-ink-soft block truncate">Deepak Chopra</span>
+<span class="font-code-md text-[13px] text-warning font-semibold">₹4,800 due</span>
+</div>
+</button>
+<button class="unit-card text-left p-3 rounded-xl bg-surface-container-low hover:bg-gold-soft/50 transition-all flex flex-col justify-between h-24" data-area="1600" data-arrears="0" data-due="0" data-maint="4000" data-owner="M. S. Swaminathan" data-sink="1000" data-unit="A-701" data-water="500" data-wing="Wing A" type="button">
+<div class="flex items-center justify-between">
+<span class="font-code-md text-title-md font-bold text-on-surface">A-701</span>
+<span class="w-2.5 h-2.5 rounded-full bg-success"></span>
+</div>
+<div>
+<span class="font-body-sm text-[12px] text-ink-soft block truncate">M. Swaminathan</span>
+<span class="font-code-md text-[12px] text-success font-medium">Settled (₹0)</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Ledger Breakdown & Assessment Module -->
+<div class="bg-surface rounded-2xl p-space-md sm:p-space-lg shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">Step 2 of 3</span>
+<h2 class="font-title-lg text-title-lg text-on-surface">Fiscal Breakdown &amp; Estate Statement</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-1 rounded-md bg-gold-soft text-primary font-code-md text-body-sm font-semibold">Cycle: Nov • 2026</span>
+<span class="font-body-sm text-ink-soft text-[12px]">Due by 15th Nov</span>
+</div>
+</div>
+<!-- Selected Unit Profile Banner -->
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-gold-soft text-primary flex items-center justify-center font-code-md font-bold text-headline-sm">
+<span id="card-unit-label">402</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md font-bold text-on-surface" id="card-owner-name">Priya Deshmukh</span>
+<span class="px-2 py-0.5 rounded-full bg-gold-soft text-primary font-label-sm text-[10px] uppercase font-semibold">Owner-Occupied</span>
+</div>
+<div class="flex items-center gap-3 font-body-sm text-body-sm text-ink-soft mt-0.5">
+<span id="card-wing-label">Wing A • Gulmohar</span>
+<span>Carpet: <strong class="font-code-md text-on-surface" id="card-carpet-area">1,420</strong> sq.ft</span>
+<span>Share Cert: <strong class="font-code-md text-on-surface">RP-902</strong></span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-ink-soft uppercase tracking-wider block">Total Payable</span>
+<span class="font-headline-lg text-headline-lg font-bold text-warning tabular-nums" id="card-total-due">₹6,200</span>
+</div>
+</div>
+<!-- Itemized Financial Matrix -->
+<div class="mt-4 flex flex-col divide-y divide-line/40">
+<div class="py-3 flex items-center justify-between font-body-md text-body-md">
+<div class="flex flex-col">
+<span class="text-on-surface font-medium">Monthly General Maintenance Fee</span>
+<span class="text-ink-soft font-body-sm text-[12px]">Common lighting, security, lift AMC, gardening</span>
+</div>
+<span class="font-code-md text-body-md font-semibold text-on-surface tabular-nums" id="line-maint">₹3,550.00</span>
+</div>
+<div class="py-3 flex items-center justify-between font-body-md text-body-md">
+<div class="flex flex-col">
+<span class="text-on-surface font-medium">Municipal Bulk Water Supply Surcharge</span>
+<span class="text-ink-soft font-body-sm text-[12px]">MCGM metered volumetric tariff • Fixed resident tier</span>
+</div>
+<span class="font-code-md text-body-md font-semibold text-on-surface tabular-nums" id="line-water">₹500.00</span>
+</div>
+<div class="py-3 flex items-center justify-between font-body-md text-body-md">
+<div class="flex flex-col">
+<span class="text-on-surface font-medium">Mandatory Sinking &amp; Structural Repair Reserve</span>
+<span class="text-ink-soft font-body-sm text-[12px]">Quarterly allocation to HDFC Escrow deposit</span>
+</div>
+<span class="font-code-md text-body-md font-semibold text-on-surface tabular-nums" id="line-sink">₹900.00</span>
+</div>
+<div class="py-3 flex items-center justify-between font-body-md text-body-md bg-error-container/30 px-3 rounded-lg my-1">
+<div class="flex flex-col">
+<span class="text-error font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">priority_high</span>
+                  Past Arrears &amp; Late Assessment Surcharge
+                </span>
+<span class="text-error/80 font-body-sm text-[12px]">Carryover interest from September cycle</span>
+</div>
+<span class="font-code-md text-body-md font-bold text-error tabular-nums" id="line-arrears">₹1,250.00</span>
+</div>
+</div>
+<!-- Payment Form & UPI Instant Settlement CTA -->
+<div class="mt-6 pt-4 bg-surface-soft p-4 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4">
+<div class="w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
+<div class="w-full sm:w-auto">
+<label class="font-label-sm text-label-sm text-ink-soft uppercase tracking-wider block mb-1">Settlement Sum</label>
+<div class="relative">
+<span class="absolute left-3 top-2.5 font-code-md font-bold text-ink-soft">₹</span>
+<input class="w-full sm:w-36 pl-8 pr-3 py-2 rounded-lg bg-surface font-code-md text-title-md font-bold text-on-surface outline-none focus:ring-2 focus:ring-primary shadow-sm tabular-nums" id="input-payment-amt" type="number" value="6200"/>
+</div>
+</div>
+<div class="w-full sm:w-auto">
+<label class="font-label-sm text-label-sm text-ink-soft uppercase tracking-wider block mb-1">Payment Date</label>
+<input class="w-full sm:w-44 px-3 py-2 rounded-lg bg-surface font-code-md text-body-sm text-on-surface outline-none shadow-sm cursor-default" readonly="" type="text" value="Today • 02 Nov 2026"/>
+</div>
+</div>
+<button class="w-full md:w-auto px-6 py-3 rounded-xl bg-primary hover:bg-gold-deep text-on-primary font-label-md text-label-md font-semibold flex items-center justify-center gap-2 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all" id="btn-open-upi-modal" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code_scanner</span>
+<span>Continue to UPI Payment</span>
+</button>
+</div>
+</div>
+<!-- Building Amenities Status & Architectural Micro-Ledger -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+<div class="p-4 rounded-xl bg-surface shadow-sm flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-gold-soft text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">elevator</span>
+</div>
+<div>
+<span class="font-title-md text-[14px] font-semibold text-on-surface block leading-tight">Elevator Bank</span>
+<span class="font-label-sm text-label-sm text-success">OTIS AMC Clear • 6/6 Online</span>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface shadow-sm flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-gold-soft text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">water_drop</span>
+</div>
+<div>
+<span class="font-title-md text-[14px] font-semibold text-on-surface block leading-tight">Hydro Reserves</span>
+<span class="font-label-sm text-label-sm text-primary">Overhead 92,000 Litres</span>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface shadow-sm flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-gold-soft text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">ev_station</span>
+</div>
+<div>
+<span class="font-title-md text-[14px] font-semibold text-on-surface block leading-tight">EV Hub Meter</span>
+<span class="font-label-sm text-label-sm text-success">Sub-metered • Net Zero Dues</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Persistent Right Rail: 4 Columns -->
+<div class="lg:col-span-4 flex flex-col gap-space-md lg:sticky lg:top-24">
+<!-- Monthly Fiscal Progress Meter -->
+<div class="p-5 rounded-2xl bg-surface shadow-sm flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">Society Treasury</span>
+<span class="px-2 py-0.5 rounded-full bg-success/10 text-success font-code-md text-[11px] font-bold">88.2% Collected</span>
+</div>
+<div>
+<div class="flex items-baseline justify-between">
+<span class="font-headline-md text-headline-md font-bold text-on-surface tabular-nums">₹14,20,000</span>
+<span class="font-code-md text-body-sm text-ink-soft">Target: ₹16,10,000</span>
+</div>
+<!-- Progress Bar -->
+<div class="w-full h-3 rounded-full bg-surface-container-high overflow-hidden mt-2 relative">
+<div class="h-full rounded-full bg-gradient-to-r from-primary to-tertiary-fixed-dim transition-all duration-700" style="width: 88.2%"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-ink-soft font-body-sm text-[12px] pt-1">
+<span>212 / 240 Units Cleared</span>
+<span>28 Pending Audits</span>
+</div>
+</div>
+<!-- Recent Administrative Notices Preview -->
+<div class="p-5 rounded-2xl bg-surface shadow-sm flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface font-semibold">Executive Notices</span>
+<span class="px-2 py-0.5 rounded bg-gold-soft text-primary font-code-md text-[11px]">Notice Board</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Notice 1 -->
+<div class="p-3 rounded-xl bg-surface-soft hover:bg-gold-soft/30 transition-all flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-surface text-ink-soft font-label-sm text-[10px] uppercase font-semibold">General Body</span>
+<span class="font-code-md text-[11px] text-ink-soft">30 Oct 2026</span>
+</div>
+<h3 class="font-title-md text-[14px] font-semibold text-on-surface">Annual General Meeting (AGM) Scheduled</h3>
+<p class="font-body-sm text-body-sm text-ink-soft line-clamp-2">Audited balance sheets and terrace solar canopy approvals will be presented in the Clubhouse at 10:00 AM.</p>
+</div>
+<!-- Notice 2 -->
+<div class="p-3 rounded-xl bg-surface-soft hover:bg-gold-soft/30 transition-all flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 rounded bg-surface text-warning font-label-sm text-[10px] uppercase font-semibold">Infrastructure</span>
+<span class="font-code-md text-[11px] text-ink-soft">28 Oct 2026</span>
+</div>
+<h3 class="font-title-md text-[14px] font-semibold text-on-surface">Basement -2 EV Power Substation Flush</h3>
+<p class="font-body-sm text-body-sm text-ink-soft line-clamp-2">Scheduled electrical shutdown on Tuesday from 14:00 to 17:00 IST for DG synchronizer sync.</p>
+</div>
+</div>
+</div>
+<!-- Committee Directory Quick Contacts -->
+<div class="p-5 rounded-2xl bg-surface shadow-sm flex flex-col gap-3">
+<span class="font-title-md text-title-md text-on-surface font-semibold">Managing Committee</span>
+<div class="flex flex-col gap-2.5">
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-gold-soft text-primary font-bold text-[12px] flex items-center justify-center">DK</div>
+<div>
+<span class="font-title-md text-[13px] font-semibold text-on-surface block leading-tight">Dr. Deepak Kulkarni</span>
+<span class="font-label-sm text-[10px] text-primary uppercase">Hon. Chairman • C-901</span>
+</div>
+</div>
+<a class="w-8 h-8 rounded-full bg-surface text-ink-soft hover:text-primary flex items-center justify-center transition-colors" href="tel:+919820011223">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-container-low">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-gold-soft text-primary font-bold text-[12px] flex items-center justify-center">MS</div>
+<div>
+<span class="font-title-md text-[13px] font-semibold text-on-surface block leading-tight">Meera Singhania</span>
+<span class="font-label-sm text-[10px] text-primary uppercase">Hon. Secretary • B-304</span>
+</div>
+</div>
+<a class="w-8 h-8 rounded-full bg-surface text-ink-soft hover:text-primary flex items-center justify-center transition-colors" href="tel:+919820011224">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Emergency Protocols Rail -->
+<div class="p-4 rounded-2xl bg-error-container/40 flex flex-col gap-2">
+<span class="font-label-sm text-label-sm text-error uppercase font-bold tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">support</span>
+            Emergency Estate Desks
+          </span>
+<div class="grid grid-cols-2 gap-2 mt-1">
+<div class="p-2.5 rounded-lg bg-surface flex flex-col">
+<span class="font-label-sm text-[10px] text-ink-soft uppercase font-semibold">Security Gate 1</span>
+<span class="font-code-md text-[13px] font-bold text-on-surface">Ext. 101</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface flex flex-col">
+<span class="font-label-sm text-[10px] text-ink-soft uppercase font-semibold">Lift Trap SOS</span>
+<span class="font-code-md text-[13px] font-bold text-error">1800-425-001</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive UPI Settlement Modal (Dialog Preview & Action Sheet) -->
+<div class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-inverse-surface/60 backdrop-blur-md transition-all" id="upi-payment-modal">
+<div class="relative w-full max-w-[480px] bg-surface rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col gap-5">
+<!-- Close Button -->
+<button class="absolute top-5 right-5 w-8 h-8 rounded-full bg-surface-container-low hover:bg-gold-soft text-ink-soft hover:text-primary flex items-center justify-center transition-colors" id="btn-close-modal" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+<!-- Modal Header -->
+<div class="text-center">
+<div class="w-12 h-12 rounded-full bg-gold-soft text-primary mx-auto flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[24px]">account_balance</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold">Immediate Sovereign Settlement</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Royal Palms Society Treasury</h3>
+<p class="font-body-sm text-ink-soft text-[12px] mt-0.5">VPA: <span class="font-code-md font-semibold text-on-surface">royalpalms.chs@hdfcbank</span></p>
+</div>
+<!-- Amount Badge -->
+<div class="py-3 px-4 rounded-xl bg-surface-soft flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-ink-soft uppercase">Target Unit</span>
+<span class="font-code-md text-title-md font-bold text-on-surface block" id="modal-unit-label">Flat A-402</span>
+</div>
+<div class="text-right">
+<span class="font-label-sm text-label-sm text-ink-soft uppercase">Settlement Amount</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary tabular-nums block" id="modal-amount-label">₹6,200</span>
+</div>
+</div>
+<!-- Generated UPI Dynamic QR Presentation -->
+<div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-surface-container-low">
+<div class="p-3 bg-surface rounded-xl shadow-md flex items-center justify-center">
+<!-- Stylized Inline SVG QR Representation -->
+<svg class="w-44 h-44 text-on-surface" fill="currentColor" viewbox="0 0 120 120">
+<!-- Position Marks -->
+<rect fill="none" height="30" rx="3" stroke="currentColor" stroke-width="4" width="30" x="10" y="10"></rect>
+<rect fill="currentColor" height="14" rx="2" width="14" x="18" y="18"></rect>
+<rect fill="none" height="30" rx="3" stroke="currentColor" stroke-width="4" width="30" x="80" y="10"></rect>
+<rect fill="currentColor" height="14" rx="2" width="14" x="88" y="18"></rect>
+<rect fill="none" height="30" rx="3" stroke="currentColor" stroke-width="4" width="30" x="10" y="80"></rect>
+<rect fill="currentColor" height="14" rx="2" width="14" x="18" y="88"></rect>
+<!-- Data Grid Matrix Bits -->
+<rect height="6" width="6" x="48" y="12"></rect>
+<rect height="6" width="6" x="58" y="12"></rect>
+<rect height="6" width="8" x="48" y="24"></rect>
+<rect height="8" width="6" x="62" y="24"></rect>
+<rect height="6" width="6" x="48" y="36"></rect>
+<rect height="8" width="6" x="12" y="48"></rect>
+<rect height="6" width="6" x="24" y="52"></rect>
+<rect height="6" width="8" x="36" y="48"></rect>
+<rect fill="#7a5500" height="10" width="10" x="48" y="48"></rect>
+<rect height="6" width="6" x="64" y="48"></rect>
+<rect height="6" width="8" x="76" y="52"></rect>
+<rect height="8" width="6" x="90" y="48"></rect>
+<rect height="6" width="6" x="102" y="52"></rect>
+<rect height="6" width="8" x="12" y="64"></rect>
+<rect height="8" width="6" x="26" y="64"></rect>
+<rect height="6" width="6" x="38" y="68"></rect>
+<rect height="6" width="8" x="52" y="64"></rect>
+<rect height="6" width="10" x="66" y="68"></rect>
+<rect height="8" width="6" x="82" y="64"></rect>
+<rect height="6" width="8" x="94" y="66"></rect>
+<rect height="6" width="8" x="48" y="82"></rect>
+<rect height="8" width="6" x="62" y="80"></rect>
+<rect height="6" width="8" x="74" y="82"></rect>
+<rect height="8" width="6" x="88" y="80"></rect>
+<rect height="6" width="8" x="100" y="82"></rect>
+<rect height="8" width="6" x="48" y="94"></rect>
+<rect height="6" width="8" x="60" y="98"></rect>
+<rect height="8" width="6" x="74" y="94"></rect>
+<rect height="6" width="8" x="86" y="96"></rect>
+<rect height="8" width="6" x="100" y="94"></rect>
+</svg>
+</div>
+<span class="font-code-md text-[11px] text-ink-soft mt-2.5">Scan with GPay, PhonePe, Paytm, or BHIM</span>
+</div>
+<!-- Quick UPI App Triggers -->
+<div class="grid grid-cols-3 gap-2">
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-gold-soft text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">phone_iphone</span>
+<span>GPay</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-gold-soft text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">bolt</span>
+<span>PhonePe</span>
+</button>
+<button class="p-2 rounded-lg bg-surface-container-low hover:bg-gold-soft text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">account_balance_wallet</span>
+<span>BHIM UPI</span>
+</button>
+</div>
+<!-- Manual UTR Submission & Simulator -->
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-ink-soft uppercase tracking-wider">12-Digit Bank UTR / Ref Number</label>
+<div class="flex items-center gap-2">
+<input class="w-full px-3 py-2.5 rounded-xl bg-surface-soft font-code-md text-body-md text-on-surface outline-none focus:ring-2 focus:ring-primary shadow-sm" id="input-utr" maxlength="12" placeholder="e.g. 431289004218" type="text"/>
+<button class="px-5 py-2.5 rounded-xl bg-primary hover:bg-gold-deep text-on-primary font-label-md text-label-md font-semibold whitespace-nowrap shadow-sm transition-all" id="btn-verify-utr" type="button">Verify</button>
+</div>
+</div>
+<!-- Success Simulation Screen (Hidden initially) -->
+<div class="hidden absolute inset-0 bg-surface rounded-3xl p-8 flex-col items-center justify-center text-center gap-3" id="modal-success-screen">
+<div class="w-16 h-16 rounded-full bg-success/15 text-success flex items-center justify-center">
+<span class="material-symbols-outlined text-[36px]">verified</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold">Maintenance Cleared!</h4>
+<p class="font-body-sm text-ink-soft">Receipt #RP-2026-NOV-8419 has been generated and dispatched to your registered WhatsApp &amp; Email.</p>
+<div class="w-full p-3 rounded-xl bg-surface-soft font-code-md text-[12px] text-left text-on-surface mt-2 space-y-1">
+<div class="flex justify-between"><span>Unit:</span><strong id="receipt-unit-text">A-402</strong></div>
+<div class="flex justify-between"><span>Settled:</span><strong id="receipt-amount-text">₹6,200.00</strong></div>
+<div class="flex justify-between"><span>Bank Ref:</span><strong>UTR-431289004218</strong></div>
+<div class="flex justify-between text-success"><span>Fiscal Status:</span><strong>Zero Arrears (Clear)</strong></div>
+</div>
+<button class="w-full mt-2 py-3 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-semibold shadow-md" id="btn-done-receipt" type="button">Return to Estate Ledger</button>
+</div>
+</div>
+</div>
+<!-- Dynamic Unit Sync and Three.js 3D Selection Hook -->
+<script>
+  (function () {
+    let selectedUnitCode = 'A-402';
+
+    // Unit roster fallback data for wings
+    const unitsData = {
+      'A-101': { owner: 'Arvind Sharma', area: '1280', due: 4500, maint: 3200, water: 500, sink: 800, arrears: 0, wing: 'Wing A • Gulmohar' },
+      'A-102': { owner: 'Rajesh Nair', area: '1150', due: 0, maint: 2875, water: 500, sink: 700, arrears: 0, wing: 'Wing A • Gulmohar' },
+      'A-201': { owner: 'Vikram Mehta', area: '1420', due: 0, maint: 3550, water: 500, sink: 900, arrears: 0, wing: 'Wing A • Gulmohar' },
+      'A-301': { owner: 'Sunita Kulkarni', area: '1420', due: 3550, maint: 3550, water: 500, sink: 900, arrears: 0, wing: 'Wing A • Gulmohar' },
+      'A-402': { owner: 'Priya Deshmukh', area: '1420', due: 6200, maint: 3550, water: 500, sink: 900, arrears: 1250, wing: 'Wing A • Gulmohar' },
+      'A-501': { owner: 'Ananya Roy', area: '1280', due: 0, maint: 3200, water: 500, sink: 800, arrears: 0, wing: 'Wing A • Gulmohar' },
+      'A-602': { owner: 'Deepak Chopra', area: '1350', due: 4800, maint: 3375, water: 500, sink: 925, arrears: 0, wing: 'Wing A • Gulmohar' },
+      'A-701': { owner: 'M. S. Swaminathan', area: '1600', due: 0, maint: 4000, water: 500, sink: 1000, arrears: 0, wing: 'Wing A • Gulmohar' }
+    };
+
+    function syncUnitSelection(unitCode, wingName) {
+      selectedUnitCode = unitCode;
+
+      // Unselect all cards
+      document.querySelectorAll('.unit-card').forEach(b => {
+        b.classList.remove('active', 'bg-gold-soft', 'ring-2', 'ring-primary');
+        b.classList.add('bg-surface-container-low');
+      });
+
+      // Target card if present in current view
+      const targetBtn = document.querySelector(`.unit-card[data-unit="${unitCode}"]`);
+      let owner = 'Resident Member';
+      let area = '1,350';
+      let due = 3800;
+      let maint = 3200;
+      let water = 500;
+      let sink = 800;
+      let arrears = 0;
+      let wingText = wingName || 'Wing A • Gulmohar';
+
+      if (targetBtn) {
+        targetBtn.classList.remove('bg-surface-container-low');
+        targetBtn.classList.add('active', 'bg-gold-soft', 'ring-2', 'ring-primary');
+
+        owner = targetBtn.getAttribute('data-owner') || owner;
+        due = parseInt(targetBtn.getAttribute('data-due') || '0', 10);
+        area = targetBtn.getAttribute('data-area') || area;
+        maint = parseFloat(targetBtn.getAttribute('data-maint') || '3200');
+        water = parseFloat(targetBtn.getAttribute('data-water') || '500');
+        sink = parseFloat(targetBtn.getAttribute('data-sink') || '800');
+        arrears = parseFloat(targetBtn.getAttribute('data-arrears') || '0');
+        wingText = targetBtn.getAttribute('data-wing') || wingText;
+      } else if (unitsData[unitCode]) {
+        const d = unitsData[unitCode];
+        owner = d.owner;
+        area = d.area;
+        due = d.due;
+        maint = d.maint;
+        water = d.water;
+        sink = d.sink;
+        arrears = d.arrears;
+        wingText = d.wing;
+      }
+
+      // Update Ledger Statement Card
+      const cleanNum = unitCode.replace(/^[A-Z]-/, '');
+      const unitLabelEl = document.getElementById('card-unit-label');
+      if (unitLabelEl) unitLabelEl.innerText = cleanNum;
+
+      const ownerNameEl = document.getElementById('card-owner-name');
+      if (ownerNameEl) ownerNameEl.innerText = owner;
+
+      const carpetEl = document.getElementById('card-carpet-area');
+      if (carpetEl) carpetEl.innerText = Number(area).toLocaleString('en-IN');
+
+      const totalDueEl = document.getElementById('card-total-due');
+      if (totalDueEl) totalDueEl.innerText = `₹${due.toLocaleString('en-IN')}`;
+
+      const wingLabelEl = document.getElementById('card-wing-label');
+      if (wingLabelEl) wingLabelEl.innerText = wingText;
+
+      const paymentInput = document.getElementById('input-payment-amt');
+      if (paymentInput) paymentInput.value = due > 0 ? due : (maint + water + sink);
+
+      const maintEl = document.getElementById('line-maint');
+      if (maintEl) maintEl.innerText = `₹${maint.toFixed(2)}`;
+
+      const waterEl = document.getElementById('line-water');
+      if (waterEl) waterEl.innerText = `₹${water.toFixed(2)}`;
+
+      const sinkEl = document.getElementById('line-sink');
+      if (sinkEl) sinkEl.innerText = `₹${sink.toFixed(2)}`;
+
+      const arrearsEl = document.getElementById('line-arrears');
+      if (arrearsEl) arrearsEl.innerText = `₹${arrears.toFixed(2)}`;
+
+      // Update Modal labels
+      const modalUnitEl = document.getElementById('modal-unit-label');
+      if (modalUnitEl) modalUnitEl.innerText = `Flat ${unitCode}`;
+
+      const modalAmtEl = document.getElementById('modal-amount-label');
+      if (modalAmtEl) modalAmtEl.innerText = `₹${(due > 0 ? due : (maint + water + sink)).toLocaleString('en-IN')}`;
+
+      const receiptUnitEl = document.getElementById('receipt-unit-text');
+      if (receiptUnitEl) receiptUnitEl.innerText = unitCode;
+
+      const receiptAmtEl = document.getElementById('receipt-amount-text');
+      if (receiptAmtEl) receiptAmtEl.innerText = `₹${(due > 0 ? due : (maint + water + sink)).toFixed(2)}`;
+    }
+
+    // Listen for custom 3D event dispatched from Three.js scene
+    window.addEventListener('flat-3d-selected', (e) => {
+      if (e.detail && e.detail.flat) {
+        const wingName = e.detail.wing ? `${e.detail.wing} • Architectural Twin` : 'Wing A';
+        syncUnitSelection(e.detail.flat, wingName);
+
+        // Highlight matching wing button if flat starts with B or C
+        const prefix = e.detail.flat.charAt(0);
+        document.querySelectorAll('.wing-tab-btn').forEach(btn => {
+          if (btn.getAttribute('data-wing') === prefix) {
+            btn.click();
+          }
+        });
+      }
+    });
+
+    // Unit cards click events
+    document.querySelectorAll('.unit-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const u = card.getAttribute('data-unit');
+        syncUnitSelection(u);
+      });
+    });
+
+    // Wing Tab Switcher
+    document.querySelectorAll('.wing-tab-btn').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.wing-tab-btn').forEach(t => {
+          t.classList.remove('active', 'bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+          t.classList.add('text-on-surface-variant');
+        });
+        tab.classList.add('active', 'bg-primary', 'text-on-primary', 'font-semibold', 'shadow-sm');
+        tab.classList.remove('text-on-surface-variant');
+      });
+    });
+
+    // Day / Dusk Lighting Toggle UI state
+    let isDusk = false;
+    const btnLighting = document.getElementById('btn-lighting-toggle');
+    const lightIcon = document.getElementById('light-icon');
+    const lightText = document.getElementById('light-text');
+    if (btnLighting) {
+      btnLighting.addEventListener('click', () => {
+        isDusk = !isDusk;
+        lightIcon.innerText = isDusk ? 'wb_sunny' : 'bedtime';
+        lightText.innerText = isDusk ? 'Day Mode' : 'Dusk Mode';
+      });
+    }
+
+    // Reset Camera UI state
+    const btnResetCam = document.getElementById('btn-reset-cam');
+    if (btnResetCam) {
+      btnResetCam.addEventListener('click', () => {
+        const slider = document.getElementById('floor-slider');
+        const indicator = document.getElementById('floor-indicator');
+        if (slider) slider.value = 4;
+        if (indicator) indicator.innerText = 'Fl. 4';
+      });
+    }
+
+    // Floor Slider
+    const floorSlider = document.getElementById('floor-slider');
+    if (floorSlider) {
+      floorSlider.addEventListener('input', (e) => {
+        const floorVal = parseInt(e.target.value, 10);
+        const indicator = document.getElementById('floor-indicator');
+        if (indicator) indicator.innerText = `Fl. ${floorVal}`;
+      });
+    }
+
+    // Heatmap Filter buttons
+    const btnAll = document.getElementById('filter-all');
+    const btnDues = document.getElementById('filter-dues');
+    if (btnAll && btnDues) {
+      btnAll.addEventListener('click', () => {
+        btnAll.className = 'px-2.5 py-1 rounded bg-primary text-on-primary';
+        btnDues.className = 'px-2.5 py-1 text-surface hover:text-primary-fixed-dim';
+      });
+      btnDues.addEventListener('click', () => {
+        btnDues.className = 'px-2.5 py-1 rounded bg-warning text-surface';
+        btnAll.className = 'px-2.5 py-1 text-surface hover:text-primary-fixed-dim';
+      });
+    }
+
+    // UPI Modal Open & Close logic
+    const modal = document.getElementById('upi-payment-modal');
+    const btnOpenModal = document.getElementById('btn-open-upi-modal');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    const successScreen = document.getElementById('modal-success-screen');
+    const btnVerifyUtr = document.getElementById('btn-verify-utr');
+    const btnDoneReceipt = document.getElementById('btn-done-receipt');
+
+    if (btnOpenModal && modal) {
+      btnOpenModal.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+    }
+
+    if (btnCloseModal && modal) {
+      btnCloseModal.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        if (successScreen) {
+          successScreen.classList.add('hidden');
+          successScreen.classList.remove('flex');
+        }
+      });
+    }
+
+    if (btnVerifyUtr && successScreen) {
+      btnVerifyUtr.addEventListener('click', () => {
+        const utrInput = document.getElementById('input-utr').value;
+        if (utrInput.length >= 8) {
+          successScreen.classList.remove('hidden');
+          successScreen.classList.add('flex');
+        } else {
+          alert('Please enter a valid 12-digit UTR bank reference number to confirm treasury receipt.');
+        }
+      });
+    }
+
+    if (btnDoneReceipt && modal && successScreen) {
+      btnDoneReceipt.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        successScreen.classList.add('hidden');
+        successScreen.classList.remove('flex');
+      });
+    }
+  })();
+</script></main><footer class="w-full bg-surface-soft mt-space-xl"><div class="max-w-[1280px] mx-auto px-gutter py-space-xl flex flex-col md:flex-row items-center justify-between gap-space-lg"><div class="flex flex-col items-center md:items-start gap-1"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-primary font-bold">Panchayat OS</span><span class="font-label-sm text-label-sm uppercase tracking-widest text-ink-soft">Residential Estate Ledger</span></div><p class="font-body-sm text-body-sm text-muted">Royal Palms Co-Operative Housing Society Ltd. Mumbai, Maharashtra.</p></div><div class="flex flex-wrap items-center justify-center gap-space-md"><div class="flex items-center gap-1.5 px-3 py-1 bg-surface rounded-full shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><span class="material-symbols-outlined text-[16px] text-success">verified_user</span><span class="font-label-sm text-label-sm text-on-surface-variant">Ledger SHA-256 Verified</span></div><div class="flex items-center gap-1.5 px-3 py-1 bg-surface rounded-full shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><span class="material-symbols-outlined text-[16px] text-gold-deep">support_agent</span><span class="font-label-sm text-label-sm text-on-surface-variant">Instant Trustee Desk: ext. 401</span></div></div><div class="font-body-sm text-body-sm text-muted text-center md:text-right">© 2026 Panchayat OS. Proprietary Trust Architecture.</div></div></footer>
+
+</body></html>

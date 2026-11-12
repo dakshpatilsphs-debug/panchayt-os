@@ -1,5 +1,5 @@
 {
-  "name": "society-khata-functions",
+  "name": "panchayat-os-functions",
   "description": "Optional server helpers: storage-limit watchdog + SMTP e-mail delivery (the payment flow itself runs fully client-side)",
   "engines": {
     "node": "20"

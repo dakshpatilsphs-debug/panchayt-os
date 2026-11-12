@@ -1,0 +1,655 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "background": "#f9f9f8", "surface-container-lowest": "#ffffff", "warning": "#c0392b", "surface": "#ffffff", "on-tertiary-fixed": "#261900", "secondary-fixed": "#e5e2e1", "surface-container-highest": "#e2e2e2", "tertiary-fixed-dim": "#f6be47", "on-secondary-container": "#636262", "primary": "#7a5500", "on-surface-variant": "#4f4536", "line-strong": "#d6d3cb", "gold-deep": "#8a5f0f", "on-error-container": "#93000a", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#474746", "inverse-surface": "#2f3130", "on-tertiary": "#ffffff", "surface-container-high": "#e8e8e7", "secondary-container": "#e2dfde", "on-primary-container": "#fffbff", "secondary": "#5f5e5e", "tertiary-container": "#976d00", "on-secondary-fixed": "#1c1b1b", "tertiary": "#785600", "line": "#e7e5e0", "on-tertiary-fixed-variant": "#5d4200", "bg-soft": "#f4f4f2", "surface-dim": "#dadad9", "surface-container": "#eeeeed", "surface-bright": "#f9f9f8", "on-error": "#ffffff", "on-background": "#1a1c1c", "outline": "#817564", "error-container": "#ffdad6", "primary-container": "#996c00", "surface-tint": "#7d5800", "muted": "#86827d", "outline-variant": "#d3c4b0", "on-primary-fixed-variant": "#5f4100", "inverse-primary": "#f6bd54", "gold-soft": "#fbf3dc", "gold-soft-deep": "#f2e6b8", "primary-fixed-dim": "#f6bd54", "primary-fixed": "#ffdea9", "on-primary": "#ffffff", "surface-container-low": "#f3f4f3", "tertiary-fixed": "#ffdea4", "on-tertiary-container": "#fffbff", "secondary-fixed-dim": "#c8c6c5", "surface-soft": "#faf9f7", "inverse-on-surface": "#f1f1f0", "on-primary-fixed": "#271900", "on-surface": "#1a1c1c", "error": "#ba1a1a", "ink-soft": "#57534e", "surface-variant": "#e2e2e2", "success": "#1d7a3d" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-mobile": "1rem", "margin-mobile": "1rem", "space-md": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "gutter": "1.5rem", "space-xl": "2.5rem", "space-lg": "1.5rem", "margin": "2.5rem" }, "fontFamily": { "title-lg": [ "Inter" ], "body-sm": [ "Inter" ], "headline-lg-mobile": [ "Playfair Display" ], "body-md": [ "Inter" ], "body-lg": [ "Inter" ], "label-sm": [ "Inter" ], "code-md": [ "JetBrains Mono" ], "headline-lg": [ "Playfair Display" ], "display": [ "Playfair Display" ], "title-md": [ "Inter" ], "headline-md": [ "Playfair Display" ], "label-md": [ "Inter" ], "display-mobile": [ "Playfair Display" ], "headline-sm": [ "Playfair Display" ] }, "fontSize": { "title-lg": [ "18px", { "lineHeight": "26px", "fontWeight": "600" } ], "body-sm": [ "12px", { "lineHeight": "18px", "fontWeight": "400" } ], "headline-lg-mobile": [ "26px", { "lineHeight": "34px", "fontWeight": "600" } ], "body-md": [ "14px", { "lineHeight": "22px", "fontWeight": "400" } ], "body-lg": [ "16px", { "lineHeight": "26px", "fontWeight": "400" } ], "label-sm": [ "11px", { "lineHeight": "16px", "letterSpacing": "0.14em", "fontWeight": "600" } ], "code-md": [ "13px", { "lineHeight": "20px", "fontWeight": "400" } ], "headline-lg": [ "32px", { "lineHeight": "40px", "fontWeight": "600" } ], "display": [ "48px", { "lineHeight": "56px", "fontWeight": "600" } ], "title-md": [ "16px", { "lineHeight": "24px", "fontWeight": "600" } ], "headline-md": [ "24px", { "lineHeight": "32px", "fontWeight": "600" } ], "label-md": [ "13px", { "lineHeight": "18px", "letterSpacing": "0.04em", "fontWeight": "500" } ], "display-mobile": [ "34px", { "lineHeight": "42px", "fontWeight": "600" } ], "headline-sm": [ "20px", { "lineHeight": "28px", "fontWeight": "600" } ] } } } };</style></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><header class="fixed top-0 left-0 w-full z-50 bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 max-w-[1280px] mx-auto px-gutter flex items-center justify-between gap-gutter"><div class="flex items-center gap-gutter"><a href="#" data-path="estate-pay" class="flex items-center gap-space-sm cursor-pointer group"><img alt="Panchayat OS Logo" class="h-8 w-auto object-contain transition-transform group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/ALJJyrCnbqPvIEq-vPdL0kHOD4ZBVbADnMboLEtATHJ5DtTbNwezaufOx8-tXexzDIMb-HCSstoiGtTTXZKk9EVzd1xFvd1R1bobEYkp2VgBj0M10MP-K6Gk7JhMxE_ZUrByQrbgaGReui24qRL8hpXO--Z6oael1J-LdRM9-v2Vo4gOjeFqq9H5fI_qKQSeWJ-jJOfmqKP1by8Ia-8OdTdFRKf3ZPqPViZMJFghJWpCDQ0E"><div class="flex flex-col"><span class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors tracking-tight leading-none">Panchayat OS</span><span class="font-label-sm text-label-sm uppercase tracking-widest text-primary font-semibold mt-1">Estate Ledger</span></div></a><a href="#" data-path="estate-pay" class="hidden xl:flex flex-col justify-center px-space-md py-1 bg-gold-soft hover:bg-gold-soft-deep/30 transition-colors rounded-lg cursor-pointer" title="Go to 3D Estate &amp; Pay"><span class="font-title-md text-[13px] leading-tight font-semibold text-primary">Royal Palms Co-Operative Housing Society</span><span class="font-code-md text-[11px] leading-tight text-ink-soft">Reg. MH/MUM/2019/847</span></a></div><nav class="hidden lg:flex items-center gap-1" data-active-classes="bg-gold-soft text-primary font-semibold rounded-lg"><a class="px-space-md py-2 font-label-md text-label-md text-on-surface-variant hover:bg-gold-soft hover:text-primary transition-all rounded-lg" data-path="estate-pay" href="#" title="Go to Estate Pay &amp; Interactive 3D Society Twin">3D Estate &amp; Pay</a><a class="px-space-md py-2 font-label-md text-label-md text-on-surface-variant hover:bg-gold-soft hover:text-primary transition-all rounded-lg" data-path="notices" href="#">Notices</a><a aria-current="page" class="px-space-md py-2 transition-all bg-gold-soft text-primary font-semibold rounded-lg" data-path="directory" href="#">Directory</a><a class="px-space-md py-2 font-label-md text-label-md text-on-surface-variant hover:bg-gold-soft hover:text-primary transition-all rounded-lg" data-path="receipt" href="#">Receipt</a><a class="px-space-md py-2 font-label-md text-label-md text-on-surface-variant hover:bg-gold-soft hover:text-primary transition-all rounded-lg" data-path="admin-desk" href="#">Admin Desk</a></nav><div class="flex items-center gap-space-md"><div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-error-container text-on-error-container"><span class="material-symbols-outlined text-[16px] text-error">emergency</span><span class="font-label-sm text-label-sm text-error">LIFT SOS: 1800-425-001</span></div><div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container-low"><span class="h-2 w-2 rounded-full bg-success animate-pulse"></span><span class="font-label-sm text-label-sm text-ink-soft">Sec Desk: Active</span></div><div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-soft hover:bg-gold-soft transition-colors cursor-pointer"><span class="font-label-md text-label-md font-semibold text-on-surface">Flat 1402-B</span><span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-20 bg-background"><div class="flex flex-col w-full">
+<!-- Top Ambient Glow -->
+<div class="relative w-full max-w-[1280px] mx-auto px-gutter pt-8 pb-16">
+<div class="absolute -top-12 right-1/4 w-96 h-96 bg-gradient-to-br from-gold-soft via-gold-soft-deep/30 to-transparent rounded-full blur-3xl pointer-events-none opacity-60"></div>
+<div class="absolute top-1/3 -left-20 w-80 h-80 bg-gradient-to-tr from-surface-container-high via-gold-soft/20 to-transparent rounded-full blur-3xl pointer-events-none opacity-50"></div>
+<!-- Editorial Header Section -->
+<div class="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6 pb-10">
+<div class="max-w-2xl">
+<div class="flex items-center gap-2 mb-2">
+<span class="inline-block w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-semibold">Verified Society Index • FY 2025-26</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Society Contact Directory</h1>
+<p class="font-body-lg text-body-lg text-ink-soft mt-2">Connect with committee members, estate maintenance teams, and 24/7 emergency helplines with single-touch verification.</p>
+</div>
+<!-- Quick Trust Stats -->
+<div class="flex items-center gap-4 bg-surface px-5 py-3 rounded-xl shadow-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-muted uppercase">Active Desk</span>
+<span class="font-title-md text-title-md text-success flex items-center gap-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-success animate-ping"></span> 100% On-Duty
+          </span>
+</div>
+<div class="w-px h-8 bg-surface-container-highest"></div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-muted uppercase">Certified Units</span>
+<span class="font-code-md text-code-md text-on-surface font-semibold mt-0.5">340 Flats</span>
+</div>
+</div>
+</div>
+<!-- Search & Filter Bar -->
+<div class="relative z-10 bg-surface rounded-2xl p-3 shadow-sm mb-10">
+<div class="flex flex-col lg:flex-row items-center gap-3">
+<!-- Search Input -->
+<div class="relative flex-1 w-full">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-muted">search</span>
+<input class="w-full bg-surface-container-low pl-12 pr-4 py-3.5 rounded-xl font-body-md text-body-md text-on-surface placeholder:text-muted focus:outline-none focus:bg-surface-container-lowest transition-all" id="directorySearch" placeholder="Search by name, flat number (e.g. A-802), wing, or department..." type="text">
+</div>
+<!-- Filter Tabs / Pills -->
+<div class="flex items-center gap-1.5 w-full lg:w-auto overflow-x-auto pb-1 lg:pb-0 scrollbar-none" id="tabButtons">
+<button class="tab-btn shrink-0 px-5 py-3 rounded-xl font-label-md text-label-md transition-all bg-primary text-on-primary shadow-sm" id="tab-btn-committee" onclick="switchTab('committee')">
+            Managing Committee
+          </button>
+<button class="tab-btn shrink-0 px-5 py-3 rounded-xl font-label-md text-label-md transition-all bg-surface-container-low text-ink-soft hover:bg-gold-soft hover:text-primary" id="tab-btn-operations" onclick="switchTab('operations')">
+            Estate Operations &amp; Staff
+          </button>
+<button class="tab-btn shrink-0 px-5 py-3 rounded-xl font-label-md text-label-md transition-all bg-surface-container-low text-ink-soft hover:bg-gold-soft hover:text-primary" id="tab-btn-emergency" onclick="switchTab('emergency')">
+            Emergency &amp; Utility SOS
+          </button>
+</div>
+</div>
+</div>
+<!-- TAB 1: Managing Committee -->
+<section class="tab-content relative z-10 flex flex-col gap-8" id="tab-committee">
+<!-- Section Intro Banner with Image -->
+<div class="relative overflow-hidden rounded-2xl bg-surface-soft p-6 lg:p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="max-w-xl">
+<span class="px-3 py-1 rounded-full bg-gold-soft text-gold-deep font-label-sm text-label-sm uppercase font-semibold">Elected Governing Body</span>
+<h2 class="font-headline-md text-headline-md text-on-surface mt-2">Executive Council of Trustees</h2>
+<p class="font-body-md text-body-md text-ink-soft mt-1">Available for resident resolutions, flat transfers, and structural escalations during prescribed administrative visiting hours (Saturdays 5 PM – 7 PM).</p>
+</div>
+<div class="w-full md:w-56 h-28 rounded-xl overflow-hidden shadow-sm shrink-0">
+<img class="w-full h-full object-cover" data-alt="Sunlit architectural conference table inside a luxury condominium management lounge with high ceilings, mahogany millwork, and warm ivory leather chairs in soft Mumbai daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2H1dJaHgJe54qPn5koHqn47ZugjKmreRpkmhSyjbP-WVeP2DKz55gIzzWKMQ3yzfn6vHETg-yXr5vqKKkiSPuFvs1HS2Hv_SAdcGReYn1BRgTpGeB9rLpV2lsDlkRM-uRjimSBNAtgM4D00ukDMNAGTAeT94rceGt4dP66XYzJ0MLowx4WrRoX5BIBFP1u2tvXD0JL6BZghyyuoq7WRFMX4KqgaKSGVHRmKJHbv8">
+</div>
+</div>
+<!-- Committee Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Chairman Card -->
+<div class="committee-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 relative group">
+<div class="absolute top-5 right-5">
+<span class="px-2.5 py-1 rounded-full bg-gold-soft text-primary font-label-sm text-label-sm font-semibold">Chairman</span>
+</div>
+<div>
+<div class="w-16 h-16 rounded-full overflow-hidden mb-4 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Distinguished senior Indian gentleman in a crisp linen Nehru jacket smiling warmly in a bright architectural interior, portrait photography, warm tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYCKM6d3Ax41xhtQnzkPbQBFGvTx7y0LyNXbFUWFKug6D0dxUUcOmgfd9wRRkdVPcCj8PBhlF63BGy5P7pcQTnhZR2rGVLF-04cNHzujgTta_Hp66INq41a-6g7MfQiBdkqS-TYm0tOK2gj4AQoUd4BBt9XJNKS65hElT8_e_JGxTzi4DkjqY0r2EYyBynv1otvnMgCGz_bSdQbS_Yh7seHVUrVhxr3qDEySPLVHU">
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Dr. K. S. Mukherjee</h3>
+<p class="font-body-sm text-body-sm text-muted mt-0.5">Senior Trustee • Architecture Head</p>
+<div class="mt-4 pt-4 border-t-0 flex flex-col gap-2 bg-surface-container-low p-3 rounded-xl">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Residence</span>
+<span class="font-code-md text-code-md text-on-surface font-semibold">Flat A-802</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Contact</span>
+<span class="font-code-md text-code-md text-on-surface">+91 98201 44521</span>
+</div>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+919820144521">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call</span>
+</a>
+<button class="p-2.5 rounded-xl bg-surface-container-low hover:bg-gold-soft text-ink-soft hover:text-primary transition-all" onclick="copyToClipboard('+919820144521', this)" title="Copy Number">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Secretary Card -->
+<div class="committee-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 relative group">
+<div class="absolute top-5 right-5">
+<span class="px-2.5 py-1 rounded-full bg-gold-soft text-primary font-label-sm text-label-sm font-semibold">Secretary</span>
+</div>
+<div>
+<div class="w-16 h-16 rounded-full overflow-hidden mb-4 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Professional Indian woman executive with elegant spectacles wearing a subtle beige silk saree, warm natural lighting in contemporary residential study, soft bokeh background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOn3QZ3CX0wgtKGarZwHERRKhGReGLBazbY455325gbSFV-zC70hDHnwyRZVQ5BofGZOeqjL1_2pjCNoG7Cw7M-MFNnIyJCzfCkCJSz3trFaR0euSu42kWpiJD5W0-XOKGtFpP2IT9BSFMA4gjXvplbJWbstiJb7VxqjfvqqyQB6s507LSlLxsoY9HfmVKNPivq6F0i2BNumrP4VSLtWCvka3zzPI8D9-X-RIBmuE">
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Mrs. Sunita Rao</h3>
+<p class="font-body-sm text-body-sm text-muted mt-0.5">Honorary General Secretary</p>
+<div class="mt-4 pt-4 flex flex-col gap-2 bg-surface-container-low p-3 rounded-xl">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Residence</span>
+<span class="font-code-md text-code-md text-on-surface font-semibold">Flat B-401</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Contact</span>
+<span class="font-code-md text-code-md text-on-surface">+91 98192 33104</span>
+</div>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+919819233104">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call</span>
+</a>
+<button class="p-2.5 rounded-xl bg-surface-container-low hover:bg-gold-soft text-ink-soft hover:text-primary transition-all" onclick="copyToClipboard('+919819233104', this)" title="Copy Number">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Treasurer Card -->
+<div class="committee-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 relative group">
+<div class="absolute top-5 right-5">
+<span class="px-2.5 py-1 rounded-full bg-gold-soft text-primary font-label-sm text-label-sm font-semibold">Treasurer</span>
+</div>
+<div>
+<div class="w-16 h-16 rounded-full overflow-hidden mb-4 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Refined middle-aged Indian financial consultant in casual formal button-down shirt sitting in an architectural library with warm wood finishes." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVFKM_aKyQH3KtPA42kSaz7NkqL8XBt4xmbraisGz1a_qjg60Qak9mrY81q_QQ_2eBXoONKO0JEnreqJXa1isKrkZvwcEXhPZpOYYXseefbZ42Cjsy9MeDnchQ8hek-HqssE5PwvBZghbsVkv0_MAPdsCuaxvsLEsJQXU5_TXAGPieZELg_XqRJnVxSS4d4V1KS_D1LkCxZsJskip8OrVgWDYPIGl4ahk2m6Rv6Ww">
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Mr. Vikram Malhotra</h3>
+<p class="font-body-sm text-body-sm text-muted mt-0.5">Finance &amp; Sinking Fund Ledger</p>
+<div class="mt-4 pt-4 flex flex-col gap-2 bg-surface-container-low p-3 rounded-xl">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Residence</span>
+<span class="font-code-md text-code-md text-on-surface font-semibold">Flat C-604</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Contact</span>
+<span class="font-code-md text-code-md text-on-surface">+91 98330 89211</span>
+</div>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+919833089211">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call</span>
+</a>
+<button class="p-2.5 rounded-xl bg-surface-container-low hover:bg-gold-soft text-ink-soft hover:text-primary transition-all" onclick="copyToClipboard('+919833089211', this)" title="Copy Number">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+<!-- Joint Secretary Card -->
+<div class="committee-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300 relative group">
+<div class="absolute top-5 right-5">
+<span class="px-2.5 py-1 rounded-full bg-gold-soft text-primary font-label-sm text-label-sm font-semibold">Joint Sec.</span>
+</div>
+<div>
+<div class="w-16 h-16 rounded-full overflow-hidden mb-4 shadow-sm">
+<img class="w-full h-full object-cover" data-alt="Young professional Indian woman architect in neutral minimalist blazer against a sun-drenched modern apartment terrace garden with potted palms." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZk4ym94Z0hds0mnLlUmP32haCRV6zS_2rw2nBlUt1wittTQMFGU-JPnvEr9YkfkMlzQzJ0iJOboyhfmDCv76cT8oz12uccmvUcbmQ60yCF8DnSLtKgKUgjv3uJMPR4QfQhPDH8_vKTQFeu0ZzO89OUPvThQnn2VHfsAnxs0qOZVwhAWz1b7nSCVaRb3FCEODN16PcbKMMXOji3ZfFlalIFE38mNUPsO9hp1tyqxQ">
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Ms. Ananya Deshmukh</h3>
+<p class="font-body-sm text-body-sm text-muted mt-0.5">Amenities &amp; Resident Welfare</p>
+<div class="mt-4 pt-4 flex flex-col gap-2 bg-surface-container-low p-3 rounded-xl">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Residence</span>
+<span class="font-code-md text-code-md text-on-surface font-semibold">Flat D-1102</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Contact</span>
+<span class="font-code-md text-code-md text-on-surface">+91 97690 12845</span>
+</div>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+919769012845">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call</span>
+</a>
+<button class="p-2.5 rounded-xl bg-surface-container-low hover:bg-gold-soft text-ink-soft hover:text-primary transition-all" onclick="copyToClipboard('+919769012845', this)" title="Copy Number">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- TAB 2: Estate Operations & Facility Staff -->
+<section class="tab-content hidden relative z-10 flex flex-col gap-6" id="tab-operations">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-surface-soft p-6 rounded-2xl shadow-sm">
+<div>
+<span class="px-3 py-1 rounded-full bg-surface-container text-ink-soft font-label-sm text-label-sm uppercase font-semibold">On-Ground Field Operations</span>
+<h2 class="font-headline-md text-headline-md text-on-surface mt-2">Facility &amp; Technical Personnel</h2>
+<p class="font-body-md text-body-md text-ink-soft mt-1">Live shift tracking for preventative maintenance, water tank operations, and round-the-clock perimeter surveillance.</p>
+</div>
+<div class="flex items-center gap-2 px-4 py-2 bg-surface rounded-xl shadow-sm">
+<span class="h-2.5 w-2.5 rounded-full bg-success animate-pulse"></span>
+<span class="font-label-md text-label-md text-on-surface">5 Specialists Currently On Shift</span>
+</div>
+</div>
+<!-- Operations Staff Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Head Security - Gate 1 -->
+<div class="operations-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">shield</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 text-success font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-success"></span> On Duty • 24h Shift
+              </span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Head Security • Gate 1</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Subedar R. S. Rathore (Retd.)</p>
+<p class="font-body-sm text-body-sm text-muted">Primary visitor screening, automated boom barrier, parcel hub.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Intercom ext.</span>
+<span class="font-code-md text-code-md font-semibold text-primary">#101 / #102</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+912228540001">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call Gate 1</span>
+</a>
+</div>
+</div>
+<!-- Head Security - Gate 2 (Service) -->
+<div class="operations-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">local_shipping</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 text-success font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-success"></span> On Duty
+              </span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Gate 2 • Service &amp; Logistics</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Havildar B. Shinde</p>
+<p class="font-body-sm text-body-sm text-muted">Heavy vehicle access, renovation contractors &amp; goods lift escort.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Intercom ext.</span>
+<span class="font-code-md text-code-md font-semibold text-primary">#201</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+912228540002">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call Gate 2</span>
+</a>
+</div>
+</div>
+<!-- Chief Electrician -->
+<div class="operations-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">bolt</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-soft text-gold-deep font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-gold-deep"></span> 8:00 AM - 8:00 PM
+              </span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Chief Electrician</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Mr. Dinesh Sawant (Licensed PWD Wireman)</p>
+<p class="font-body-sm text-body-sm text-muted">Substation upkeep, diesel generator switchover, flat phase check.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Direct Mobile</span>
+<span class="font-code-md text-code-md font-semibold text-on-surface">+91 99204 88310</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+919920488310">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call Sawant</span>
+</a>
+</div>
+</div>
+<!-- Master Plumber -->
+<div class="operations-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">plumbing</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 text-success font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-success"></span> On Duty • Pump Room
+              </span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Master Plumber • Hydraulics</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Mr. Santosh Yadav</p>
+<p class="font-body-sm text-body-sm text-muted">Overhead water hydro-pneumatic pressure, drainage lines.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Direct Mobile</span>
+<span class="font-code-md text-code-md font-semibold text-on-surface">+91 98205 11984</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+919820511984">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call Plumber</span>
+</a>
+</div>
+</div>
+<!-- Facility Estate Manager -->
+<div class="operations-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">apartment</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-soft text-gold-deep font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-gold-deep"></span> Office 9am - 6pm
+              </span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Facility General Manager</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Mr. Neville Contractor</p>
+<p class="font-body-sm text-body-sm text-muted">Vendor SLAs, clubhouse reservations, move-in/move-out permissions.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Office Desk</span>
+<span class="font-code-md text-code-md font-semibold text-on-surface">+91 22 2854 4401</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+912228544401">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call Office</span>
+</a>
+</div>
+</div>
+<!-- Housekeeping Supervisor -->
+<div class="operations-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">cleaning_services</span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-success/10 text-success font-label-sm text-label-sm font-semibold">
+<span class="w-2 h-2 rounded-full bg-success"></span> Floor Patrol Active
+              </span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Housekeeping Supervisor</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Mrs. Lakshmi Pujari</p>
+<p class="font-body-sm text-body-sm text-muted">Common lobby sanitization, waste segregation compliance, garden upkeep.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Direct Mobile</span>
+<span class="font-code-md text-code-md font-semibold text-on-surface">+91 98920 44012</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+919892044012">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call Supervisor</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- TAB 3: Emergency & Utility Helplines -->
+<section class="tab-content hidden relative z-10 flex flex-col gap-6" id="tab-emergency">
+<!-- High Priority Red SOS Card -->
+<div class="bg-error-container rounded-2xl p-6 md:p-8 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+<div class="flex items-start gap-4">
+<div class="w-14 h-14 rounded-2xl bg-error flex items-center justify-center text-on-error shrink-0 shadow-md">
+<span class="material-symbols-outlined text-[32px]">warning</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="px-2.5 py-0.5 rounded-full bg-error text-on-error font-label-sm text-label-sm font-semibold uppercase">Immediate Hazard Protocol</span>
+<span class="font-label-sm text-label-sm text-on-error-container">24/7 Priority Channel</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-error mt-1">Lift Trapped Passenger • Emergency SOS</h2>
+<p class="font-body-md text-body-sm text-on-surface-variant max-w-xl">Direct satellite patch to Otis &amp; Schindler rapid-response intervention vehicle stationed inside Goregaon East Hub.</p>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+<a class="w-full sm:w-auto flex items-center justify-center gap-2 bg-error hover:bg-warning text-on-error px-6 py-3.5 rounded-xl font-title-md text-title-md transition-all shadow-md" href="tel:1800425001">
+<span class="material-symbols-outlined text-[20px]">e911_emergency</span>
+<span class="">Dial Toll-Free: 1800-425-001</span>
+</a>
+<button class="w-full sm:w-auto p-3.5 rounded-xl bg-surface/80 hover:bg-surface text-on-surface font-label-md text-label-md flex items-center justify-center gap-1 transition-all" onclick="copyToClipboard('1800425001', this)">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span class="sm:hidden">Copy SOS</span>
+</button>
+</div>
+</div>
+<!-- Emergency Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Cardiac Hospital & Ambulance -->
+<div class="emergency-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-error-container flex items-center justify-center text-error">
+<span class="material-symbols-outlined text-[28px]">ambulance</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-gold-soft text-gold-deep font-label-sm text-label-sm font-semibold">1.4 km Away</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Nearest Cardiac Hospital ICU</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Holy Spirit &amp; Lilavati Trauma Affiliate</p>
+<p class="font-body-sm text-body-sm text-muted mt-2">Dedicated ALS Ambulance dispatch with Society priority code #RP-909.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Desk Ph.</span>
+<span class="font-code-md text-code-md font-semibold text-error">+91 22 2570 1100</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-error hover:bg-warning text-on-error py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+912225701100">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Dispatch Ambulance</span>
+</a>
+</div>
+</div>
+<!-- Fire Station -->
+<div class="emergency-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">local_fire_department</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-ink-soft font-label-sm text-label-sm font-semibold">Goregaon Fire Brigade</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Fire Brigade Headquarters</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">National Command &amp; Local Precinct</p>
+<p class="font-body-sm text-body-sm text-muted mt-2">Hydrant riser connection points certified quarterly with society master pump.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Hotlines</span>
+<span class="font-code-md text-code-md font-semibold text-on-surface">101 / +91 22 2872 3232</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:101">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call 101 Fire</span>
+</a>
+</div>
+</div>
+<!-- Police Control -->
+<div class="emergency-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">local_police</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-ink-soft font-label-sm text-label-sm font-semibold">Aarey Station</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Police Control Room &amp; Beat</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Beat Marshal • Sector 4 Patrol</p>
+<p class="font-body-sm text-body-sm text-muted mt-2">Direct escalation to local senior inspector and night emergency mobile van.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Emergency / Landline</span>
+<span class="font-code-md text-code-md font-semibold text-on-surface">112 / +91 22 2840 1200</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:112">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Dial 112 Police</span>
+</a>
+</div>
+</div>
+<!-- BMC P/South Ward Office -->
+<div class="emergency-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">account_balance</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-ink-soft font-label-sm text-label-sm font-semibold">Municipal Corp</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">BMC Ward Office (P-South)</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Municipal Corporation of Greater Mumbai</p>
+<p class="font-body-sm text-body-sm text-muted mt-2">Main municipal supply pipe breakdown, road repair &amp; vector fogging unit.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Helpline</span>
+<span class="font-code-md text-code-md font-semibold text-on-surface">1916 / +91 22 2872 1152</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:1916">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call BMC 1916</span>
+</a>
+</div>
+</div>
+<!-- Adani Electricity Emergency -->
+<div class="emergency-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">electric_meter</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-ink-soft font-label-sm text-label-sm font-semibold">Grid Power</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Adani Electricity Emergency</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Western Suburbs Feeder Division</p>
+<p class="font-body-sm text-body-sm text-muted mt-2">Area-wide transformer outages, neutral earth faults, street transformer sparks.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Toll-Free 24x7</span>
+<span class="font-code-md text-code-md font-semibold text-on-surface">19122</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:19122">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call 19122 Grid</span>
+</a>
+</div>
+</div>
+<!-- Mahanagar Gas Ltd (MGL) -->
+<div class="emergency-card bg-surface rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:-translate-y-1 transition-all duration-300">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="w-12 h-12 rounded-xl bg-gold-soft flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">mode_fan</span>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container text-ink-soft font-label-sm text-label-sm font-semibold">Piped Gas PNG</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface">Mahanagar Gas (MGL) Gas Leak</h3>
+<p class="font-body-sm text-body-sm text-ink-soft mt-1">Direct Pipeline Emergency Patrol</p>
+<p class="font-body-sm text-body-sm text-muted mt-2">Kitchen odor or riser odor alarms. Society meter regulator isolator.</p>
+<div class="mt-4 p-3 bg-surface-container-low rounded-xl flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-muted uppercase">Emergency Line</span>
+<span class="font-code-md text-code-md font-semibold text-on-surface">+91 22 2401 2400</span>
+</div>
+</div>
+<div class="mt-6 flex items-center gap-2">
+<a class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-gold-deep text-on-primary py-2.5 rounded-xl font-label-md text-label-md transition-all shadow-sm" href="tel:+912224012400">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span class="">Call MGL Leak</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Asymmetrical Contextual Footnote: Architectural Map & Office Timing -->
+<div class="mt-14 pt-8 border-t-0 bg-surface rounded-3xl p-8 shadow-sm flex flex-col lg:flex-row items-center justify-between gap-8">
+<div class="flex items-start gap-5 max-w-xl">
+<div class="w-12 h-12 rounded-2xl bg-gold-soft flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[26px]">mark_chat_unread</span>
+</div>
+<div>
+<h4 class="font-title-lg text-title-lg text-on-surface">Official Society Administrative Desk</h4>
+<p class="font-body-md text-body-md text-ink-soft mt-1">Ground Floor, Clubhouse Block, Wing B. For physical document attestation, NOC applications, and share certificate endorsements.</p>
+<div class="flex flex-wrap items-center gap-3 mt-3">
+<span class="font-label-sm text-label-sm text-muted">Timings: Mon - Sat: 10:00 AM – 1:30 PM | 4:30 PM – 7:30 PM</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">• Sunday Closed</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 shrink-0 w-full lg:w-auto">
+<button class="w-full lg:w-auto px-5 py-3 rounded-xl bg-surface-container-low hover:bg-gold-soft text-ink-soft hover:text-primary font-label-md text-label-md flex items-center justify-center gap-2 transition-all" onclick="window.print()">
+<span class="material-symbols-outlined text-[18px]">print</span>
+<span class="">Print Directory PDF</span>
+</button>
+<a class="w-full lg:w-auto px-6 py-3 rounded-xl bg-primary hover:bg-gold-deep text-on-primary font-label-md text-label-md flex items-center justify-center gap-2 transition-all shadow-sm" href="mailto:admin@royalpalms-chs.org">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+<span class="">Email Society Office</span>
+</a>
+</div>
+</div>
+<!-- Toast Notification Container -->
+<div class="fixed bottom-6 right-6 bg-inverse-surface text-inverse-on-surface px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none" id="copyToast">
+<span class="material-symbols-outlined text-success text-[20px]">check_circle</span>
+<span class="font-body-sm text-body-sm" id="toastMessage">Copied to clipboard</span>
+</div>
+</div>
+<script>
+  // Tab Switcher Logic
+  function switchTab(tabId) {
+    const tabs = ['committee', 'operations', 'emergency'];
+    
+    tabs.forEach(t => {
+      const content = document.getElementById('tab-' + t);
+      const btn = document.getElementById('tab-btn-' + t);
+      
+      if (t === tabId) {
+        content.classList.remove('hidden');
+        btn.className = 'tab-btn shrink-0 px-5 py-3 rounded-xl font-label-md text-label-md transition-all bg-primary text-on-primary shadow-sm';
+      } else {
+        content.classList.add('hidden');
+        btn.className = 'tab-btn shrink-0 px-5 py-3 rounded-xl font-label-md text-label-md transition-all bg-surface-container-low text-ink-soft hover:bg-gold-soft hover:text-primary';
+      }
+    });
+
+    // Reset search on tab change
+    const searchInput = document.getElementById('directorySearch');
+    if (searchInput) {
+      searchInput.value = '';
+      filterCards('');
+    }
+  }
+
+  // Copy to Clipboard Feedback
+  function copyToClipboard(text, triggerEl) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Copied: ' + text);
+      const icon = triggerEl.querySelector('.material-symbols-outlined');
+      if (icon) {
+        const originalText = icon.textContent;
+        icon.textContent = 'done';
+        setTimeout(() => {
+          icon.textContent = originalText;
+        }, 1500);
+      }
+    }).catch(err => {
+      showToast('Could not copy number');
+    });
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('copyToast');
+    const toastMsg = document.getElementById('toastMessage');
+    toastMsg.textContent = msg;
+    toast.classList.remove('translate-y-20', 'opacity-0');
+    toast.classList.add('translate-y-0', 'opacity-100');
+    
+    setTimeout(() => {
+      toast.classList.remove('translate-y-0', 'opacity-100');
+      toast.classList.add('translate-y-20', 'opacity-0');
+    }, 2400);
+  }
+
+  // Real-time search across active cards
+  const searchInput = document.getElementById('directorySearch');
+  searchInput.addEventListener('input', (e) => {
+    filterCards(e.target.value.toLowerCase().trim());
+  });
+
+  function filterCards(query) {
+    const cards = document.querySelectorAll('.committee-card, .operations-card, .emergency-card');
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      if (!query || text.includes(query)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+</script></main><footer class="w-full bg-surface-soft mt-space-xl"><div class="max-w-[1280px] mx-auto px-gutter py-space-xl flex flex-col md:flex-row items-center justify-between gap-space-lg"><div class="flex flex-col items-center md:items-start gap-1"><a href="#" data-path="estate-pay" class="flex items-center gap-space-xs group cursor-pointer" title="Back to 3D Estate &amp; Pay"><span class="font-headline-sm text-headline-sm text-primary group-hover:text-gold-deep transition-colors font-bold">Panchayat OS</span><span class="font-label-sm text-label-sm uppercase tracking-widest text-ink-soft">Residential Estate Ledger</span></a><p class="font-body-sm text-body-sm text-muted">Royal Palms Co-Operative Housing Society Ltd. Mumbai, Maharashtra.</p></div><div class="flex flex-wrap items-center justify-center gap-space-md"><div class="flex items-center gap-1.5 px-3 py-1 bg-surface rounded-full shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><span class="material-symbols-outlined text-[16px] text-success">verified_user</span><span class="font-label-sm text-label-sm text-on-surface-variant">Ledger SHA-256 Verified</span></div><div class="flex items-center gap-1.5 px-3 py-1 bg-surface rounded-full shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><span class="material-symbols-outlined text-[16px] text-gold-deep">support_agent</span><span class="font-label-sm text-label-sm text-on-surface-variant">Instant Trustee Desk: ext. 401</span></div></div><div class="font-body-sm text-body-sm text-muted text-center md:text-right">© 2026 Panchayat OS. Proprietary Trust Architecture.</div></div></footer>
+
+</body></html>

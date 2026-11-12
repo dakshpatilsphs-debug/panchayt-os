@@ -63,7 +63,7 @@ export default function HistoryPage() {
         <h3>Which flat is yours?</h3>
         <p className="muted">
           This browser has no flat picked yet — choose your wing + flat on the Pay page and
-          your receipts will show up here.
+          your payment history will show up here.
         </p>
         <button className="btn btn-primary" onClick={() => navigate("/", { replace: true })}>
           Pick your flat
@@ -76,7 +76,7 @@ export default function HistoryPage() {
     <div>
       <section className="hero">
         <p className="eyebrow">Payment history · Flat {me.wing}-{me.flat}</p>
-        <h1>Your little register of receipts.</h1>
+        <h1>Your payment register.</h1>
         <p className="lede">Everything paid from flat {me.wing}-{me.flat} — verified, pending and returned.</p>
       </section>
 
@@ -94,10 +94,10 @@ export default function HistoryPage() {
         </div>
         <div className="flatpanel-side">
           <label>
-            <span className="eyebrow">Search receipts</span>
+            <span className="eyebrow">Search payments</span>
             <div className="searchwrap">
               <IconSearch size={15} />
-              <input className="input" placeholder="Receipt, UTR, month…" value={search} onChange={(e) => setSearch(e.target.value)} />
+              <input className="input" placeholder="Payment ID, UTR, month…" value={search} onChange={(e) => setSearch(e.target.value)} />
             </div>
           </label>
         </div>
@@ -108,7 +108,7 @@ export default function HistoryPage() {
           <table className="table">
             <thead>
               <tr>
-                <th>Receipt</th>
+                <th>Payment ID</th>
                 <th>Paid on</th>
                 <th>For</th>
                 <th className="num">Amount</th>
@@ -127,9 +127,7 @@ export default function HistoryPage() {
                   <td className="mono">{p.utr || "—"}</td>
                   <td><span className={`badge b-${p.status}`}>{p.status}</span></td>
                   <td className="rowact">
-                    <Link className="linkbtn" to={`/receipt/${p.id}`}>
-                      Receipt
-                    </Link>
+                    <span className="badge font-code-md text-[11px]">{p.id}</span>
                   </td>
                 </tr>
               ))}
@@ -143,7 +141,7 @@ export default function HistoryPage() {
           <IconHistory size={30} />
           <h3>Nothing here yet</h3>
           <p className="muted">
-            {search ? "No receipts match your search." : "Once you pay, receipts appear within seconds."}
+            {search ? "No payments match your search." : "Once you pay, records appear within seconds."}
           </p>
           <Link to="/" className="btn btn-primary">
             Pay maintenance

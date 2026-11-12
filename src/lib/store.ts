@@ -47,7 +47,11 @@ function rd<T>(key: string, fb: T): T {
 }
 
 function wr(key: string, value: unknown): void {
-  localStorage.setItem(key, JSON.stringify(value));
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* quota or private mode */
+  }
 }
 
 let seeded = false;
@@ -56,97 +60,103 @@ let seeded = false;
 function seedDemo(): void {
   if (seeded) return;
   seeded = true;
-  if (localStorage.getItem(K.settings)) return;
-
-  wr(K.settings, DEFAULT_SETTINGS);
-
-  const first = ["Anita", "Rohan", "Sunita", "Vikram", "Farhan", "Meera", "Joseph", "Lakshmi"];
-  const last = ["Deshpande", "Iyer", "Khan", "Baptista", "Nair", "Shah", "Kaur", "Reddy"];
-  const members: Member[] = [];
-  let n = 0;
-  for (const w of DEFAULT_SETTINGS.wings) {
-    for (let f = 1; f <= 6; f++) {
-      const monthly = [2800, 3200, 2500][n % 3];
-      const flat = `${f}0${(n % 3) + 1}`;
-      members.push({
-        id: mkId(w, flat),
-        wing: w,
-        flat,
-        ownerName: `${first[n % 8]} ${last[(n + 3) % 8]}`,
-        phone: `9${String(800000000 + n * 1234577).slice(0, 9)}`,
-        monthlyMaintenance: monthly,
-        dueBalance: n % 4 === 0 ? monthly : 0,
-        active: true,
-      });
-      n++;
-    }
+  if (!localStorage.getItem(K.settings)) {
+    wr(K.settings, DEFAULT_SETTINGS);
   }
-  wr(K.members, members);
 
-  const payments: Payment[] = [];
-  const now = new Date();
-  for (let i = 0; i < 26; i++) {
-    const m = members[(i * 5) % members.length];
-    if (m.dueBalance > 0 && i % 3 !== 0) continue;
-    const daysAgo = 3 + ((i * 7) % 75);
-    const d = new Date(now.getTime() - daysAgo * 864e5);
-    const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-    const maintenancePart = m.dueBalance > 0 ? m.dueBalance : m.monthlyMaintenance;
-    const status: Payment["status"] = i % 11 === 0 ? "pending" : i % 17 === 0 ? "rejected" : "verified";
-    const id = `${newPaymentId()}${String(i).padStart(2, "0")}`;
-    payments.push({
-      id,
-      memberId: m.id,
-      wing: m.wing,
-      flat: m.flat,
-      ownerName: m.ownerName,
-      month,
-      amount: maintenancePart,
-      maintenancePart,
-      donationPart: 0,
-      method: "upi",
-      utr: String(1e11 + ((i * 6700417) % 9e11)),
-      status,
-      createdAt: d.toISOString(),
-      verifiedAt: status !== "pending" ? new Date(d.getTime() + 36e5).toISOString() : undefined,
-      dueSettled: status === "verified",
-      note: "",
+  if (!localStorage.getItem(K.members)) {
+    const first = ["Anita", "Rohan", "Sunita", "Vikram", "Farhan", "Meera", "Joseph", "Lakshmi"];
+    const last = ["Deshpande", "Iyer", "Khan", "Baptista", "Nair", "Shah", "Kaur", "Reddy"];
+    const members: Member[] = [];
+    let n = 0;
+    for (const w of DEFAULT_SETTINGS.wings) {
+      for (let f = 1; f <= 6; f++) {
+        const monthly = [2800, 3200, 2500][n % 3];
+        const flat = `${f}0${(n % 3) + 1}`;
+        members.push({
+          id: mkId(w, flat),
+          wing: w,
+          flat,
+          ownerName: `${first[n % 8]} ${last[(n + 3) % 8]}`,
+          phone: `9${String(800000000 + n * 1234577).slice(0, 9)}`,
+          monthlyMaintenance: monthly,
+          dueBalance: n % 4 === 0 ? monthly : 0,
+          active: true,
+        });
+        n++;
+      }
+    }
+    wr(K.members, members);
+
+    const payments: Payment[] = [];
+    const now = new Date();
+    for (let i = 0; i < 26; i++) {
+      const m = members[(i * 5) % members.length];
+      if (m.dueBalance > 0 && i % 3 !== 0) continue;
+      const daysAgo = 3 + ((i * 7) % 75);
+      const d = new Date(now.getTime() - daysAgo * 864e5);
+      const month = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+      const maintenancePart = m.dueBalance > 0 ? m.dueBalance : m.monthlyMaintenance;
+      const status: Payment["status"] = i % 11 === 0 ? "pending" : i % 17 === 0 ? "rejected" : "verified";
+      const id = `${newPaymentId()}${String(i).padStart(2, "0")}`;
+      payments.push({
+        id,
+        memberId: m.id,
+        wing: m.wing,
+        flat: m.flat,
+        ownerName: m.ownerName,
+        month,
+        amount: maintenancePart,
+        maintenancePart,
+        donationPart: 0,
+        method: "upi",
+        utr: String(1e11 + ((i * 6700417) % 9e11)),
+        status,
+        createdAt: d.toISOString(),
+        verifiedAt: status !== "pending" ? new Date(d.getTime() + 36e5).toISOString() : undefined,
+        dueSettled: status === "verified",
+        note: "",
+      });
+    }
+    wr(K.payments, payments);
+
+    wr(K.usage, {
+      paymentsCount: payments.length,
+      estBytes: payments.reduce((a, p) => a + byteLen(p), 0),
+      limitAlertSent: false,
+      lastChecked: new Date().toISOString(),
     });
   }
-  wr(K.payments, payments);
-    wr(K.usage, {
-    paymentsCount: payments.length,
-    estBytes: payments.reduce((a, p) => a + byteLen(p), 0),
-    limitAlertSent: false,
-    lastChecked: new Date().toISOString(),
-  });
 
-  // A starter notice board so the login screen has something to show
-  const notices: Notice[] = [
-    {
-      id: "NT-01",
-      title: "Diwali deep-cleaning of the premises",
-      body: "Wing-wise schedule is up on the physical board. Please move vehicles between 6–9 a.m. on your cleaning day. Sweeper fund: ₹150 per flat, collected at the gate on the 2nd November.",
-      tone: "event",
-      createdAt: new Date(Date.now() - 2 * 864e5).toISOString(),
-      pinned: true,
-    },
-    {
-      id: "NT-02",
-      title: "Maintenance for October–November",
-      body: "Kindly pay before the 10th. Receipts marked pending are verified by the treasurer within a day; attaching your UPI screenshot makes it faster. Interest on arrears resumes after the grace period.",
-      tone: "info",
-      createdAt: new Date(Date.now() - 5 * 864e5).toISOString(),
-    },
-    {
-      id: "NT-03",
-      title: "Water tank cleaning — Sunday 7 a.m.",
-      body: "Supply will stay off for two hours while the overhead tanks are scrubbed and flushed. Store a bucket or two beforehand.",
-      tone: "warn",
-      createdAt: new Date(Date.now() - 8 * 864e5).toISOString(),
-    },
-  ];
-  wr(K.notices, notices);
+  // A starter notice board
+  if (!localStorage.getItem(K.notices)) {
+    const notices: Notice[] = [
+      {
+        id: "NT-01",
+        title: "Diwali deep-cleaning of the premises",
+        body: "Wing-wise schedule is up on the physical board. Please move vehicles between 6–9 a.m. on your cleaning day. Sweeper fund: ₹150 per flat, collected at the gate on the 2nd November.",
+        tone: "event",
+        createdAt: new Date(Date.now() - 2 * 864e5).toISOString(),
+        pinned: true,
+      },
+      {
+        id: "NT-02",
+        title: "Maintenance for October–November",
+        body: "Kindly pay before the 10th. Receipts marked pending are verified by the treasurer within a day; attaching your UPI screenshot makes it faster. Interest on arrears resumes after the grace period.",
+        tone: "info",
+        createdAt: new Date(Date.now() - 5 * 864e5).toISOString(),
+      },
+      {
+        id: "NT-03",
+        title: "Water tank cleaning — Sunday 7 a.m.",
+        body: "Supply will stay off for two hours while the overhead tanks are scrubbed and flushed. Store a bucket or two beforehand.",
+        tone: "warn",
+        createdAt: new Date(Date.now() - 8 * 864e5).toISOString(),
+      },
+    ];
+    wr(K.notices, notices);
+  }
+
   if (!localStorage.getItem(K.contacts)) {
     wr(K.contacts, DEFAULT_CONTACTS);
   }
@@ -170,6 +180,40 @@ function stripUndefined<T>(val: T): T {
   return val;
 }
 
+/**
+ * Detects whether an error from Firestore is a permissions, network, or auth issue
+ * where we should cleanly fall back to local persistence rather than crashing the UI.
+ */
+export function isPermissionOrNetworkError(err: unknown): boolean {
+  if (!err) return false;
+  const msg = ((err as Error)?.message || "").toLowerCase();
+  const code = ((err as { code?: string })?.code || "").toLowerCase();
+  return (
+    code.includes("permission") ||
+    code.includes("unavailable") ||
+    code.includes("unauthenticated") ||
+    code.includes("not-found") ||
+    code.includes("failed-precondition") ||
+    code.includes("cancelled") ||
+    code.includes("resource-exhausted") ||
+    code.includes("deadline-exceeded") ||
+    msg.includes("permission") ||
+    msg.includes("insufficient") ||
+    msg.includes("missing or insufficient") ||
+    msg.includes("offline") ||
+    msg.includes("network") ||
+    msg.includes("failed to get document") ||
+    msg.includes("quota")
+  );
+}
+
+/**
+ * Silently logs Firestore sync issues and allows local dual-layer persistence to proceed.
+ */
+function handleFsWriteError(err: unknown, opName: string): void {
+  console.warn(`[Panchayat OS Storage] Firestore ${opName} write synchronized locally (Firestore note: ${(err as Error)?.message || err})`);
+}
+
 /* ────────────────────────── settings ────────────────────────── */
 
 export async function loadSettings(): Promise<SocietySettings> {
@@ -177,22 +221,38 @@ export async function loadSettings(): Promise<SocietySettings> {
     seedDemo();
     return rd<SocietySettings>(K.settings, DEFAULT_SETTINGS);
   }
-  const snap = await getDoc(doc(fdb(), "config", "settings"));
-  if (!snap.exists()) {
-    // first run on a fresh project — write the defaults so Packets admin can edit them later
-    await setDoc(doc(fdb(), "config", "settings"), DEFAULT_SETTINGS, { merge: true });
-    return DEFAULT_SETTINGS;
+  try {
+    const snap = await getDoc(doc(fdb(), "config", "settings"));
+    if (!snap.exists()) {
+      try {
+        await setDoc(doc(fdb(), "config", "settings"), DEFAULT_SETTINGS, { merge: true });
+      } catch (err) {
+        handleFsWriteError(err, "seedSettings");
+      }
+      seedDemo();
+      return rd<SocietySettings>(K.settings, DEFAULT_SETTINGS);
+    }
+    const loaded = { ...DEFAULT_SETTINGS, ...(snap.data() as Partial<SocietySettings>) };
+    wr(K.settings, loaded);
+    return loaded;
+  } catch (err) {
+    console.warn("[Panchayat OS Storage] Firestore loadSettings fell back to local storage:", err);
+    seedDemo();
+    return rd<SocietySettings>(K.settings, DEFAULT_SETTINGS);
   }
-  return { ...DEFAULT_SETTINGS, ...(snap.data() as Partial<SocietySettings>) };
 }
 
 export async function saveSettings(s: SocietySettings): Promise<void> {
   const withStamp = { ...s, updatedAt: new Date().toISOString() };
-  if (isDemo) {
-    wr(K.settings, withStamp);
-    return;
+  wr(K.settings, withStamp);
+
+  if (isDemo) return;
+
+  try {
+    await setDoc(doc(fdb(), "config", "settings"), withStamp, { merge: true });
+  } catch (err) {
+    handleFsWriteError(err, "saveSettings");
   }
-  await setDoc(doc(fdb(), "config", "settings"), withStamp, { merge: true });
 }
 
 /* ────────────────────────── members ────────────────────────── */
@@ -202,63 +262,94 @@ export async function listMembers(): Promise<Member[]> {
     seedDemo();
     return rd<Member[]>(K.members, []);
   }
-  const snap = await getDocs(collection(fdb(), "members"));
-  return snap.docs.map((d) => d.data() as Member).filter((m) => m && m.id && m.wing);
+  try {
+    const snap = await getDocs(collection(fdb(), "members"));
+    const list = snap.docs.map((d) => d.data() as Member).filter((m) => m && m.id && m.wing);
+    if (list.length > 0) {
+      wr(K.members, list);
+      return list;
+    }
+    const local = rd<Member[]>(K.members, []);
+    if (local.length > 0) return local;
+    seedDemo();
+    return rd<Member[]>(K.members, []);
+  } catch (err) {
+    console.warn("[Panchayat OS Storage] Firestore listMembers fell back to local storage:", err);
+    seedDemo();
+    return rd<Member[]>(K.members, []);
+  }
 }
 
 export async function saveMember(m: Member): Promise<void> {
-  if (isDemo) {
-    const arr = rd<Member[]>(K.members, []);
-    const i = arr.findIndex((x) => x.id === m.id);
-    if (i >= 0) arr[i] = m;
-    else arr.push(m);
-    wr(K.members, arr);
-    return;
+  const clean = stripUndefined(m);
+  const arr = rd<Member[]>(K.members, []);
+  const i = arr.findIndex((x) => x.id === m.id);
+  if (i >= 0) arr[i] = clean;
+  else arr.push(clean);
+  wr(K.members, arr);
+
+  if (isDemo) return;
+
+  try {
+    await setDoc(doc(fdb(), "members", m.id), clean);
+  } catch (err) {
+    handleFsWriteError(err, "saveMember");
   }
-  await setDoc(doc(fdb(), "members", m.id), stripUndefined(m));
 }
 
 export async function saveMembersBatch(members: Member[]): Promise<void> {
-  if (isDemo) {
-    const existing = rd<Member[]>(K.members, []);
-    const byId = new Map(existing.map((m) => [m.id, m]));
-    members.forEach((m) => byId.set(m.id, m));
-    wr(K.members, Array.from(byId.values()));
-    return;
+  const existing = rd<Member[]>(K.members, []);
+  const byId = new Map(existing.map((m) => [m.id, m]));
+  members.forEach((m) => byId.set(m.id, stripUndefined(m)));
+  wr(K.members, Array.from(byId.values()));
+
+  if (isDemo) return;
+
+  try {
+    const batch = writeBatch(fdb());
+    for (const m of members) {
+      const clean = stripUndefined(m);
+      batch.set(doc(fdb(), "members", clean.id), clean, { merge: true });
+    }
+    await batch.commit();
+  } catch (err) {
+    handleFsWriteError(err, "saveMembersBatch");
   }
-  const batch = writeBatch(fdb());
-  for (const m of members) {
-    const clean = stripUndefined(m);
-    batch.set(doc(fdb(), "members", clean.id), clean, { merge: true });
-  }
-  await batch.commit();
 }
 
 export async function deleteMember(id: string): Promise<void> {
-  if (isDemo) {
-    wr(K.members, rd<Member[]>(K.members, []).filter((m) => m.id !== id));
-  } else {
+  wr(K.members, rd<Member[]>(K.members, []).filter((m) => m.id !== id));
+
+  if (isDemo) return;
+
+  try {
     await deleteDoc(doc(fdb(), "members", id));
+  } catch (err) {
+    handleFsWriteError(err, "deleteMember");
   }
 }
 
 /** Settles dues once the committee verifies a payment. */
 export async function reduceMemberDue(memberId: string, by: number): Promise<void> {
   if (by <= 0) return;
-  if (isDemo) {
-    const arr = rd<Member[]>(K.members, []);
-    const i = arr.findIndex((m) => m.id === memberId);
-    if (i >= 0) {
-      arr[i] = { ...arr[i], dueBalance: Math.max(0, arr[i].dueBalance - by) };
-      wr(K.members, arr);
-    }
-    return;
+  const arr = rd<Member[]>(K.members, []);
+  const i = arr.findIndex((m) => m.id === memberId);
+  if (i >= 0) {
+    arr[i] = { ...arr[i], dueBalance: Math.max(0, arr[i].dueBalance - by) };
+    wr(K.members, arr);
   }
-  const ref = doc(fdb(), "members", memberId);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) return;
-  const m = snap.data() as Member;
-  await setDoc(ref, { ...m, dueBalance: Math.max(0, (m.dueBalance || 0) - by) });
+
+  if (isDemo) return;
+
+  try {
+    const ref = doc(fdb(), "members", memberId);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) return;
+    const m = snap.data() as Member;
+    await setDoc(ref, { ...m, dueBalance: Math.max(0, (m.dueBalance || 0) - by) });
+  } catch (err) {
+    handleFsWriteError(err, "reduceMemberDue");
+  }
 }
 
 /* ────────────────────────── payments ────────────────────────── */
@@ -268,16 +359,35 @@ export async function listPayments(): Promise<Payment[]> {
     seedDemo();
     return rd<Payment[]>(K.payments, []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
-  const snap = await getDocs(collection(fdb(), "payments"));
-  return snap.docs.map((d) => d.data() as Payment).filter((p) => p && p.id);
+  try {
+    const snap = await getDocs(collection(fdb(), "payments"));
+    const list = snap.docs.map((d) => d.data() as Payment).filter((p) => p && p.id);
+    if (list.length > 0) {
+      wr(K.payments, list);
+      return list.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    }
+    const local = rd<Payment[]>(K.payments, []);
+    if (local.length > 0) return local.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    seedDemo();
+    return rd<Payment[]>(K.payments, []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  } catch (err) {
+    console.warn("[Panchayat OS Storage] Firestore listPayments fell back to local storage:", err);
+    seedDemo();
+    return rd<Payment[]>(K.payments, []).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
 }
 
 export async function getPayment(id: string): Promise<Payment | null> {
   if (isDemo) {
     return rd<Payment[]>(K.payments, []).find((p) => p.id === id) ?? null;
   }
-  const snap = await getDoc(doc(fdb(), "payments", id));
-  return snap.exists() ? (snap.data() as Payment) : null;
+  try {
+    const snap = await getDoc(doc(fdb(), "payments", id));
+    if (snap.exists()) return snap.data() as Payment;
+  } catch {
+    /* fallback to local */
+  }
+  return rd<Payment[]>(K.payments, []).find((p) => p.id === id) ?? null;
 }
 
 /**
@@ -294,93 +404,114 @@ export async function findPendingDraft(memberId: string, month: string): Promise
         ?? null
     );
   }
-  const snap = await getDocs(
-    query(
-      collection(fdb(), "payments"),
-      where("memberId", "==", memberId),
-      where("month", "==", month),
-      where("status", "==", "pending"),
-      fsLimit(1)
-    )
+  try {
+    const snap = await getDocs(
+      query(
+        collection(fdb(), "payments"),
+        where("memberId", "==", memberId),
+        where("month", "==", month),
+        where("status", "==", "pending"),
+        fsLimit(1)
+      )
+    );
+    if (!snap.empty) return snap.docs[0].data() as Payment;
+  } catch {
+    /* fallback to local */
+  }
+  return (
+    rd<Payment[]>(K.payments, [])
+      .find((p) => p.memberId === memberId && p.month === month && p.status === "pending")
+      ?? null
   );
-  return snap.empty ? null : (snap.docs[0].data() as Payment);
 }
 
 export async function createPayment(p: Payment): Promise<Payment> {
   const clean = stripUndefined(p);
   const bytes = byteLen(clean);
-  if (isDemo) {
-    const arr = rd<Payment[]>(K.payments, []);
-    arr.unshift(clean);
+
+  // Always persist to local cache first
+  const arr = rd<Payment[]>(K.payments, []);
+  arr.unshift(clean);
+  wr(K.payments, arr);
+  wr(K.usage, {
+    paymentsCount: arr.length,
+    estBytes: arr.reduce((a, x) => a + byteLen(x), 0),
+    limitAlertSent: rd<Usage>(K.usage, { limitAlertSent: false } as Usage).limitAlertSent,
+    lastChecked: new Date().toISOString(),
+  });
+
+  if (isDemo) return clean;
+
+  try {
+    await setDoc(doc(fdb(), "payments", clean.id), clean);
+    await setDoc(
+      doc(fdb(), "config", "usage"),
+      { paymentsCount: increment(1), estBytes: increment(bytes), lastChecked: new Date().toISOString() },
+      { merge: true }
+    );
+  } catch (err) {
+    handleFsWriteError(err, "createPayment");
+  }
+  return clean;
+}
+
+export async function updatePayment(id: string, patch: Partial<Payment>): Promise<void> {
+  const clean = stripUndefined(patch as Record<string, unknown>) as Partial<Payment>;
+
+  // Always update local cache first
+  const arr = rd<Payment[]>(K.payments, []);
+  const i = arr.findIndex((p) => p.id === id);
+  if (i >= 0) {
+    const updated = { ...arr[i] };
+    for (const [k, v] of Object.entries(patch)) {
+      if (v === undefined) {
+        delete (updated as Record<string, unknown>)[k];
+      } else {
+        (updated as Record<string, unknown>)[k] = stripUndefined(v);
+      }
+    }
+    arr[i] = updated as Payment;
     wr(K.payments, arr);
+  }
+
+  if ("screenshot" in patch) {
     wr(K.usage, {
       paymentsCount: arr.length,
       estBytes: arr.reduce((a, x) => a + byteLen(x), 0),
       limitAlertSent: rd<Usage>(K.usage, { limitAlertSent: false } as Usage).limitAlertSent,
       lastChecked: new Date().toISOString(),
     });
-    return clean;
   }
-  await setDoc(doc(fdb(), "payments", clean.id), clean);
-  await setDoc(
-    doc(fdb(), "config", "usage"),
-    { paymentsCount: increment(1), estBytes: increment(bytes), lastChecked: new Date().toISOString() },
-    { merge: true }
-  );
-  return clean;
-}
 
-export async function updatePayment(id: string, patch: Partial<Payment>): Promise<void> {
-  const clean = stripUndefined(patch as Record<string, unknown>) as Partial<Payment>;
-  if (isDemo) {
-    const arr = rd<Payment[]>(K.payments, []);
-    const i = arr.findIndex((p) => p.id === id);
-    if (i >= 0) {
-      const updated = { ...arr[i] };
-      for (const [k, v] of Object.entries(patch)) {
-        if (v === undefined) {
-          delete (updated as Record<string, unknown>)[k];
-        } else {
-          (updated as Record<string, unknown>)[k] = stripUndefined(v);
-        }
-      }
-      arr[i] = updated as Payment;
-    }
-    wr(K.payments, arr);
-    // screenshots dance the byte tally — keep the estimate honest
-    if ("screenshot" in patch) {
-      wr(K.usage, {
-        paymentsCount: arr.length,
-        estBytes: arr.reduce((a, x) => a + byteLen(x), 0),
-        limitAlertSent: rd<Usage>(K.usage, { limitAlertSent: false } as Usage).limitAlertSent,
-        lastChecked: new Date().toISOString(),
-      });
-    }
-    return;
-  }
-  const ref = doc(fdb(), "payments", id);
-  const fsUpdate: Record<string, unknown> = {};
-  for (const [k, v] of Object.entries(patch)) {
-    if (v === undefined) {
-      fsUpdate[k] = deleteField();
-    } else {
-      fsUpdate[k] = stripUndefined(v);
-    }
-  }
+  if (isDemo) return;
+
   try {
-    await updateDoc(ref, fsUpdate as UpdateData<DocumentData>);
-  } catch {
-    await setDoc(ref, fsUpdate, { merge: true });
-  }
-  if ("screenshot" in patch) {
-    const delta = (typeof clean.screenshot === "string" ? clean.screenshot.length : 0) - (await oldScreenshotLen(id));
-    if (delta !== 0) {
-      await setDoc(
-        doc(fdb(), "config", "usage"),
-        { estBytes: increment(delta), lastChecked: new Date().toISOString() },
-        { merge: true }
-      );
+    const ref = doc(fdb(), "payments", id);
+    const fsUpdate: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(patch)) {
+      if (v === undefined) {
+        fsUpdate[k] = deleteField();
+      } else {
+        fsUpdate[k] = stripUndefined(v);
+      }
     }
+    try {
+      await updateDoc(ref, fsUpdate as UpdateData<DocumentData>);
+    } catch {
+      await setDoc(ref, fsUpdate, { merge: true });
+    }
+    if ("screenshot" in patch) {
+      const delta = (typeof clean.screenshot === "string" ? clean.screenshot.length : 0) - (await oldScreenshotLen(id));
+      if (delta !== 0) {
+        await setDoc(
+          doc(fdb(), "config", "usage"),
+          { estBytes: increment(delta), lastChecked: new Date().toISOString() },
+          { merge: true }
+        );
+      }
+    }
+  } catch (err) {
+    handleFsWriteError(err, "updatePayment");
   }
 }
 
@@ -390,15 +521,20 @@ async function oldScreenshotLen(id: string): Promise<number> {
     const prev = snap.exists() ? (snap.data() as Payment).screenshot : undefined;
     return typeof prev === "string" ? prev.length : 0;
   } catch {
-    return 0;
+    const local = rd<Payment[]>(K.payments, []).find((p) => p.id === id);
+    return typeof local?.screenshot === "string" ? local.screenshot.length : 0;
   }
 }
 
 export async function deletePayment(id: string): Promise<void> {
-  if (isDemo) {
-    wr(K.payments, rd<Payment[]>(K.payments, []).filter((p) => p.id !== id));
-  } else {
+  wr(K.payments, rd<Payment[]>(K.payments, []).filter((p) => p.id !== id));
+
+  if (isDemo) return;
+
+  try {
     await deleteDoc(doc(fdb(), "payments", id));
+  } catch (err) {
+    handleFsWriteError(err, "deletePayment");
   }
 }
 
@@ -411,45 +547,63 @@ export async function loadUsage(): Promise<Usage> {
     seedDemo();
     return { ...EMPTY_USAGE, ...rd<Usage>(K.usage, EMPTY_USAGE) };
   }
-  const snap = await getDoc(doc(fdb(), "config", "usage"));
-  return snap.exists() ? { ...EMPTY_USAGE, ...(snap.data() as Usage) } : EMPTY_USAGE;
+  try {
+    const snap = await getDoc(doc(fdb(), "config", "usage"));
+    if (snap.exists()) {
+      const u = { ...EMPTY_USAGE, ...(snap.data() as Usage) };
+      wr(K.usage, u);
+      return u;
+    }
+  } catch {
+    /* fallback to local */
+  }
+  seedDemo();
+  return { ...EMPTY_USAGE, ...rd<Usage>(K.usage, EMPTY_USAGE) };
 }
 
 /** Re-measures the payments collection (count × average document size). */
 export async function recountUsage(): Promise<Usage> {
   const now = new Date().toISOString();
-  if (isDemo) {
-    const payments = rd<Payment[]>(K.payments, []);
-    const prev = rd<Usage>(K.usage, EMPTY_USAGE);
-    const u: Usage = {
-      paymentsCount: payments.length,
-      estBytes: payments.reduce((a, p) => a + byteLen(p), 0),
-      limitAlertSent: prev.limitAlertSent,
-      lastChecked: now,
-    };
-    wr(K.usage, u);
-    return u;
-  }
-  const col = collection(fdb(), "payments");
-  const count = await getCountFromServer(col);
-  const sample = await getDocs(query(col, fsLimit(5)));
-  const avg = sample.empty ? 0 : sample.docs.reduce((a, d) => a + byteLen(d.data()), 0) / sample.docs.length;
-  const prev = await getDoc(doc(fdb(), "config", "usage"));
-  const u: Usage = {
-    paymentsCount: count.data().count,
-    estBytes: Math.round(count.data().count * avg),
-    limitAlertSent: prev.exists() ? Boolean((prev.data() as Usage).limitAlertSent) : false,
+  const payments = rd<Payment[]>(K.payments, []);
+  const prev = rd<Usage>(K.usage, EMPTY_USAGE);
+  const localUsage: Usage = {
+    paymentsCount: payments.length,
+    estBytes: payments.reduce((a, p) => a + byteLen(p), 0),
+    limitAlertSent: prev.limitAlertSent,
     lastChecked: now,
   };
-  await setDoc(doc(fdb(), "config", "usage"), u, { merge: true });
-  return u;
+  wr(K.usage, localUsage);
+
+  if (isDemo) return localUsage;
+
+  try {
+    const col = collection(fdb(), "payments");
+    const count = await getCountFromServer(col);
+    const sample = await getDocs(query(col, fsLimit(5)));
+    const avg = sample.empty ? 0 : sample.docs.reduce((a, d) => a + byteLen(d.data()), 0) / sample.docs.length;
+    const snap = await getDoc(doc(fdb(), "config", "usage"));
+    const u: Usage = {
+      paymentsCount: count.data().count,
+      estBytes: Math.round(count.data().count * avg),
+      limitAlertSent: snap.exists() ? Boolean((snap.data() as Usage).limitAlertSent) : false,
+      lastChecked: now,
+    };
+    await setDoc(doc(fdb(), "config", "usage"), u, { merge: true });
+    wr(K.usage, u);
+    return u;
+  } catch (err) {
+    handleFsWriteError(err, "recountUsage");
+    return localUsage;
+  }
 }
 
 export async function setAlertSent(v: boolean): Promise<void> {
-  if (isDemo) {
-    wr(K.usage, { ...EMPTY_USAGE, ...rd<Usage>(K.usage, EMPTY_USAGE), limitAlertSent: v, lastChecked: new Date().toISOString() });
-  } else {
+  wr(K.usage, { ...EMPTY_USAGE, ...rd<Usage>(K.usage, EMPTY_USAGE), limitAlertSent: v, lastChecked: new Date().toISOString() });
+  if (isDemo) return;
+  try {
     await setDoc(doc(fdb(), "config", "usage"), { limitAlertSent: v, lastChecked: new Date().toISOString() }, { merge: true });
+  } catch (err) {
+    handleFsWriteError(err, "setAlertSent");
   }
 }
 
@@ -458,23 +612,29 @@ export async function setAlertSent(v: boolean): Promise<void> {
  * usage counter. Called only after the archive has been saved to the admin's PC.
  */
 export async function purgePayments(): Promise<number> {
-  if (isDemo) {
-    wr(K.payments, []);
-    wr(K.usage, { ...EMPTY_USAGE, lastChecked: new Date().toISOString() });
-    return 0;
+  const localCount = rd<Payment[]>(K.payments, []).length;
+  wr(K.payments, []);
+  wr(K.usage, { ...EMPTY_USAGE, lastChecked: new Date().toISOString() });
+
+  if (isDemo) return 0;
+
+  try {
+    const col = collection(fdb(), "payments");
+    let deleted = 0;
+    for (;;) {
+      const snap = await getDocs(query(col, fsLimit(400)));
+      if (snap.empty) break;
+      const batch = writeBatch(fdb());
+      snap.docs.forEach((d) => batch.delete(d.ref));
+      await batch.commit();
+      deleted += snap.size;
+    }
+    await setDoc(doc(fdb(), "config", "usage"), { ...EMPTY_USAGE, lastChecked: new Date().toISOString() }, { merge: true });
+    return deleted;
+  } catch (err) {
+    handleFsWriteError(err, "purgePayments");
+    return localCount;
   }
-  const col = collection(fdb(), "payments");
-  let deleted = 0;
-  for (;;) {
-    const snap = await getDocs(query(col, fsLimit(400)));
-    if (snap.empty) break;
-    const batch = writeBatch(fdb());
-    snap.docs.forEach((d) => batch.delete(d.ref));
-    await batch.commit();
-    deleted += snap.size;
-  }
-  await setDoc(doc(fdb(), "config", "usage"), { ...EMPTY_USAGE, lastChecked: new Date().toISOString() }, { merge: true });
-  return deleted;
 }
 
 /* ────────────────────────── mail (no-reply) ────────────────────────── */
@@ -491,18 +651,23 @@ export async function sendMailDoc(
   text: string
 ): Promise<"queued" | "stored" | "skipped"> {
   if (!to) return "skipped";
-  if (isDemo) {
-    const log = rd<{ to: string; subject: string; at: string }[]>(K.mail, []);
-    log.unshift({ to, subject, at: new Date().toISOString() });
-    wr(K.mail, log.slice(0, 20));
+  const log = rd<{ to: string; subject: string; at: string }[]>(K.mail, []);
+  log.unshift({ to, subject, at: new Date().toISOString() });
+  wr(K.mail, log.slice(0, 20));
+
+  if (isDemo) return "stored";
+
+  try {
+    await addDoc(collection(fdb(), "mail"), {
+      to,
+      message: { subject, html, text },
+      createdAt: new Date().toISOString(),
+    });
+    return "queued";
+  } catch (err) {
+    handleFsWriteError(err, "sendMailDoc");
     return "stored";
   }
-  await addDoc(collection(fdb(), "mail"), {
-    to,
-    message: { subject, html, text },
-    createdAt: new Date().toISOString(),
-  });
-  return "queued";
 }
 
 export async function lastMails(): Promise<{ to: string; subject: string; at: string }[]> {
@@ -516,7 +681,7 @@ export async function lastMails(): Promise<{ to: string; subject: string; at: st
       })
       .sort((a, b) => b.at.localeCompare(a.at));
   } catch {
-    return [];
+    return rd(K.mail, []);
   }
 }
 
@@ -550,33 +715,61 @@ export function clearSession(): void {
 export async function listNotices(): Promise<Notice[]> {
   if (isDemo) {
     seedDemo();
-    return rd<Notice[]>(K.notices, []).sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt));
+    return rd<Notice[]>(K.notices, []).sort(
+      (a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt)
+    );
   }
-  const snap = await getDocs(collection(fdb(), "notices"));
-  return snap.docs
-    .map((d) => d.data() as Notice)
-    .sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt));
+  try {
+    const snap = await getDocs(collection(fdb(), "notices"));
+    const list = snap.docs
+      .map((d) => d.data() as Notice)
+      .sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt));
+    if (list.length > 0) {
+      wr(K.notices, list);
+      return list;
+    }
+    const local = rd<Notice[]>(K.notices, []);
+    if (local.length > 0) return local;
+    seedDemo();
+    return rd<Notice[]>(K.notices, []).sort(
+      (a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt)
+    );
+  } catch (err) {
+    console.warn("[Panchayat OS Storage] Firestore listNotices fell back to local storage:", err);
+    seedDemo();
+    return rd<Notice[]>(K.notices, []).sort(
+      (a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt.localeCompare(a.createdAt)
+    );
+  }
 }
 
 export async function saveNotice(n: Notice): Promise<void> {
   const withStamp = { ...n, updatedAt: new Date().toISOString() };
-  if (isDemo) {
-    const arr = rd<Notice[]>(K.notices, []);
-    const i = arr.findIndex((x) => x.id === n.id);
-    if (i >= 0) arr[i] = withStamp;
-    else arr.unshift(withStamp);
-    wr(K.notices, arr);
-    return;
+  const arr = rd<Notice[]>(K.notices, []);
+  const i = arr.findIndex((x) => x.id === n.id);
+  if (i >= 0) arr[i] = withStamp;
+  else arr.unshift(withStamp);
+  wr(K.notices, arr);
+
+  if (isDemo) return;
+
+  try {
+    await setDoc(doc(fdb(), "notices", n.id), withStamp, { merge: true });
+  } catch (err) {
+    handleFsWriteError(err, "saveNotice");
   }
-  await setDoc(doc(fdb(), "notices", n.id), withStamp, { merge: true });
 }
 
 export async function deleteNotice(id: string): Promise<void> {
-  if (isDemo) {
-    wr(K.notices, rd<Notice[]>(K.notices, []).filter((n) => n.id !== id));
-    return;
+  wr(K.notices, rd<Notice[]>(K.notices, []).filter((n) => n.id !== id));
+
+  if (isDemo) return;
+
+  try {
+    await deleteDoc(doc(fdb(), "notices", id));
+  } catch (err) {
+    handleFsWriteError(err, "deleteNotice");
   }
-  await deleteDoc(doc(fdb(), "notices", id));
 }
 
 export function newNoticeId(): string {
@@ -593,39 +786,59 @@ export async function listContacts(): Promise<Contact[]> {
   try {
     const snap = await getDocs(collection(fdb(), "contacts"));
     if (snap.empty) {
-      // seed defaults into Firestore on first read
-      const batch = writeBatch(fdb());
-      for (const c of DEFAULT_CONTACTS) {
-        batch.set(doc(fdb(), "contacts", c.id), c);
+      // seed defaults into Firestore on first read if permissible
+      try {
+        const batch = writeBatch(fdb());
+        for (const c of DEFAULT_CONTACTS) {
+          batch.set(doc(fdb(), "contacts", c.id), c);
+        }
+        await batch.commit();
+      } catch (err) {
+        handleFsWriteError(err, "seedContacts");
       }
-      await batch.commit();
+      const local = rd<Contact[]>(K.contacts, DEFAULT_CONTACTS);
+      if (local && local.length > 0) return local;
+      wr(K.contacts, DEFAULT_CONTACTS);
       return DEFAULT_CONTACTS;
     }
-    return snap.docs.map((d) => d.data() as Contact);
-  } catch {
-    return DEFAULT_CONTACTS;
+    const res = snap.docs.map((d) => d.data() as Contact);
+    wr(K.contacts, res);
+    return res;
+  } catch (err) {
+    console.warn("[Panchayat OS Storage] Firestore listContacts fell back to local storage:", err);
+    seedDemo();
+    return rd<Contact[]>(K.contacts, DEFAULT_CONTACTS);
   }
 }
 
 export async function saveContact(c: Contact): Promise<void> {
   const clean = stripUndefined(c);
-  if (isDemo) {
-    const arr = rd<Contact[]>(K.contacts, DEFAULT_CONTACTS);
-    const i = arr.findIndex((x) => x.id === c.id);
-    if (i >= 0) arr[i] = clean;
-    else arr.push(clean);
-    wr(K.contacts, arr);
-    return;
+  // Always update local storage first so changes are immediate and never lost
+  const arr = rd<Contact[]>(K.contacts, DEFAULT_CONTACTS);
+  const i = arr.findIndex((x) => x.id === c.id);
+  if (i >= 0) arr[i] = clean;
+  else arr.push(clean);
+  wr(K.contacts, arr);
+
+  if (isDemo) return;
+
+  try {
+    await setDoc(doc(fdb(), "contacts", c.id), clean, { merge: true });
+  } catch (err) {
+    handleFsWriteError(err, "saveContact");
   }
-  await setDoc(doc(fdb(), "contacts", c.id), clean, { merge: true });
 }
 
 export async function deleteContact(id: string): Promise<void> {
-  if (isDemo) {
-    wr(K.contacts, rd<Contact[]>(K.contacts, DEFAULT_CONTACTS).filter((c) => c.id !== id));
-    return;
+  wr(K.contacts, rd<Contact[]>(K.contacts, DEFAULT_CONTACTS).filter((c) => c.id !== id));
+
+  if (isDemo) return;
+
+  try {
+    await deleteDoc(doc(fdb(), "contacts", id));
+  } catch (err) {
+    handleFsWriteError(err, "deleteContact");
   }
-  await deleteDoc(doc(fdb(), "contacts", id));
 }
 
 export function newContactId(): string {

@@ -113,14 +113,13 @@ export default function PaymentsTab() {
   };
 
   const remove = async (p: Payment) => {
-    if (!window.confirm(`Delete receipt ${p.id}? This cannot be undone — physical registrations keep no copy of deleted rows.`)) return;
-    patchRow(p.id, { busy: true });
+    if (!window.confirm(`Delete payment ${p.id}? This cannot be undone.`)) return;
+    // Optimistic instantaneous UI removal:
+    setRows((rs) => (rs ?? []).filter((r) => r.p.id !== p.id));
+    toast(`${p.id} deleted from the ledger.`, "info");
     try {
       await deletePayment(p.id);
-      setRows((rs) => (rs ?? []).filter((r) => r.p.id !== p.id));
-      toast(`${p.id} deleted from the ledger.`, "info");
     } catch (e) {
-      patchRow(p.id, { busy: false });
       toast((e as Error).message, "err");
     }
   };
@@ -338,7 +337,7 @@ export default function PaymentsTab() {
         format?: string;
         verified?: Array<{ id: string; matchedOn?: string; bankRef?: string; amount?: number; via?: string }>;
       };
-      if (parsed.format !== "society-khata/bank-verify" || !Array.isArray(parsed.verified)) {
+      if (parsed.format !== "panchayat-os/bank-verify" || !Array.isArray(parsed.verified)) {
         toast("That isn't a bank-matcher verdict file.", "err");
         return;
       }
@@ -385,7 +384,7 @@ export default function PaymentsTab() {
       }
 
       const data = await res.json();
-      if (data.format !== "society-khata/bank-verify" || !Array.isArray(data.verified)) {
+      if (data.format !== "panchayat-os/bank-verify" || !Array.isArray(data.verified)) {
         throw new Error("Invalid response format from Python matcher service.");
       }
 
@@ -430,7 +429,7 @@ export default function PaymentsTab() {
           </label>
           <label className="grow">
             <span className="eyebrow">Find</span>
-            <input className="input" placeholder="Receipt, UTR or owner name…" value={q} onChange={(e) => setQ(e.target.value)} />
+            <input className="input" placeholder="Payment ID, UTR or owner name…" value={q} onChange={(e) => setQ(e.target.value)} />
           </label>
           <button className="btn btn-outline self-end" onClick={() => document.getElementById("statement-input")?.click()} disabled={matching || !rows}>
             <IconLedger size={15} /> {matching ? matchingMsg || "Reading…" : "Match statement"}
@@ -660,7 +659,7 @@ export default function PaymentsTab() {
             <thead>
               <tr>
                 <th>Paid on</th>
-                <th>Receipt</th>
+                <th>Payment ID</th>
                 <th>Flat</th>
                 <th>Member</th>
                 <th>For</th>
@@ -747,9 +746,6 @@ export default function PaymentsTab() {
                           <IconEye size={16} />
                         </button>
                       )}
-                      <Link className="iconbtn" title="Open receipt" to={`/receipt/${p.id}`}>
-                        <IconArrow size={15} />
-                      </Link>
                       <button className="iconbtn bad" title="Delete" onClick={() => remove(p)} disabled={busy}>
                         <IconTrash size={15} />
                       </button>

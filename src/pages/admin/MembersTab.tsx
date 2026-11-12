@@ -262,7 +262,7 @@ export default function MembersTab() {
       setCommPhone("");
       setCommNotes("");
       setEditingCommId(null);
-      toast(editingCommId ? `Committee member "${c.name}" updated.` : `Added "${c.name}" to Society Management.`, "ok");
+      toast(editingCommId ? `Committee member "${c.name}" updated successfully.` : `Added "${c.name}" to Society Management.`, "ok");
     } catch (err) {
       toast((err as Error).message, "err");
     } finally {
@@ -276,7 +276,15 @@ export default function MembersTab() {
     setCommRole(c.role);
     setCommPhone(c.phone);
     setCommNotes(c.notes || "");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => {
+      const el = document.getElementById("committee-form");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        const input = el.querySelector<HTMLInputElement>("input");
+        if (input) input.focus();
+      }
+    }, 50);
+    toast(`Editing committee member "${c.name}". Update details and click Save.`, "info");
   };
 
   const cancelEditCommittee = () => {
@@ -312,7 +320,7 @@ export default function MembersTab() {
       setEmergCategory("services");
       setEmergNotes("");
       setEditingEmergId(null);
-      toast(editingEmergId ? `Contact "${c.name}" updated.` : `Added contact "${c.name}".`, "ok");
+      toast(editingEmergId ? `Contact "${c.name}" updated successfully.` : `Added contact "${c.name}".`, "ok");
     } catch (err) {
       toast((err as Error).message, "err");
     } finally {
@@ -327,7 +335,15 @@ export default function MembersTab() {
     setEmergPhone(c.phone);
     setEmergCategory(c.category);
     setEmergNotes(c.notes || "");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => {
+      const el = document.getElementById("emergency-form");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        const input = el.querySelector<HTMLInputElement>("input");
+        if (input) input.focus();
+      }
+    }, 50);
+    toast(`Editing contact "${c.name}". Update details and click Save.`, "info");
   };
 
   const cancelEditEmergency = () => {
@@ -341,11 +357,13 @@ export default function MembersTab() {
 
   const removeContact = async (c: Contact) => {
     if (!window.confirm(`Delete "${c.name}" (${c.role})? This cannot be undone.`)) return;
+    // Optimistic instantaneous UI removal:
+    setContacts((prev) => (prev ?? []).filter((x) => x.id !== c.id));
+    toast(`Removed "${c.name}".`, "info");
     try {
       await deleteContact(c.id);
-      setContacts(await listContacts());
-      toast(`Removed "${c.name}".`, "info");
     } catch (err) {
+      setContacts(await listContacts());
       toast((err as Error).message, "err");
     }
   };
@@ -648,21 +666,23 @@ export default function MembersTab() {
                     <div
                       key={c.id}
                       style={{
-                        border: "1px solid var(--line)",
-                        borderTop: "3px solid var(--brand)",
+                        border: editingCommId === c.id ? "2px solid var(--brand, #2f7d4f)" : "1px solid var(--line)",
+                        borderTop: editingCommId === c.id ? "4px solid var(--brand, #2f7d4f)" : "3px solid var(--brand, #2f7d4f)",
                         borderRadius: "10px",
                         padding: "16px",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "space-between",
                         gap: "10px",
-                        background: "var(--card-bg, #fff)",
+                        background: editingCommId === c.id ? "var(--brand-surface, #f4faf6)" : "var(--card-bg, #fff)",
+                        boxShadow: editingCommId === c.id ? "0 0 0 3px rgba(47, 125, 79, 0.2)" : "none",
+                        transition: "all 0.2s ease",
                       }}
                     >
                       <div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <span className="badge b-verified" style={{ fontWeight: 700, fontSize: "11px" }}>
-                            COMMITTEE
+                            {editingCommId === c.id ? "EDITING NOW" : "COMMITTEE"}
                           </span>
                           <div style={{ display: "flex", gap: "4px" }}>
                             <button
@@ -704,10 +724,42 @@ export default function MembersTab() {
           </div>
 
           {/* Add / Edit Committee Member Form */}
-          <form className="card pad addmember" onSubmit={handleSaveCommittee} style={{ alignSelf: "flex-start" }}>
+          <form id="committee-form" className="card pad addmember" onSubmit={handleSaveCommittee} style={{ alignSelf: "flex-start" }}>
             <h2 className="card-title">
               {editingCommId ? <><IconEdit size={16} /> Edit Committee Member</> : <><IconPlus size={16} /> Add Committee Member</>}
             </h2>
+            {editingCommId && (
+              <div
+                style={{
+                  padding: "8px 12px",
+                  background: "var(--brand-surface, #eef7f2)",
+                  border: "1px solid var(--brand-line, #c2e2d0)",
+                  borderRadius: "6px",
+                  fontSize: "12.5px",
+                  color: "var(--brand-deep, #1d4d3b)",
+                  marginBottom: "12px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span>Editing: <b>{commName || "Member"}</b></span>
+                <button
+                  type="button"
+                  onClick={cancelEditCommittee}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "inherit",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                    fontSize: "12px",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
             <label>
               <span className="eyebrow">Full Name</span>
               <input
@@ -758,7 +810,7 @@ export default function MembersTab() {
             </label>
             <div className="btnrow" style={{ marginTop: 10 }}>
               <button className="btn btn-primary btn-block" disabled={savingComm}>
-                {savingComm ? "Saving…" : editingCommId ? "Save Changes" : <><IconPlus size={15} /> Add to Committee</>}
+                {savingComm ? "Saving…" : editingCommId ? <><IconCheck size={15} /> Save Changes</> : <><IconPlus size={15} /> Add to Committee</>}
               </button>
               {editingCommId && (
                 <button type="button" className="btn btn-ghost btn-block" onClick={cancelEditCommittee}>
@@ -794,21 +846,23 @@ export default function MembersTab() {
                     <div
                       key={c.id}
                       style={{
-                        border: "1px solid var(--line)",
-                        borderTop: `3px solid ${c.category === "emergency" ? "var(--danger, #d32f2f)" : "var(--brand-mid, #2f7d4f)"}`,
+                        border: editingEmergId === c.id ? "2px solid var(--brand, #2f7d4f)" : "1px solid var(--line)",
+                        borderTop: editingEmergId === c.id ? "4px solid var(--brand, #2f7d4f)" : `3px solid ${c.category === "emergency" ? "var(--danger, #d32f2f)" : "var(--brand-mid, #2f7d4f)"}`,
                         borderRadius: "8px",
                         padding: "14px",
                         display: "flex",
                         flexDirection: "column",
                         justifyContent: "space-between",
                         gap: "8px",
-                        background: "var(--card-bg, #fff)",
+                        background: editingEmergId === c.id ? "var(--brand-surface, #f4faf6)" : "var(--card-bg, #fff)",
+                        boxShadow: editingEmergId === c.id ? "0 0 0 3px rgba(47, 125, 79, 0.2)" : "none",
+                        transition: "all 0.2s ease",
                       }}
                     >
                       <div>
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                           <span className={`badge b-${c.category === "emergency" ? "rejected" : "pending"}`}>
-                            {c.category.toUpperCase()}
+                            {editingEmergId === c.id ? "EDITING NOW" : c.category.toUpperCase()}
                           </span>
                           <div style={{ display: "flex", gap: "4px" }}>
                             <button
@@ -845,10 +899,42 @@ export default function MembersTab() {
           </div>
 
           {/* Add / Edit Emergency Contact Form */}
-          <form className="card pad addmember" onSubmit={handleSaveEmergency} style={{ alignSelf: "flex-start" }}>
+          <form id="emergency-form" className="card pad addmember" onSubmit={handleSaveEmergency} style={{ alignSelf: "flex-start" }}>
             <h2 className="card-title">
               {editingEmergId ? <><IconEdit size={16} /> Edit Contact</> : <><IconPlus size={16} /> Add Contact</>}
             </h2>
+            {editingEmergId && (
+              <div
+                style={{
+                  padding: "8px 12px",
+                  background: "var(--brand-surface, #eef7f2)",
+                  border: "1px solid var(--brand-line, #c2e2d0)",
+                  borderRadius: "6px",
+                  fontSize: "12.5px",
+                  color: "var(--brand-deep, #1d4d3b)",
+                  marginBottom: "12px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span>Editing: <b>{emergName || "Contact"}</b></span>
+                <button
+                  type="button"
+                  onClick={cancelEditEmergency}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "inherit",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                    fontSize: "12px",
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
             <label>
               <span className="eyebrow">Contact Name / Agency</span>
               <input
@@ -903,7 +989,7 @@ export default function MembersTab() {
             </label>
             <div className="btnrow" style={{ marginTop: 10 }}>
               <button className="btn btn-primary btn-block" disabled={savingEmerg}>
-                {savingEmerg ? "Saving…" : editingEmergId ? "Save Changes" : <><IconPlus size={15} /> Add Contact</>}
+                {savingEmerg ? "Saving…" : editingEmergId ? <><IconCheck size={15} /> Save Changes</> : <><IconPlus size={15} /> Add Contact</>}
               </button>
               {editingEmergId && (
                 <button type="button" className="btn btn-ghost btn-block" onClick={cancelEditEmergency}>
@@ -961,15 +1047,13 @@ function FloorMemberRow({
   const remove = async () => {
     const nameStr = member.ownerName ? ` (${member.ownerName})` : "";
     if (!window.confirm(`Remove flat ${member.id}${nameStr} from the register?`)) return;
-    setBusy(true);
+    // Optimistic instantaneous UI removal:
+    onDeleted();
+    toast(`Flat ${member.id} removed.`, "ok");
     try {
       await deleteMember(member.id);
-      toast(`${member.id} removed.`, "ok");
-      onDeleted();
     } catch (e) {
       toast((e as Error).message, "err");
-    } finally {
-      setBusy(false);
     }
   };
 

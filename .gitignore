@@ -5,3 +5,6 @@ dist
 *.local
 .DS_Store
 functions/node_modules
+.agents/
+opencode.json
+

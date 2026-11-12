@@ -93,7 +93,7 @@ export default function DashboardTab() {
         <div className="kpi">
           <span className="eyebrow">Collected · all time</span>
           <b className="kpi-num">{inr(stats.totalVerified)}</b>
-          <span className="kpi-sub">{stats.verifiedCount} verified receipts</span>
+          <span className="kpi-sub">{stats.verifiedCount} verified payments</span>
         </div>
         <div className="kpi">
           <span className="eyebrow">This month</span>
@@ -115,7 +115,7 @@ export default function DashboardTab() {
       <div className="twocol">
         <div className="card pad">
           <div className="card-head-line">
-            <h2 className="card-title">Latest receipts</h2>
+            <h2 className="card-title">Latest payments</h2>
           </div>
           <div className="monthrow">
             <span className="eyebrow">Register scope</span>
@@ -142,7 +142,7 @@ export default function DashboardTab() {
             <table className="table">
               <thead>
                 <tr>
-                  <th>Receipt</th>
+                  <th>Payment ID</th>
                   <th>Member</th>
                   <th className="num">Amount</th>
                   <th>Paid on</th>

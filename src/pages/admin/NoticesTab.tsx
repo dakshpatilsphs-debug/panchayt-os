@@ -149,11 +149,13 @@ export default function NoticesTab() {
 
   const remove = async (n: Notice) => {
     if (!window.confirm(`Take down "${n.title}"? This cannot be undone.`)) return;
+    // Optimistic instantaneous UI removal:
+    setRows((prev) => (prev ?? []).filter((x) => x.id !== n.id));
+    toast("Notice removed from the board.", "info");
     try {
       await deleteNotice(n.id);
-      setRows(await listNotices());
-      toast("Notice removed from the board.", "info");
     } catch (e) {
+      setRows(await listNotices());
       toast((e as Error).message, "err");
     }
   };
